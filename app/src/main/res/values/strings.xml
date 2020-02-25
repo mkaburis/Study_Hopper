@@ -108,4 +108,5 @@
     <string name="title_activity_study_group_details">StudyGroupDetails</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+    <string name="title_activity_session_details">SessionDetails</string>
 </resources>
