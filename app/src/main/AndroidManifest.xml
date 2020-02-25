@@ -10,6 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".StudyGroupDetails"
+            android:label="@string/title_activity_study_group_details"
+            android:parentActivityName=".HomePage"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="study_dev.testbed.studyhopper.HomePage" />
+        </activity>
+        <activity
             android:name=".StudyGroupFinder"
             android:label="@string/title_activity_study_group_finder"
             android:parentActivityName=".HomePage"
