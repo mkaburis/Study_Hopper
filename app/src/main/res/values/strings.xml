@@ -15,7 +15,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_profile_page">ProfilePage</string>
     <string name="title_activity_study_group_finder">StudyGroupFinder</string>
-    <string name="test">Test</string>
+    <string name="card_title">Card Title</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
