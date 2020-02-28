@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="study_dev.testbed.studyhopper">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -16,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".Dashboard"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -34,7 +33,7 @@
             android:label="@string/title_activity_study_locations_map">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.HomePage" />
+                android:value="study_dev.testbed.studyhopper.Dashboard" />
         </activity>
         <activity
             android:name=".SessionDetails"
@@ -48,32 +47,29 @@
         <activity
             android:name=".StudyGroupDetails"
             android:label="@string/title_activity_study_group_details"
-            android:parentActivityName=".HomePage"
+            android:parentActivityName=".Dashboard"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.HomePage" />
+                android:value="study_dev.testbed.studyhopper.Dashboard" />
         </activity>
         <activity
             android:name=".StudyGroupFinder"
             android:label="@string/title_activity_study_group_finder"
-            android:parentActivityName=".HomePage"
+            android:parentActivityName=".Dashboard"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.HomePage" />
+                android:value="study_dev.testbed.studyhopper.Dashboard" />
         </activity>
         <activity
             android:name=".ProfilePage"
             android:label="@string/title_activity_profile_page"
-            android:parentActivityName=".HomePage">
+            android:parentActivityName=".Dashboard">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.HomePage" />
+                android:value="study_dev.testbed.studyhopper.Dashboard" />
         </activity>
-        <activity
-            android:name=".HomePage"
-            android:label="@string/title_activity_home_page" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login" />
