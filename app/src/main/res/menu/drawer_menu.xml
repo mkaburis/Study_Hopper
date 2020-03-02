@@ -5,7 +5,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/dasboard_option"
+            android:id="@+id/dashboard_option"
             android:icon="@drawable/ic_dashboard"
             android:title="Dashboard" />
         <item
@@ -19,7 +19,7 @@
         <item
             android:id="@+id/my_groups"
             android:icon="@drawable/ic_my_groups"
-            android:title="My Group" />
+            android:title="My Groups" />
         <item
             android:id="@+id/study_locations"
             android:icon="@drawable/ic_study_locations"
@@ -28,11 +28,15 @@
 
     <item android:title="Options">
         <menu>
-        <item
-            android:id="@+id/settings"
-            android:icon="@drawable/ic_settings"
-            android:title="Settings" />
+            <item
+                android:id="@+id/settings"
+                android:icon="@drawable/ic_settings"
+                android:title="Settings" />
 
+            <item
+                android:id="@+id/logout"
+                android:icon="@drawable/ic_logout"
+                android:title="Settings" />
         </menu>
 
     </item>
