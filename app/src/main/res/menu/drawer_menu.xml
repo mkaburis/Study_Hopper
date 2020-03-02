@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="naviation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/dasboard_option"
+            android:icon="@drawable/ic_dashboard"
+            android:title="Dashboard" />
+        <item
+            android:id="@+id/study_safari"
+            android:icon="@drawable/ic_study_safari"
+            android:title="Study Safari" />
+        <item
+            android:id="@+id/messages"
+            android:icon="@drawable/ic_messages"
+            android:title="Messages" />
+        <item
+            android:id="@+id/my_groups"
+            android:icon="@drawable/ic_my_groups"
+            android:title="My Group" />
+        <item
+            android:id="@+id/study_locations"
+            android:icon="@drawable/ic_study_locations"
+            android:title="Study Locations" />
+    </group>
+
+    <item android:title="Options">
+        <menu>
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_settings"
+            android:title="Settings" />
+
+        </menu>
+
+    </item>
+
+</menu>
