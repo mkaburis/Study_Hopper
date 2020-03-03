@@ -7,8 +7,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +40,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
         drawer.addDrawerListener(toggle);
+
+        View headerview = navigationView.getHeaderView(0);
+        ImageView profileButton = headerview.findViewById(R.id.profile_image);
+
+        LinearLayout header = headerview.findViewById(R.id.nav_header);
+
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Toast.makeText(getApplicationContext(), "profile image", Toast.LENGTH_SHORT).show();
+            }
+
+        });
         toggle.syncState();
 
         if(savedInstanceState == null) {
@@ -50,29 +67,37 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+        // Intent is used to switch between activities
+        Intent in;
         switch (menuItem.getItemId()) {
 
             case R.id.dashboard_option:
+
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new DashboardFragment()).commit();
+                        new study_dev.testbed.studyhopper.DashboardFragment()).commit();
                 break;
             case R.id.study_safari:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new StudySafariFragment()).commit();
+                in = new Intent(getBaseContext(),StudyGroupFinder.class);
+                startActivity(in);
+                overridePendingTransition(0, 0);
                 break;
             case R.id.messages:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new MessageFragment()).commit();
+                in = new Intent(getBaseContext(),Messages.class);
+                startActivity(in);
+                overridePendingTransition(0, 0);
                 break;
 
             case R.id.my_groups:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new MyGroupsFragment()).commit();
+                in = new Intent(getBaseContext(),StudyGroupDetails.class);
+                startActivity(in);
+                overridePendingTransition(0, 0);
                 break;
 
             case R.id.study_locations:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new StudyLocationsFragment()).commit();
+                in = new Intent(getBaseContext(),StudyLocationsMap.class);
+                startActivity(in);
+                overridePendingTransition(0, 0);
                 break;
 
             case R.id.settings:
