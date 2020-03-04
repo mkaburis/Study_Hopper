@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "794788986409-q9ogl8dk16pjl2v5kjp1kvs7qla8kahf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "study_dev.testbed.studyhopper",
+            "certificate_hash": "a5721ecd415089a7d316b85c1da841f77144863d"
+          }
+        },
+        {
           "client_id": "794788986409-edf95884el1bsamtbh1pj2bjsujj8ed2.apps.googleusercontent.com",
           "client_type": 3
         }
