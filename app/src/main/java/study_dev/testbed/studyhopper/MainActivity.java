@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if(currentUser == null){
-            //Intent intent = new Intent(this, LoginActivity.class);
-            //startActivity(intent);
+            Intent intent = new Intent(this, Login.class);
+            startActivity(intent);
         }
         else {
             Intent intent = new Intent(this, DashboardFragment.class);
