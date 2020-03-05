@@ -1,24 +1,21 @@
 package study_dev.testbed.studyhopper;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 
-public class Messages extends AppCompatActivity {
+public class MyGroups extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messages);
+        setContentView(R.layout.activity_my_groups);
 
         // Enable back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {

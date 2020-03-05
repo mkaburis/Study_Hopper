@@ -89,7 +89,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 break;
 
             case R.id.my_groups:
-                in = new Intent(getBaseContext(),StudyGroupDetails.class);
+                in = new Intent(getBaseContext(),MyGroups.class);
                 startActivity(in);
                 overridePendingTransition(0, 0);
                 break;
@@ -102,6 +102,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
             case R.id.settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.logout:
+                Toast.makeText(this, "Log Out", Toast.LENGTH_SHORT).show();
                 break;
         }
 
