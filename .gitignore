@@ -12,3 +12,7 @@
 /captures
 .externalNativeBuild
 .cxx
+
+# contains API keys do not add to github
+/gradle.properties
+
