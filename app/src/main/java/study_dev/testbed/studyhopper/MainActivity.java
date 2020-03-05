@@ -1,14 +1,12 @@
 package study_dev.testbed.studyhopper;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import study_dev.testbed.studyhopper.ui.dashboard.DashboardFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
         else {
-            Intent intent = new Intent(this, DashboardFragment.class);
+            Intent intent = new Intent(this, HomePage.class);
             startActivity(intent);
         }
 
