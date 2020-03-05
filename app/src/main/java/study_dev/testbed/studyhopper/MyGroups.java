@@ -6,12 +6,12 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class StudyGroupFinder extends AppCompatActivity {
+public class MyGroups extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_study_group_finder);
+        setContentView(R.layout.activity_my_groups);
 
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
@@ -19,6 +19,7 @@ public class StudyGroupFinder extends AppCompatActivity {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {

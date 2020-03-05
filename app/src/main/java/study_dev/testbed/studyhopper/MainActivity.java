@@ -29,10 +29,12 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser == null){
             Intent intent = new Intent(this, Login.class);
             startActivity(intent);
+            overridePendingTransition(0, 0);
         }
         else {
-            Intent intent = new Intent(this, HomePage.class);
+            Intent intent = new Intent(this, Dashboard.class);
             startActivity(intent);
+            overridePendingTransition(0, 0);
         }
 
 
