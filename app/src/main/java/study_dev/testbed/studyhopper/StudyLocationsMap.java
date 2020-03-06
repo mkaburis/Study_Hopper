@@ -1,10 +1,10 @@
 package study_dev.testbed.studyhopper;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,14 +23,19 @@ public class StudyLocationsMap extends AppCompatActivity implements OnMapReadyCa
         setContentView(R.layout.activity_study_locations_map);
 
         // Enable back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
     }
 
 
@@ -61,7 +66,7 @@ public class StudyLocationsMap extends AppCompatActivity implements OnMapReadyCa
 
     @Override
     public void onBackPressed() {
-        Intent in = new Intent(getBaseContext(),Dashboard.class);
+        Intent in = new Intent(getBaseContext(), Dashboard.class);
         startActivity(in);
         overridePendingTransition(0, 0);
 

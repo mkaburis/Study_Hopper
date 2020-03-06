@@ -7,36 +7,36 @@
         <item
             android:id="@+id/dashboard_option"
             android:icon="@drawable/ic_dashboard"
-            android:title="Dashboard" />
+            android:title="@string/dashboard" />
         <item
             android:id="@+id/study_safari"
             android:icon="@drawable/ic_study_safari"
-            android:title="Study Safari" />
+            android:title="@string/study_safari" />
         <item
             android:id="@+id/messages"
             android:icon="@drawable/ic_messages"
-            android:title="Messages" />
+            android:title="@string/messages" />
         <item
             android:id="@+id/my_groups"
             android:icon="@drawable/ic_my_groups"
-            android:title="My Groups" />
+            android:title="@string/my_groups" />
         <item
             android:id="@+id/study_locations"
             android:icon="@drawable/ic_study_locations"
-            android:title="Study Locations" />
+            android:title="@string/study_locations" />
     </group>
 
-    <item android:title="Options">
+    <item android:title="@string/options">
         <menu>
             <item
                 android:id="@+id/settings"
                 android:icon="@drawable/ic_settings"
-                android:title="Settings" />
+                android:title="@string/settings" />
 
             <item
                 android:id="@+id/logout"
                 android:icon="@drawable/ic_logout"
-                android:title="Logout" />
+                android:title="@string/logout" />
         </menu>
 
     </item>
