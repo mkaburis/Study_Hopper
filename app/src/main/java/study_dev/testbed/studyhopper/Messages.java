@@ -1,12 +1,10 @@
 package study_dev.testbed.studyhopper;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class Messages extends AppCompatActivity {
 
@@ -16,7 +14,10 @@ public class Messages extends AppCompatActivity {
         setContentView(R.layout.activity_messages);
 
         // Enable back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
     }
 
@@ -28,7 +29,7 @@ public class Messages extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent in = new Intent(getBaseContext(),Dashboard.class);
+        Intent in = new Intent(getBaseContext(), Dashboard.class);
         startActivity(in);
         overridePendingTransition(0, 0);
 
