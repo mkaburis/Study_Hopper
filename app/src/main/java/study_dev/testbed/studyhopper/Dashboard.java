@@ -31,6 +31,13 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         setContentView(R.layout.activity_dashboard);
         user = FirebaseAuth.getInstance().getCurrentUser();
 
+        if (user == null) {
+            Toast.makeText(getApplicationContext(), "Unauthorized access", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        }
+
         // Call our toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -53,6 +60,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "profile image", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Dashboard.this, ProfilePage.class);
+                intent.putExtra("new-profile", false);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
             }
 
         });

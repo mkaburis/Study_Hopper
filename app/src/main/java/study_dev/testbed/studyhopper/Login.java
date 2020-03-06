@@ -96,7 +96,6 @@ public class Login extends AppCompatActivity {
 
                             Intent intent = new Intent(Login.this, ProfilePage.class);
                             intent.putExtra("new-profile", true);
-
                             startActivity(intent);
 
                         } else {
