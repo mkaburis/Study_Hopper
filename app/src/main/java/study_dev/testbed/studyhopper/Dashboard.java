@@ -1,5 +1,13 @@
 package study_dev.testbed.studyhopper;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,26 +15,21 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import study_dev.testbed.studyhopper.ui.dashboard.DashboardFragment;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         // Call our toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -48,14 +51,14 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         header.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "profile image", Toast.LENGTH_SHORT).show();
             }
 
         });
         toggle.syncState();
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             // Start activity in the dashboard fragment...
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new DashboardFragment()).commit();
@@ -78,24 +81,24 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                         new study_dev.testbed.studyhopper.DashboardFragment()).commit();
                 break;
             case R.id.study_safari:
-                in = new Intent(getBaseContext(),StudyGroupFinder.class);
+                in = new Intent(getBaseContext(), StudyGroupFinder.class);
                 startActivity(in);
                 overridePendingTransition(0, 0);
                 break;
             case R.id.messages:
-                in = new Intent(getBaseContext(),Messages.class);
+                in = new Intent(getBaseContext(), Messages.class);
                 startActivity(in);
                 overridePendingTransition(0, 0);
                 break;
 
             case R.id.my_groups:
-                in = new Intent(getBaseContext(),MyGroups.class);
+                in = new Intent(getBaseContext(), MyGroups.class);
                 startActivity(in);
                 overridePendingTransition(0, 0);
                 break;
 
             case R.id.study_locations:
-                in = new Intent(getBaseContext(),StudyLocationsMap.class);
+                in = new Intent(getBaseContext(), StudyLocationsMap.class);
                 startActivity(in);
                 overridePendingTransition(0, 0);
                 break;
@@ -105,7 +108,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 break;
 
             case R.id.logout:
-                Toast.makeText(this, "Log Out", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Logged Out", Toast.LENGTH_SHORT).show();
+                logOut();
                 break;
         }
 
@@ -116,11 +120,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     @Override
     public void onBackPressed() {
 
-        if(drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
 
+    }
+
+    public void logOut() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 }

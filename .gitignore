@@ -15,4 +15,5 @@
 
 # contains API keys do not add to github
 /gradle.properties
+/app/google-services.json
 
