@@ -27,8 +27,9 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:padding="8dp"
+        card_view:cardBackgroundColor="@color/safariYellow"
         card_view:cardCornerRadius="5dp"
-        app:cardElevation="8dp">
+        card_view:cardElevation="6dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -38,24 +39,46 @@
                 android:id="@+id/studyGroupCardHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
                 android:text="@string/study_groups_card_title"
-                android:textSize="20sp" />
+                android:textColor="@color/colorWhite"
+                android:textSize="25sp" />
+
+            <ImageView
+                android:id="@+id/studyGroupImage"
+                android:contentDescription="Study group image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_study_groups" />
+            
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/study_group_list"
                 android:layout_width="wrap_content"
                 android:layout_height="120dp"
-                android:layout_below="@+id/studyGroupCardHeader"
                 android:layout_marginTop="20dp"
                 android:padding="5dp" >
 
+
+
             </androidx.recyclerview.widget.RecyclerView>
+
+            </ScrollView>
 
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/studyGroupFinderCard"
         android:layout_width="match_parent"
         android:layout_height="80dp"
@@ -66,9 +89,9 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:padding="8dp"
-        app:cardBackgroundColor="@color/safariBrown"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="6dp">
+        card_view:cardBackgroundColor="@color/safariBrown"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="6dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
