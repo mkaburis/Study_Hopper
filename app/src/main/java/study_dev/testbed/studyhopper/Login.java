@@ -45,6 +45,17 @@ public class Login extends AppCompatActivity {
                 final String email = mEmailField.getText().toString();
                 final String password = mPasswordField.getText().toString();
 
+                if (email.isEmpty()) {
+                    Toast.makeText(Login.this, "Email cannot be empty.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (password.isEmpty()) {
+                    Toast.makeText(Login.this, "Password cannot be empty.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 signIn(mAuth, email, password);
             }
         });
@@ -54,6 +65,17 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 final String email = mEmailField.getText().toString();
                 final String password = mPasswordField.getText().toString();
+
+                if (email.isEmpty()) {
+                    Toast.makeText(Login.this, "Email cannot be empty.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (password.isEmpty()) {
+                    Toast.makeText(Login.this, "Password cannot be empty.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 createAccount(mAuth, email, password);
             }
@@ -68,6 +90,8 @@ public class Login extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
+                            Toast.makeText(Login.this, "Logged in successfully.",
+                                    Toast.LENGTH_SHORT).show();
                             user = mAuth.getCurrentUser();
 
                             Intent intent = new Intent(Login.this, Dashboard.class);
@@ -77,7 +101,8 @@ public class Login extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(Login.this, "Authentication failed.",
+
+                            Toast.makeText(Login.this, task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -92,6 +117,8 @@ public class Login extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
+                            Toast.makeText(Login.this, "User created successfully.",
+                                    Toast.LENGTH_SHORT).show();
                             user = mAuth.getCurrentUser();
 
                             Intent intent = new Intent(Login.this, ProfilePage.class);
@@ -100,7 +127,9 @@ public class Login extends AppCompatActivity {
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(Login.this, "Error creating user.",
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+
+                            Toast.makeText(Login.this, task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
