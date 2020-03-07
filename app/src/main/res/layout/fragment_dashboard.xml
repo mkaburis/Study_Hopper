@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,6 +9,7 @@
         android:id="@+id/welcome_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:textSize="30sp"
         android:text="Welcome First Last"
         android:layout_centerHorizontal="true"/>
@@ -19,7 +19,7 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/studyGroupCard"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="200dp"
         android:layout_margin="6dp"
         android:layout_below="@+id/welcome_txt"
         android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -27,8 +27,8 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:padding="8dp"
-        android:background="@color/cardview_light_background"
-        card_view:cardCornerRadius="5dp">
+        card_view:cardCornerRadius="5dp"
+        app:cardElevation="8dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -44,9 +44,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/study_group_list"
                 android:layout_width="wrap_content"
-                android:layout_height="100dp"
+                android:layout_height="120dp"
                 android:layout_below="@+id/studyGroupCardHeader"
+                android:layout_marginTop="20dp"
                 android:padding="5dp" >
+
             </androidx.recyclerview.widget.RecyclerView>
 
         </RelativeLayout>
@@ -54,10 +56,9 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/studyGroupFinderCard"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="80dp"
         android:layout_margin="6dp"
         android:layout_below="@+id/studyGroupCard"
         android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -65,19 +66,36 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:padding="8dp"
-        android:background="@color/cardview_light_background"
-        card_view:cardCornerRadius="5dp">
+        app:cardBackgroundColor="@color/safariBrown"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="6dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/studyFinderCardHeader"
+                android:id="@+id/studyGroupFinderHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
                 android:text="@string/study_group_finder_card_title"
-                android:textSize="20sp" />
+                android:textColor="@color/colorWhite"
+                android:textSize="25sp" />
+
+            <ImageView
+                android:id="@+id/studyFinderImage"
+                android:contentDescription="Search image for study group finder"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_study_group_finder" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -87,7 +105,7 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/studyRoomReservationsCard"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="80dp"
         android:layout_margin="6dp"
         android:layout_below="@+id/studyGroupFinderCard"
         android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -95,8 +113,9 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:padding="8dp"
-        android:background="@color/cardview_light_background"
-        card_view:cardCornerRadius="5dp">
+        card_view:cardBackgroundColor="@color/safariGreen"
+        card_view:cardCornerRadius="5dp"
+        app:cardElevation="6dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -106,8 +125,24 @@
                 android:id="@+id/studyRoomCardHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
                 android:text="@string/study_room_reservation_card_title"
-                android:textSize="20sp" />
+                android:textColor="@color/colorWhite"
+                android:textSize="25sp" />
+
+            <ImageView
+                android:id="@+id/studyRoomReservationImage"
+                android:contentDescription="Scheduling Image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_study_room_scheduler" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
