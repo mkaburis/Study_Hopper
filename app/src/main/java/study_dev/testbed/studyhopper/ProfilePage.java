@@ -12,7 +12,11 @@ public class ProfilePage extends AppCompatActivity {
         setContentView(R.layout.activity_profile_page);
 
         Bundle extras = getIntent().getExtras();
-        boolean newProfile = extras.getBoolean("new-profile");
+        boolean newProfile = false;
+
+        if (extras != null) {
+            newProfile = extras.getBoolean("new-profile");
+        }
 
         if (newProfile) {
             // blank entries
