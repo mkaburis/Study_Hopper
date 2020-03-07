@@ -51,10 +51,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         drawer.addDrawerListener(toggle);
 
-        View headerview = navigationView.getHeaderView(0);
-        ImageView profileButton = headerview.findViewById(R.id.profile_image);
+        View headerView = navigationView.getHeaderView(0);
+        ImageView profileButton = headerView.findViewById(R.id.profile_image);
 
-        LinearLayout header = headerview.findViewById(R.id.nav_header);
+        LinearLayout header = headerView.findViewById(R.id.nav_header);
 
         header.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +139,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     }
 
-    public void logOut() {
+    private void logOut() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
         Intent intent = new Intent(this, MainActivity.class);

@@ -6,7 +6,6 @@
     tools:context=".Login">
 
     <LinearLayout
-        android:id="@+id/row_align"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -21,6 +20,7 @@
 
             android:hint="@string/prompt_email"
             android:inputType="textEmailAddress"
+            android:autofillHints="Enter Username"
             android:selectAllOnFocus="true" />
 
         <EditText
@@ -34,10 +34,10 @@
             android:hint="@string/prompt_password"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
+            android:autofillHints="Enter Password"
             android:selectAllOnFocus="true" />
 
         <LinearLayout
-            android:id="@+id/button_bar"
             style="?attr/buttonBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
