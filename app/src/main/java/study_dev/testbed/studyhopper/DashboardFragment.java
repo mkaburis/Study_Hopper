@@ -1,6 +1,8 @@
 package study_dev.testbed.studyhopper;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,10 +37,15 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
         ArrayList<studyGroupItem> studyGroupList = new ArrayList<>();
         studyGroupList.add(new studyGroupItem(R.drawable.ic_study_group_color, "Mobile Devices", "COP 4656"));
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Automata Fun", "COT 4210"));
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_3, "How to not go to Jail", "CIS 4250"));
+        studyGroupList.add(new studyGroupItem(R.drawable.ic_study_group_color, "Hendrix Fun", "COP 4970"));
+        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Hadoop & Big Data", "CIS 4930"));
+        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_3, "GRE Prep", "TestPrep"));
+        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Test", "Test"));
 
 
 
