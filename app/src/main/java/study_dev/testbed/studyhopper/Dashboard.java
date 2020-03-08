@@ -61,9 +61,10 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         if (savedInstanceState == null) {
             // Start activity in the dashboard fragment...
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new DashboardFragment()).commit();
+                    new study_dev.testbed.studyhopper.DashboardFragment()).commit();
             navigationView.setCheckedItem(R.id.dashboard_option);
         }
+
 
 
     }
