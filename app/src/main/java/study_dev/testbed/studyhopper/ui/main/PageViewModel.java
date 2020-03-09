@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-class PageViewModel extends ViewModel {
+public class PageViewModel extends ViewModel {
 
     private final MutableLiveData<Integer> mIndex = new MutableLiveData<>();
     private final LiveData<String> mText = Transformations.map(mIndex, new Function<Integer, String>() {

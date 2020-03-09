@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import study_dev.testbed.studyhopper.R;
 
-class NotificationsFragment extends Fragment {
+public class NotificationsFragment extends Fragment {
 
     private NotificationsViewModel notificationsViewModel;
 
