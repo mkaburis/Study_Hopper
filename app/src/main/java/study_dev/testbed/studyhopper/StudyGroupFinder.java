@@ -34,17 +34,4 @@ public class StudyGroupFinder extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent in = new Intent(getBaseContext(),Dashboard.class);
-        startActivity(in);
-        overridePendingTransition(0, 0);
-
-    }
 }

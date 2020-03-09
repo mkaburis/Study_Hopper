@@ -61,10 +61,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         if (savedInstanceState == null) {
             // Start activity in the dashboard fragment...
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new DashboardFragment()).commit();
+                    new study_dev.testbed.studyhopper.DashboardFragment()).commit();
             navigationView.setCheckedItem(R.id.dashboard_option);
         }
 
+        getSupportActionBar().setTitle("Dashboard");
 
     }
 
@@ -83,12 +84,12 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             case R.id.study_safari:
                 in = new Intent(getBaseContext(), StudyGroupFinder.class);
                 startActivity(in);
-                overridePendingTransition(0, 0);
+                overridePendingTransition(1, 0);
                 break;
             case R.id.messages:
                 in = new Intent(getBaseContext(), Messages.class);
                 startActivity(in);
-                overridePendingTransition(0, 0);
+                overridePendingTransition(1, 0);
                 break;
 
             case R.id.my_groups:
