@@ -63,6 +63,7 @@ public class Login extends AppCompatActivity {
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              
 
                 Intent intent = new Intent(Login.this, ProfilePage.class);
                 intent.putExtra("new-profile", true);
@@ -70,6 +71,7 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
 
     private void signIn(final FirebaseAuth mAuth, String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
@@ -79,11 +81,13 @@ public class Login extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
+
                             Toast.makeText(Login.this, "Logged in successfully.",
                                     Toast.LENGTH_SHORT).show();
                             user = mAuth.getCurrentUser();
 
                             // add an update to last-login in firebase
+
 
                             Intent intent = new Intent(Login.this, Dashboard.class);
                             intent.putExtra("user-ids", user.getUid());
@@ -94,6 +98,30 @@ public class Login extends AppCompatActivity {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
 
                             Toast.makeText(Login.this, task.getException().getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void createAccount(final FirebaseAuth mAuth, String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            user = mAuth.getCurrentUser();
+
+                            Intent intent = new Intent(Login.this, ProfilePage.class);
+                            intent.putExtra("new-profile", true);
+
+                            startActivity(intent);
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(Login.this, "Error creating user.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

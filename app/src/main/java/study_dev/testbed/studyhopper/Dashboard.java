@@ -139,6 +139,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     }
 
+
     private void logOut() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();

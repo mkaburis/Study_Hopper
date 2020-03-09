@@ -18,6 +18,7 @@ public class StudyGroupFinder extends AppCompatActivity {
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
+      
     }
 
     @Override

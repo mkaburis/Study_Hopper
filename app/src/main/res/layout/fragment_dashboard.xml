@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@android:color/holo_purple"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
 
     <TextView
         android:id="@+id/welcome_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30sp"
+
         android:layout_marginTop="@dimen/appbar_padding"
         android:layout_centerHorizontal="true" />
     android:text="Welcome First Last"
     android:layout_centerHorizontal="true"/>
-
 
     <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/studyGroupCard"
@@ -73,7 +73,6 @@
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-
     <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/studyRoomReservationsCard"
         android:layout_width="match_parent"
@@ -91,14 +90,12 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <TextView
                 android:id="@+id/studyRoomCardHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/study_room_reservation_card_title"
                 android:textSize="20sp" />
-
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

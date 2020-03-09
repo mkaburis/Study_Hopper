@@ -11,7 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-class DashboardFragment extends Fragment {
+
+public class DashboardFragment extends Fragment {
 
     private TextView welcomeMsg;
 
