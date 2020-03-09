@@ -31,6 +31,13 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         setContentView(R.layout.activity_dashboard);
         user = FirebaseAuth.getInstance().getCurrentUser();
 
+        if (user == null) {
+            Toast.makeText(getApplicationContext(), "Unauthorized access", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        }
+
         // Call our toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -44,15 +51,19 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         drawer.addDrawerListener(toggle);
 
-        View headerview = navigationView.getHeaderView(0);
-        ImageView profileButton = headerview.findViewById(R.id.profile_image);
+        View headerView = navigationView.getHeaderView(0);
+        ImageView profileButton = headerView.findViewById(R.id.profile_image);
 
-        LinearLayout header = headerview.findViewById(R.id.nav_header);
+        LinearLayout header = headerView.findViewById(R.id.nav_header);
 
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "profile image", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Dashboard.this, ProfilePage.class);
+                intent.putExtra("new-profile", false);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
             }
 
         });
@@ -129,7 +140,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
     }
 
-    public void logOut() {
+
+    private void logOut() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
         Intent intent = new Intent(this, MainActivity.class);

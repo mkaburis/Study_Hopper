@@ -8,19 +8,19 @@ import androidx.lifecycle.ViewModel;
 
 public class PageViewModel extends ViewModel {
 
-    private MutableLiveData<Integer> mIndex = new MutableLiveData<>();
-    private LiveData<String> mText = Transformations.map(mIndex, new Function<Integer, String>() {
+    private final MutableLiveData<Integer> mIndex = new MutableLiveData<>();
+    private final LiveData<String> mText = Transformations.map(mIndex, new Function<Integer, String>() {
         @Override
         public String apply(Integer input) {
             return "Hello world from section: " + input;
         }
     });
 
-    public void setIndex(int index) {
+    void setIndex(int index) {
         mIndex.setValue(index);
     }
 
-    public LiveData<String> getText() {
+    LiveData<String> getText() {
         return mText;
     }
 }

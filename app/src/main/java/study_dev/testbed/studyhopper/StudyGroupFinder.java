@@ -18,6 +18,7 @@ public class StudyGroupFinder extends AppCompatActivity {
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
+      
     }
 
     @Override
@@ -33,5 +34,4 @@ public class StudyGroupFinder extends AppCompatActivity {
         overridePendingTransition(0, 0);
 
     }
-
 }

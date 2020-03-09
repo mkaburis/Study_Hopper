@@ -26,12 +26,12 @@ public class MainActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if(currentUser == null){
+
+        if (currentUser == null) {
             Intent intent = new Intent(this, Login.class);
             startActivity(intent);
             overridePendingTransition(0, 0);
-        }
-        else {
+        } else {
             Intent intent = new Intent(this, Dashboard.class);
             startActivity(intent);
             overridePendingTransition(0, 0);

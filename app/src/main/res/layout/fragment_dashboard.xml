@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <TextView
         android:id="@+id/welcome_txt"
         android:layout_width="match_parent"
@@ -17,7 +16,6 @@
         app:autoSizeMinTextSize="14sp"
         app:autoSizeMaxTextSize="30sp"
         app:autoSizeStepGranularity="2sp" />
-
 
     <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/studyGroupCard"
@@ -73,7 +71,6 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
-
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
@@ -123,7 +120,6 @@
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
-
     <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/studyRoomReservationsCard"
         android:layout_width="match_parent"
@@ -142,7 +138,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <TextView
                 android:id="@+id/studyRoomCardHeader"
                 android:layout_width="match_parent"
