@@ -17,6 +17,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
         <activity
+            android:name=".StudyRoomReservations"
+            android:label="@string/title_activity_reservation_page"></activity>
+        <activity
             android:name=".Login"
             android:label="@string/title_activity_login">
             <meta-data

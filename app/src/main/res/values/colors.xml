@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#4d652d</color>
     <color name="colorAccent">#5e459a</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="safariBrown">#8B7E62</color>
+    <color name="safariGreen">#787C57</color>
+    <color name="safariYellow">#DFA21F</color>
 </resources>
