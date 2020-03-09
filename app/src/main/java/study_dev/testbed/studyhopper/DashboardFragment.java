@@ -20,6 +20,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -36,6 +41,10 @@ public class DashboardFragment extends Fragment {
     private CardView groupFinderCard;
     private CardView studyRoomReservationCard;
 
+    private FirebaseAuth mAuth;
+
+    private String personaName = "Welcome Demo Demo";
+
     @SuppressLint("SetTextI18n")
     @Nullable
     @Override
@@ -50,6 +59,7 @@ public class DashboardFragment extends Fragment {
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Hadoop & Big Data", "CIS 4930"));
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_3, "GRE Prep", "TestPrep"));
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Test", "Test"));
+
 
 
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
@@ -83,9 +93,31 @@ public class DashboardFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new StudyGroupAdapter(studyGroupList);
 
+        // Retrieve user email and parse it
+        mAuth = FirebaseAuth.getInstance();
+        String email = mAuth.getCurrentUser().getEmail();
+        int parseIndex = email.indexOf('@');
+        String userName = email.substring(0, parseIndex);
+
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users").document(userName).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String first_name = documentSnapshot.getString("first-name");
+                        String last_name = documentSnapshot.getString("last-name");
+
+                        personaName = "Welcome " + first_name + " " + last_name + "!";
+
+                    }
+                });
+
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-        welcomeMsg.setText("Welcome Jose-Pablo Mantilla");
+        welcomeMsg.setText(personaName);
         
         return v;
 

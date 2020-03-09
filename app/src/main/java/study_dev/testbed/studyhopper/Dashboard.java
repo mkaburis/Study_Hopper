@@ -65,7 +65,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             navigationView.setCheckedItem(R.id.dashboard_option);
         }
 
-
+        getSupportActionBar().setTitle("Dashboard");
 
     }
 
