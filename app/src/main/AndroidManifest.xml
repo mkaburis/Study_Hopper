@@ -16,7 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".Login"
+        <activity
+            android:name=".StudyRoomReservations"
+            android:label="@string/title_activity_reservation_page"></activity>
+        <activity
+            android:name=".Login"
             android:label="@string/title_activity_login">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

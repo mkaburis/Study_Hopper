@@ -17,6 +17,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_profile_page">ProfilePage</string>
     <string name="title_activity_study_group_finder">StudyGroupFinder</string>
+    <string name="title_activity_reservation_page">StudyRoomReservations</string>
     <string name="study_groups_card_title">Your Study Groups</string>
     <string name="study_group_finder_card_title">Study Group Finder</string>
     <string name="study_room_reservation_card_title">Study Room Reservations</string>

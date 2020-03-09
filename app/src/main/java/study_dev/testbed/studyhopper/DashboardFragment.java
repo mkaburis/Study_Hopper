@@ -1,6 +1,8 @@
 package study_dev.testbed.studyhopper;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.nfc.Tag;
@@ -31,6 +33,8 @@ public class DashboardFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
 
     private TextView welcomeMsg;
+    private CardView groupFinderCard;
+    private CardView studyRoomReservationCard;
 
     @SuppressLint("SetTextI18n")
     @Nullable
@@ -48,11 +52,32 @@ public class DashboardFragment extends Fragment {
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Test", "Test"));
 
 
-
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        //recyclerView = v.getRootView().findViewById(R.id.study_group_list);
         welcomeMsg = v.getRootView().findViewById(R.id.welcome_txt);
+
+        groupFinderCard = v.getRootView().findViewById(R.id.studyGroupFinderCard);
+
+        groupFinderCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity activity = (Activity) getContext();
+                Intent in = new Intent(getContext(), StudyGroupFinder.class);
+                startActivity(in);
+                activity.overridePendingTransition(0, 0);
+            }
+        });
+
+        studyRoomReservationCard = v.getRootView().findViewById(R.id.studyRoomReservationsCard);
+        studyRoomReservationCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Activity activity = (Activity) getContext();
+                Intent in = new Intent(getContext(), StudyRoomReservations.class);
+                startActivity(in);
+                activity.overridePendingTransition(0, 0);
+            }
+        });
         mRecyclerView = v.getRootView().findViewById(R.id.study_group_recycler_view);
         mRecyclerView.setHasFixedSize(true); //ONLY for FIXED Size recylcerView remove later
         mLayoutManager = new LinearLayoutManager(getContext());
@@ -61,11 +86,9 @@ public class DashboardFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         welcomeMsg.setText("Welcome Jose-Pablo Mantilla");
-
-
+        
         return v;
 
     }
-
 
 }
