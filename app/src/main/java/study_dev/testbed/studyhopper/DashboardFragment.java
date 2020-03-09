@@ -104,7 +104,7 @@ public class DashboardFragment extends Fragment {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("users").document(userName).get()
+        db.collection("users").document("mkaburis").get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -118,7 +118,7 @@ public class DashboardFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-        welcomeMsg.setText(personaName);
+        welcomeMsg.setText(userName);
         
         return v;
 
