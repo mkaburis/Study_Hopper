@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -158,17 +159,24 @@ public class ProfilePage extends AppCompatActivity {
         String docId = email.toLowerCase().split("@")[0];
 
         db.collection("users").document(docId).set(newUser)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+            .addOnCompleteListener(new OnCompleteListener<Void>() {
 
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(ProfilePage.this, "User information saved to database.",
-                                Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(ProfilePage.this, Dashboard.class);
-                        intent.putExtra("user-ids", user.getUid());
-                        startActivity(intent);
-                    }
-                });
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Toast.makeText(ProfilePage.this, "User information saved to database.",
+                            Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ProfilePage.this, Dashboard.class);
+                    intent.putExtra("user-ids", user.getUid());
+                    startActivity(intent);
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(ProfilePage.this, "Error saving profile info to database",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
 
     }
 
@@ -213,6 +221,12 @@ public class ProfilePage extends AppCompatActivity {
             passwordLayout.setVisibility(View.GONE);
             mPassword.setVisibility(View.GONE);
             mEmail.setEnabled(false);
+        }
+    }).addOnFailureListener(new OnFailureListener() {
+        @Override
+        public void onFailure(@NonNull Exception e) {
+            Toast.makeText(ProfilePage.this, "Error loading profile info",
+                    Toast.LENGTH_SHORT).show();
         }
     });
 
