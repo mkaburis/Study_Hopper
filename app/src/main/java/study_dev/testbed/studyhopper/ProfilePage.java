@@ -11,12 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -49,6 +53,8 @@ public class ProfilePage extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
+        mAuth = FirebaseAuth.getInstance();
+
         mFirstName = findViewById(R.id.fnameText);
         mLastName = findViewById(R.id.lnameText);
         mEmail = findViewById(R.id.emailText);
@@ -64,6 +70,10 @@ public class ProfilePage extends AppCompatActivity {
 
         if (extras != null) {
             newProfile = extras.getBoolean("new-profile");
+        }
+
+        if (!newProfile) {
+            fillInformation();
         }
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -164,12 +174,60 @@ public class ProfilePage extends AppCompatActivity {
 
     // overwrites existing user's info in database
     private void updateAccount() {
+        String userName = getUsername();
+
+        DocumentReference ref = db.collection("users").document(userName);
+
+
+
+    }
+    // fills text boxes with info from database
+    private void fillInformation() {
+        String userName = getUsername();
+
+        DocumentReference ref = db.collection("users").document(userName);
+
+        ref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        @Override
+        public void onSuccess(DocumentSnapshot documentSnapshot) {
+            Map x = documentSnapshot.getData();
+            String fname = x.get("first-name").toString();
+            String lname = x.get("last-name").toString();
+            String dob = x.get("dob").toString();
+            String gender = x.get("gender").toString();
+            String major = x.get("major").toString();
+            String college = x.get("college").toString();
+            String uni = x.get("university").toString();
+            String email = mAuth.getCurrentUser().getEmail();
+
+            mFirstName.setText(fname);
+            mLastName.setText(lname);
+            mDob.setText(dob);
+            mGender.setText(gender);
+            mEmail.setText(email);
+            mMajor.setText(major);
+            mCollege.setText(college);
+            mUniversity.setText(uni);
+
+            TextInputLayout passwordLayout = findViewById(R.id.passwordLayout);
+            passwordLayout.setVisibility(View.GONE);
+            mPassword.setVisibility(View.GONE);
+            mEmail.setEnabled(false);
+        }
+    });
+
 
     }
 
-    // fills text boxes with info from database
-    private void fillInformation() {
+    private String getUsername(){
+        FirebaseUser user = mAuth.getCurrentUser();
+        final String email = user.getEmail();
+        if (email == null){
+            return null;
+        }
+        String userName = email.split("@")[0];
 
+        return userName;
     }
 
 }
