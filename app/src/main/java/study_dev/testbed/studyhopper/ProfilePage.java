@@ -134,29 +134,8 @@ public class ProfilePage extends AppCompatActivity {
 
     // adds new user's info to database
     private void addAccount() {
-        String fName = mFirstName.getText().toString();
-        String lName = mLastName.getText().toString();
-        String birthday = mDob.getText().toString();
-        String gender = mGender.getText().toString();
-        String email = mEmail.getText().toString();
-
-        Timestamp dob = new Timestamp(new Date(birthday));
-
-        String university = mUniversity.getText().toString();
-        String college = mCollege.getText().toString();
-        final String major = mMajor.getText().toString();
-
-        Map<String, Object> newUser = new HashMap<>();
-        newUser.put("first-name", fName);
-        newUser.put("last-name", lName);
-        newUser.put("dob", dob);
-        newUser.put("gender", gender);
-        newUser.put("university", university);
-        newUser.put("college", college);
-        newUser.put("major", major);
-        newUser.put("last-login", FieldValue.serverTimestamp());
-
-        String docId = email.toLowerCase().split("@")[0];
+        Map<String, Object> newUser = getDataFromFields();
+        String docId = getUsername();
 
         db.collection("users").document(docId).set(newUser)
             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -183,16 +162,12 @@ public class ProfilePage extends AppCompatActivity {
     // overwrites existing user's info in database
     private void updateAccount() {
         String userName = getUsername();
-
         DocumentReference ref = db.collection("users").document(userName);
-
-
 
     }
     // fills text boxes with info from database
     private void fillInformation() {
         String userName = getUsername();
-
         DocumentReference ref = db.collection("users").document(userName);
 
         ref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -242,6 +217,31 @@ public class ProfilePage extends AppCompatActivity {
         String userName = email.split("@")[0];
 
         return userName;
+    }
+
+    private Map<String, Object> getDataFromFields() {
+        String fName = mFirstName.getText().toString();
+        String lName = mLastName.getText().toString();
+        String birthday = mDob.getText().toString();
+        String gender = mGender.getText().toString();
+
+        Timestamp dob = new Timestamp(new Date(birthday));
+
+        String university = mUniversity.getText().toString();
+        String college = mCollege.getText().toString();
+        final String major = mMajor.getText().toString();
+
+        Map<String, Object> newUser = new HashMap<>();
+        newUser.put("first-name", fName);
+        newUser.put("last-name", lName);
+        newUser.put("dob", dob);
+        newUser.put("gender", gender);
+        newUser.put("university", university);
+        newUser.put("college", college);
+        newUser.put("major", major);
+        newUser.put("last-login", FieldValue.serverTimestamp());
+
+        return newUser;
     }
 
 }
