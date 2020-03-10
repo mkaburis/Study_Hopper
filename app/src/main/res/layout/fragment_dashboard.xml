@@ -59,7 +59,6 @@
                 android:src="@drawable/ic_study_groups" />
 
 
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/study_group_recycler_view"
                 android:layout_width="match_parent"
