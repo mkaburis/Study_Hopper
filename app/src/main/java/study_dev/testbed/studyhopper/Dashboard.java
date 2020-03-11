@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,15 +16,23 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import study_dev.testbed.studyhopper.ui.dashboard.DashboardFragment;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private FirebaseUser user;
+    private FirebaseFirestore db;
+    private TextView emailView, nameView;
+    private String email, name, userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,34 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         drawer.addDrawerListener(toggle);
 
         View headerView = navigationView.getHeaderView(0);
+
+        // Set the email address for the navigation header
+        email = user.getEmail();
+        emailView = headerView.findViewById(R.id.nav_drawer_email);
+        emailView.setText(email);
+
+
+        // Get name of user for the navigation header
+        nameView = headerView.findViewById(R.id.nav_drawer_name);
+        int parseIndex = email.indexOf('@');
+        userName = email.substring(0, parseIndex);
+        db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(userName);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if(task.isSuccessful())
+                {
+                    String first_name = document.getString("first-name");
+                    String last_name = document.getString("last-name");
+                    name = first_name + " " + last_name;
+                    nameView.setText(name);
+                }
+            }
+        });
+
+
         ImageView profileButton = headerView.findViewById(R.id.profile_image);
 
         LinearLayout header = headerView.findViewById(R.id.nav_header);
