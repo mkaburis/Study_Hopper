@@ -23,17 +23,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.model.Document;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.ref.Reference;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ProfilePage extends AppCompatActivity {
     private String TAG;
@@ -160,29 +156,28 @@ public class ProfilePage extends AppCompatActivity {
     // fills text boxes with info from database
     private void fillInformation() {
         String userName = getUsername();
-        DocumentReference ref = db.collection("users").document(userName);
+        DocumentReference profileRef = db.collection("users").document(userName);
+        CollectionReference majorsRef = db.collection("users").document(userName).collection("majors");
 
-        ref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        profileRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Map x = documentSnapshot.getData();
-                String fname = x.get("first-name").toString();
-                String lname = x.get("last-name").toString();
-                String dob = x.get("dob").toString();
-                String gender = x.get("gender").toString();
-                String major = x.get("major").toString();
-                String college = x.get("college").toString();
-                String uni = x.get("university").toString();
-                String email = mAuth.getCurrentUser().getEmail();
+                Profile profile = documentSnapshot.toObject(Profile.class);
+                String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-                mFirstName.setText(fname);
-                mLastName.setText(lname);
-                mDob.setText(dob);
-                mGender.setText(gender);
+                if (profile == null) {
+                    Toast.makeText(ProfilePage.this, "Profile info not found",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                mFirstName.setText(profile.firstName);
+                mLastName.setText(profile.lastName);
+                mDob.setText(profile.dob.toString());
+                mGender.setText(profile.gender);
                 mEmail.setText(email);
-                mMajor.setText(major);
-                mCollege.setText(college);
-                mUniversity.setText(uni);
+                mUniversity.setText(profile.university);
+
 
                 TextInputLayout passwordLayout = findViewById(R.id.passwordLayout);
                 passwordLayout.setVisibility(View.GONE);
@@ -197,6 +192,26 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
 
+        majorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Major currMajor = document.toObject(Major.class);
+                        mMajor.setText(currMajor.major);
+                        mCollege.setText(currMajor.college);
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfilePage.this, "Error loading profile info",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -229,6 +244,7 @@ public class ProfilePage extends AppCompatActivity {
 
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                boolean done = true;
                 userRef.document(docId).collection("majors").document().set(newMajor).addOnCompleteListener(new OnCompleteListener<Void>() {
 
                     @Override
@@ -240,12 +256,18 @@ public class ProfilePage extends AppCompatActivity {
                         startActivity(intent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(ProfilePage.this, "Error saving profile info to database",
-                            Toast.LENGTH_SHORT).show();
-                        }
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ProfilePage.this, "Error saving profile info to database",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfilePage.this, "Error saving profile info to database",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -259,7 +281,7 @@ public class ProfilePage extends AppCompatActivity {
         String universityStr = mUniversity.getText().toString();
 
         DateFormat df = DateFormat.getDateInstance();
-        Date dob = df.parse(birthday);
+        Date dob = new Date();
 
         Profile profile = new Profile();
         profile.firstName = fName;
@@ -272,23 +294,102 @@ public class ProfilePage extends AppCompatActivity {
     }
 
     private class Profile {
-        public String firstName;
-        public String lastName;
-        public Date dob;
-        public String gender;
-        public String university;
-        public Timestamp lastLogin;
+        String firstName;
+        String lastName;
+        Date dob;
+        String gender;
+        String university;
+        Timestamp lastLogin;
 
-        Profile(){
-            lastLogin = Timestamp.now();
-        };
+        Profile() {
+        }
+
+        Profile(String firstName, String lastName, Date dob, String gender, String university, Timestamp lastLogin) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.dob = dob;
+            this.gender = gender;
+            this.university = university;
+            this.lastLogin = lastLogin;
+
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public Date getDob() {
+            return dob;
+        }
+
+        public void setDob(Date dob) {
+            this.dob = dob;
+        }
+
+        public String getGender() {
+            return gender;
+        }
+
+        public void setGender(String gender) {
+            this.gender = gender;
+        }
+
+        public String getUniversity() {
+            return university;
+        }
+
+        public void setUniversity(String university) {
+            this.university = university;
+        }
+
+        public Timestamp getLastLogin() {
+            return lastLogin;
+        }
+
+        public void setLastLogin(Timestamp lastLogin) {
+            this.lastLogin = lastLogin;
+        }
+
     }
 
     private class Major{
-        public String college;
-        public String major;
+        String college;
+        String major;
 
         Major(){}
+
+        Major(String major, String college) {
+            this.major = major;
+            this.college = college;
+        }
+
+        public String getCollege() {
+            return college;
+        }
+
+        public void setCollege(String college) {
+            this.college = college;
+        }
+
+        public String getMajor() {
+            return major;
+        }
+
+        public void setMajor(String major) {
+            this.major = major;
+        }
     }
 
     private class StudentClass {
