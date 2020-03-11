@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/profile_pic_desc"
-                android:src="@mipmap/ic_launcher_round" />
+                android:src="@mipmap/ic_profile_image_round" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"

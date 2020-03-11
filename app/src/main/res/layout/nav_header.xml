@@ -13,10 +13,11 @@
         android:id="@+id/profile_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher_round"
+        android:src="@mipmap/ic_profile_image_round"
         android:contentDescription="@string/profile_pic_desc" />
 
     <TextView
+        android:id="@+id/nav_drawer_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
@@ -25,6 +26,7 @@
         android:textColor="@color/colorWhite" />
 
     <TextView
+        android:id="@+id/nav_drawer_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nav_profile_email"
