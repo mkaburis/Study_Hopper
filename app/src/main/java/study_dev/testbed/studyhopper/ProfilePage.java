@@ -16,18 +16,20 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ProfilePage extends AppCompatActivity {
     private String TAG;
@@ -86,7 +88,6 @@ public class ProfilePage extends AppCompatActivity {
                 } else {
                     updateAccount();
                 }
-
             }
         });
 
@@ -119,7 +120,11 @@ public class ProfilePage extends AppCompatActivity {
                             Toast.makeText(ProfilePage.this, "User created successfully.",
                                     Toast.LENGTH_SHORT).show();
                             user = mAuth.getCurrentUser();
-                            addAccount();
+                            try {
+                                addAccount();
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -133,30 +138,12 @@ public class ProfilePage extends AppCompatActivity {
     }
 
     // adds new user's info to database
-    private void addAccount() {
-        Map<String, Object> newUser = getDataFromFields();
+    private void addAccount() throws ParseException {
+        Profile newProfile = getProfile();
+        Major newMajor = getMajor();
         String docId = getUsername();
 
-        db.collection("users").document(docId).set(newUser)
-            .addOnCompleteListener(new OnCompleteListener<Void>() {
-
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    Toast.makeText(ProfilePage.this, "User information saved to database.",
-                            Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ProfilePage.this, Dashboard.class);
-                    intent.putExtra("user-ids", user.getUid());
-                    startActivity(intent);
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(ProfilePage.this, "Error saving profile info to database",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
-
+        saveNewProfileToFireBase(docId, newProfile, newMajor);
     }
 
     // overwrites existing user's info in database
@@ -168,43 +155,64 @@ public class ProfilePage extends AppCompatActivity {
     // fills text boxes with info from database
     private void fillInformation() {
         String userName = getUsername();
-        DocumentReference ref = db.collection("users").document(userName);
+        DocumentReference profileRef = db.collection("users").document(userName);
+        CollectionReference majorsRef = db.collection("users").document(userName).collection("majors");
 
-        ref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-        @Override
-        public void onSuccess(DocumentSnapshot documentSnapshot) {
-            Map x = documentSnapshot.getData();
-            String fname = x.get("first-name").toString();
-            String lname = x.get("last-name").toString();
-            String dob = x.get("dob").toString();
-            String gender = x.get("gender").toString();
-            String major = x.get("major").toString();
-            String college = x.get("college").toString();
-            String uni = x.get("university").toString();
-            String email = mAuth.getCurrentUser().getEmail();
+        profileRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Profile profile = documentSnapshot.toObject(Profile.class);
+                String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-            mFirstName.setText(fname);
-            mLastName.setText(lname);
-            mDob.setText(dob);
-            mGender.setText(gender);
-            mEmail.setText(email);
-            mMajor.setText(major);
-            mCollege.setText(college);
-            mUniversity.setText(uni);
+                if (profile == null) {
+                    Toast.makeText(ProfilePage.this, "Profile info not found",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-            TextInputLayout passwordLayout = findViewById(R.id.passwordLayout);
-            passwordLayout.setVisibility(View.GONE);
-            mPassword.setVisibility(View.GONE);
-            mEmail.setEnabled(false);
-        }
-    }).addOnFailureListener(new OnFailureListener() {
-        @Override
-        public void onFailure(@NonNull Exception e) {
-            Toast.makeText(ProfilePage.this, "Error loading profile info",
-                    Toast.LENGTH_SHORT).show();
-        }
-    });
+                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
+                mFirstName.setText(profile.firstName);
+                mLastName.setText(profile.lastName);
+                mDob.setText(dateFormat.format(profile.dob));
+                mGender.setText(profile.gender);
+                mEmail.setText(email);
+                mUniversity.setText(profile.university);
+
+
+                TextInputLayout passwordLayout = findViewById(R.id.passwordLayout);
+                passwordLayout.setVisibility(View.GONE);
+                mPassword.setVisibility(View.GONE);
+                mEmail.setEnabled(false);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfilePage.this, "Error loading profile info",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        majorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Major currMajor = document.toObject(Major.class);
+                        mMajor.setText(currMajor.major);
+                        mCollege.setText(currMajor.college);
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfilePage.this, "Error loading profile info",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -214,34 +222,76 @@ public class ProfilePage extends AppCompatActivity {
         if (email == null){
             return null;
         }
-        String userName = email.split("@")[0];
 
-        return userName;
+        return email.split("@")[0];
     }
 
-    private Map<String, Object> getDataFromFields() {
+    private Major getMajor() {
+        String collegeStr = mCollege.getText().toString();
+        final String majorStr = mMajor.getText().toString();
+
+        Major major = new Major();
+        major.college = collegeStr;
+        major.major = majorStr;
+
+        return major;
+    }
+
+    private void saveNewProfileToFireBase(final String docId, Profile newProfile, final Major newMajor) {
+        final CollectionReference userRef = db.collection("users");
+
+        userRef.document(docId).set(newProfile).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                boolean done = true;
+                userRef.document(docId).collection("majors").document().set(newMajor).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(ProfilePage.this, "User information saved to database.",
+                                Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ProfilePage.this, Dashboard.class);
+                        intent.putExtra("user-ids", user.getUid());
+                        startActivity(intent);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ProfilePage.this, "Error saving profile info to database",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfilePage.this, "Error saving profile info to database",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private Profile getProfile() {
         String fName = mFirstName.getText().toString();
         String lName = mLastName.getText().toString();
         String birthday = mDob.getText().toString();
         String gender = mGender.getText().toString();
+        String universityStr = mUniversity.getText().toString();
 
-        Timestamp dob = new Timestamp(new Date(birthday));
+        DateFormat df = DateFormat.getDateInstance();
+        Date dob = new Date();
 
-        String university = mUniversity.getText().toString();
-        String college = mCollege.getText().toString();
-        final String major = mMajor.getText().toString();
+        Profile profile = new Profile();
+        profile.firstName = fName;
+        profile.lastName = lName;
+        profile.dob = dob;
+        profile.gender = gender;
+        profile.university = universityStr;
 
-        Map<String, Object> newUser = new HashMap<>();
-        newUser.put("first-name", fName);
-        newUser.put("last-name", lName);
-        newUser.put("dob", dob);
-        newUser.put("gender", gender);
-        newUser.put("university", university);
-        newUser.put("college", college);
-        newUser.put("major", major);
-        newUser.put("last-login", FieldValue.serverTimestamp());
-
-        return newUser;
+        return profile;
     }
 
 }
+
