@@ -67,7 +67,8 @@
                 android:layout_below="@id/studyGroupCardHeader"
                 android:layout_marginTop="20dp"
                 android:scrollbars="vertical"
-                android:padding="5dp">
+                android:padding="5dp" >
+
 
 
             </androidx.recyclerview.widget.RecyclerView>

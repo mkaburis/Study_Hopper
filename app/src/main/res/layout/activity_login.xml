@@ -13,22 +13,21 @@
 
         <ImageView
             android:id="@+id/studyHopperLogo"
+            android:contentDescription="@string/logoDescription"
             android:layout_width="400dp"
             android:layout_height="300dp"
             android:layout_gravity="center"
-            android:contentDescription="@string/logoDescription"
-            android:src="@drawable/study_hopper_mast" />
+            android:src="@drawable/study_hopper_mast"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/studyHopperLogo"
             android:layout_gravity="center"
+            android:layout_below="@+id/studyHopperLogo"
             android:text="@string/app_name"
-            android:textColor="@color/colorPrimaryDark"
             android:textSize="30sp"
-            android:textStyle="bold" />
-
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"/>
 
         <EditText
             android:id="@+id/username"
