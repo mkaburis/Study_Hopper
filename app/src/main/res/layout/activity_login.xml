@@ -6,11 +6,6 @@
     tools:context=".Login">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".Login" />
-
-    <LinearLayout
         android:id="@+id/row_align"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
