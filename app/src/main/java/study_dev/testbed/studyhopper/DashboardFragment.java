@@ -3,15 +3,12 @@ package study_dev.testbed.studyhopper;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,15 +17,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
 public class DashboardFragment extends Fragment {
@@ -44,7 +40,9 @@ public class DashboardFragment extends Fragment {
 
     private FirebaseAuth mAuth;
 
-    private String personaName = "Welcome Demo Demo";
+    private String userName;
+
+    private String personaName;
 
     @SuppressLint("SetTextI18n")
     @Nullable
@@ -60,7 +58,6 @@ public class DashboardFragment extends Fragment {
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Hadoop & Big Data", "CIS 4930"));
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_3, "GRE Prep", "TestPrep"));
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Test", "Test"));
-
 
 
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
@@ -82,7 +79,7 @@ public class DashboardFragment extends Fragment {
         studyRoomReservationCard = v.getRootView().findViewById(R.id.studyRoomReservationsCard);
         studyRoomReservationCard.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Activity activity = (Activity) getContext();
                 Intent in = new Intent(getContext(), StudyRoomReservations.class);
                 startActivity(in);
@@ -93,33 +90,38 @@ public class DashboardFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true); //ONLY for FIXED Size recylcerView remove later
         mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new StudyGroupAdapter(studyGroupList);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
         // Retrieve user email and parse it
         mAuth = FirebaseAuth.getInstance();
         String email = mAuth.getCurrentUser().getEmail();
         int parseIndex = email.indexOf('@');
-        String userName = email.substring(0, parseIndex);
+        userName = email.substring(0, parseIndex);
 
-
-
+        // Retreive first and last name of user from the database
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("users").document(userName).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        String first_name = documentSnapshot.getString("first-name");
-                        String last_name = documentSnapshot.getString("last-name");
+        DocumentReference docRef = db.collection("users").document(userName);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        String first_name = document.getString("first-name");
+                        String last_name = document.getString("last-name");
 
                         personaName = "Welcome " + first_name + " " + last_name + "!";
+                        welcomeMsg.setText(personaName);
 
+                    } else {
+                        String exception = task.getException().toString();
+                        Toast.makeText(getContext(), exception, Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
+            }
+        });
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-        welcomeMsg.setText(personaName);
-        
         return v;
 
     }

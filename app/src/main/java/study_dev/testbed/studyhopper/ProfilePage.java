@@ -88,7 +88,6 @@ public class ProfilePage extends AppCompatActivity {
                 } else {
                     updateAccount();
                 }
-
             }
         });
 
@@ -223,9 +222,8 @@ public class ProfilePage extends AppCompatActivity {
         if (email == null){
             return null;
         }
-        String userName = email.split("@")[0];
 
-        return userName;
+        return email.split("@")[0];
     }
 
     private Major getMajor(){
@@ -275,7 +273,7 @@ public class ProfilePage extends AppCompatActivity {
 
     }
 
-    private Profile getProfile() throws ParseException {
+    private Profile getProfile() {
         String fName = mFirstName.getText().toString();
         String lName = mLastName.getText().toString();
         String birthday = mDob.getText().toString();
