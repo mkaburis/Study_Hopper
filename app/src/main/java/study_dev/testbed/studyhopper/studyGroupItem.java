@@ -11,6 +11,10 @@ public class studyGroupItem {
         mText2 = text2;
     }
 
+    public void changeText1(String text){
+        mText1 = text;
+    }
+
     public int getImageResource() {
         return mImageResource;
     }

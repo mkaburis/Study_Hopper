@@ -40,7 +40,7 @@ public class DashboardFragment extends Fragment {
 
     private static final String TAG = "DashboardFragment";
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private StudyGroupAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private TextView welcomeMsg;
@@ -59,7 +59,7 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-        ArrayList<studyGroupItem> studyGroupList = new ArrayList<>();
+        final ArrayList<studyGroupItem> studyGroupList = new ArrayList<>();
         studyGroupList.add(new studyGroupItem(R.drawable.ic_study_group_color, "Mobile Devices", "COP 4656"));
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Automata Fun", "COT 4210"));
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_3, "How to not go to Jail", "CIS 4250"));
@@ -101,6 +101,14 @@ public class DashboardFragment extends Fragment {
         mAdapter = new StudyGroupAdapter(studyGroupList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        mAdapter.setOnItemClickListener(new StudyGroupAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                studyGroupList.get(position).changeText1("Clicked");
+                mAdapter.notifyItemChanged(position);
+            }
+        });
 
         // Retrieve user email and parse it
         mAuth = FirebaseAuth.getInstance();
