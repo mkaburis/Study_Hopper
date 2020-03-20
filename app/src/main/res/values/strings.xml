@@ -29,6 +29,9 @@
     <string name="title_activity_study_locations_map">Map</string>
     <string name="dashboard">Dashboard</string>
     <string name="study_group_finder">Study Group Finder</string>
+    <string name="study_session_card_title">Current Study Sessions</string>
+    <string name="study_session_content_description">Image for study sessions</string>
+    <string name="study_group_circle_color_description">Icon for group</string>
     <string name="messages">Messages</string>
     <string name="my_groups">My Groups</string>
     <string name="study_locations">Study Locations</string>
