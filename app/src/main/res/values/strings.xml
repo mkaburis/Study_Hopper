@@ -7,7 +7,7 @@
     <string name="prompt_password">Password</string>
     <string name="sign_in_button">Sign in</string>
     <string name="register_button">Register</string>
-    <string name="title_activity_profile_page">ProfilePage</string>
+    <string name="title_activity_profile_page">Profile Page</string>
     <string name="title_activity_study_group_finder">StudyGroupFinder</string>
     <string name="title_activity_reservation_page">StudyRoomReservations</string>
     <string name="study_groups_card_title">Your Study Groups</string>
@@ -40,4 +40,9 @@
     <string name="last_name">Last Name</string>
     <string name="password">Password</string>
     <string name="logoDescription">Study Hopper Logo</string>
+    <string name="profile_tab">Profile</string>
+    <string name="classes_tab">Classes</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
