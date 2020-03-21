@@ -105,8 +105,10 @@ public class DashboardFragment extends Fragment {
         mAdapter.setOnItemClickListener(new StudyGroupAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                studyGroupList.get(position).changeText1("Clicked");
-                mAdapter.notifyItemChanged(position);
+                // start the dashboard activity
+                Intent intent = new Intent(getContext(), StudyGroupActivity.class);
+                intent.putExtra("Study Group Item", studyGroupList.get(position));
+                startActivity(intent);
             }
         });
 
