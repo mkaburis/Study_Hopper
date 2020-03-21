@@ -2,8 +2,10 @@ package study_dev.testbed.studyhopper;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -27,6 +29,8 @@ public class StudyGroupActivity extends AppCompatActivity {
     private static final String TAG = "StudyGroupActivity";
 
     private LineChart mChart;
+    CardView groupMembersCard;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,16 @@ public class StudyGroupActivity extends AppCompatActivity {
             }
         });
 
+        groupMembersCard = findViewById(R.id.studyGroupMemberCard);
+        groupMembersCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StudyGroupActivity.this, GroupMemberList.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
+        });
+
         mChart = findViewById(R.id.lineChart);
 
 //        mChart.setOnChartGestureListener(StudyGroupActivity.this);
@@ -72,7 +86,7 @@ public class StudyGroupActivity extends AppCompatActivity {
 
         mChart.setDragEnabled(true);
         mChart.setScaleEnabled(false);
-        mChart.setBackgroundColor(getColor(R.color.safariYellow));
+        mChart.setBackgroundColor(Color.WHITE);
 
 
         ArrayList<Entry> yValues = new ArrayList<>();

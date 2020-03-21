@@ -89,6 +89,7 @@
                 android:contentDescription="@string/study_session_content_description"
                 android:src="@drawable/ic_study_sessions" />
 
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
@@ -134,25 +135,56 @@
     </androidx.cardview.widget.CardView>
 
 
-    <TextView
-        android:id="@+id/studyGroupStatsTitle"
+    <androidx.cardview.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/studyGroupStatsCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/studyGroupMemberCard"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="Group Statistics"
-        android:textSize="25sp"
-        android:textColor="@android:color/black" />
-
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart"
-        android:layout_below="@id/studyGroupStatsTitle"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_margin="6dp"
+        android:layout_height="250dp"
+        android:layout_below="@+id/studyGroupMemberCard"
         android:padding="8dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_margin="6dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardBackgroundColor="@color/safariYellowGreen">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/studyGroupStatsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/study_group_statistics"
+            android:textColor="@color/colorWhite"
+            android:textSize="25sp" />
+
+
+            <ImageView
+                android:id="@+id/studyGroupStatsImage"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@string/study_group_statistics"
+                android:src="@drawable/ic_study_group_stats" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_below="@id/studyGroupStatsText"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_margin="6dp"
+                android:padding="8dp"
+                android:layout_marginTop="20dp"/>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
 
 
 
