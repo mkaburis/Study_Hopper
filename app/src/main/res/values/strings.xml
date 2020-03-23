@@ -7,7 +7,7 @@
     <string name="prompt_password">Password</string>
     <string name="sign_in_button">Sign in</string>
     <string name="register_button">Register</string>
-    <string name="title_activity_profile_page">Profile Page</string>
+    <string name="title_activity_profile_page">ProfilePage</string>
     <string name="title_activity_study_group_finder">StudyGroupFinder</string>
     <string name="title_activity_reservation_page">StudyRoomReservations</string>
     <string name="study_groups_card_title">Your Study Groups</string>
