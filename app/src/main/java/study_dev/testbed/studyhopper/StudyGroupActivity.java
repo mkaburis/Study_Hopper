@@ -128,7 +128,7 @@ public class StudyGroupActivity extends AppCompatActivity {
     public void onBackPressed() {
 
 
-        Intent in = new Intent(getBaseContext(), Dashboard.class);
+        Intent in = new Intent(getBaseContext(), StudyGroupActivity.class);
         startActivity(in);
         overridePendingTransition(0, 0);
     }

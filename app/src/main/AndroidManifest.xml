@@ -43,7 +43,7 @@
             android:label="Messages">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.Dashboard" />
+                android:value="study_dev.testbed.studyhopper.StudyGroupActivity" />
         </activity>
         <activity
             android:name=".Dashboard"
