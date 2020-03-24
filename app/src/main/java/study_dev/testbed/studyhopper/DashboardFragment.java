@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 import static androidx.constraintlayout.widget.Constraints.TAG;
@@ -42,11 +46,11 @@ public class DashboardFragment extends Fragment {
     private CardView groupFinderCard;
     private CardView studyRoomReservationCard;
 
-    private FirebaseAuth mAuth;
+    private String userName, personaName;
 
-    private String userName;
-
-    private String personaName;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private DocumentReference docRef = db.collection("users").document(getUserName());
 
     @SuppressLint("SetTextI18n")
     @Nullable
@@ -107,31 +111,23 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        // Retrieve user email and parse it
-        mAuth = FirebaseAuth.getInstance();
-        String email = mAuth.getCurrentUser().getEmail();
-        int parseIndex = email.indexOf('@');
-        userName = email.substring(0, parseIndex);
-
         // Retreive first and last name of user from the database
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users").document(userName);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        String first_name = document.getString("first-name");
-                        String last_name = document.getString("last-name");
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(e != null) {
+                    Toast.makeText(getContext(), "Error while loading!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, e.toString());
+                }
+                if(documentSnapshot.exists()) {
+                    String first_name = documentSnapshot.getString("first-name");
+                    String last_name = documentSnapshot.getString("last-name");
 
-                        personaName = "Welcome " + first_name + " " + last_name + "!";
-                        welcomeMsg.setText(personaName);
-
-                    } else {
-                        String exception = task.getException().toString();
-                        Toast.makeText(getContext(), exception, Toast.LENGTH_SHORT).show();
-                    }
+                    personaName = "Welcome " + first_name + " " + last_name + "!";
+                    welcomeMsg.setText(personaName);
+                }
+                else {
+                    welcomeMsg.setText("Error!");
                 }
             }
         });
@@ -140,4 +136,10 @@ public class DashboardFragment extends Fragment {
 
     }
 
+
+    private String getUserName() {
+        String email = mAuth.getCurrentUser().getEmail();
+        int parseIndex = email.indexOf('@');
+        return email.substring(0, parseIndex);
+    }
 }
