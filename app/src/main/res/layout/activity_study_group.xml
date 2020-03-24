@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StudyGroupActivity">
-    
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/messageFAB"
         android:layout_width="wrap_content"
@@ -23,17 +23,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
-    <TextView
-        android:id="@+id/groupName"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:text=""
-        android:textColor="@android:color/black"
-        app:autoSizeMaxTextSize="30sp"
-        app:autoSizeMinTextSize="20sp"
-        app:autoSizeStepGranularity="2sp"
-        app:autoSizeTextType="uniform"/>
+        <TextView
+            android:id="@+id/groupName"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:text=""
+            android:textColor="@android:color/black"
+            app:autoSizeMaxTextSize="30sp"
+            app:autoSizeMinTextSize="20sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"/>
 
         <ImageView
             android:id="@+id/groupCircleImage"
@@ -136,30 +136,29 @@
 
 
     <androidx.cardview.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/studyGroupStatsCard"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_below="@+id/studyGroupMemberCard"
         android:padding="8dp"
         android:layout_margin="6dp"
-        card_view:cardCornerRadius="5dp"
-        card_view:cardBackgroundColor="@color/safariYellowGreen">
+        app:cardCornerRadius="5dp"
+        app:cardBackgroundColor="@color/safariYellowGreen">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/studyGroupStatsText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/study_group_statistics"
-            android:textColor="@color/colorWhite"
-            android:textSize="25sp" />
+            <TextView
+                android:id="@+id/studyGroupStatsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="@string/study_group_statistics"
+                android:textColor="@color/colorWhite"
+                android:textSize="25sp" />
 
 
             <ImageView
@@ -169,6 +168,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp"
                 android:contentDescription="@string/study_group_statistics"
+                android:paddingBottom="5dp"
                 android:src="@drawable/ic_study_group_stats" />
 
             <com.github.mikephil.charting.charts.LineChart

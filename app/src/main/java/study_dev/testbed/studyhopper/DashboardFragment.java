@@ -111,7 +111,7 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        // Retreive first and last name of user from the database
+        // Retrieve first and last name of user from the database
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
