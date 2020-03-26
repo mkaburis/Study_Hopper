@@ -22,8 +22,6 @@ public class StudyLocationsMap extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_locations_map);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -59,5 +57,19 @@ public class StudyLocationsMap extends AppCompatActivity implements OnMapReadyCa
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent in = new Intent(getBaseContext(), Dashboard.class);
+        startActivity(in);
+        overridePendingTransition(0, 0);
+    }
+
 
 }

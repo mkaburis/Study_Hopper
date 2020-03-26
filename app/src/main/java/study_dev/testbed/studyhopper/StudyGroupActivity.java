@@ -72,7 +72,9 @@ public class StudyGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(StudyGroupActivity.this, Messages.class);
+                intent.putExtra("Study Group Data", studyGroupItem);
                 startActivity(intent);
+                overridePendingTransition(0, 0);
             }
         });
 
@@ -141,6 +143,32 @@ public class StudyGroupActivity extends AppCompatActivity {
         s.setSpan(new ForegroundColorSpan(Color.RED), 0, s.length(), 0);
         leaveGroupMenuItem.setTitle(s);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.add_session_option:
+                Intent in = new Intent(StudyGroupActivity.this, SessionPage.class);
+                in.putExtra("Study Group Data", studyGroupItem);
+                startActivity(in);
+                overridePendingTransition(0, 0);
+                return true;
+
+            case R.id.group_settings_option:
+                //TODO implement functionality for when group owner wishes to change
+                // the group's settings
+            case R.id.leave_group_option:
+
+            // TODO implement functionality for when user leaves the group
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
     @Override

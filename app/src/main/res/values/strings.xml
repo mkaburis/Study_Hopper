@@ -28,6 +28,12 @@
     <string name="study_group_settings">Group Settings</string>
     <string name="study_group_leave_group">Leave this group</string>
     <string name="study_group_add_session">Add Session</string>
+    <string name="session_name">Session Name</string>
+    <string name="session_description">Session Description</string>
+    <string name="session_location">Session Location</string>
+    <string name="session_date">Date of Session</string>
+    <string name="session_start_time">Session Start Time</string>
+    <string name="session_end_time">Session End Time</string>
     <string name="messages">Messages</string>
     <string name="my_groups">My Groups</string>
     <string name="study_locations">Study Locations</string>
