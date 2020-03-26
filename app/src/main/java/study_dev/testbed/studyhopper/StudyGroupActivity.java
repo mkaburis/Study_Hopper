@@ -1,5 +1,6 @@
 package study_dev.testbed.studyhopper;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -9,6 +10,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +33,7 @@ import java.util.ArrayList;
 public class StudyGroupActivity extends AppCompatActivity {
 
     private static final String TAG = "StudyGroupActivity";
+    private studyGroupItem studyGroupItem;
 
     private LineChart mChart;
     CardView groupMembersCard;
@@ -38,7 +45,7 @@ public class StudyGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_study_group);
 
         Intent intent = getIntent();
-        studyGroupItem studyGroupItem = intent.getParcelableExtra("Study Group Item");
+        studyGroupItem = intent.getParcelableExtra("Study Group Item");
 
         int imageRes = studyGroupItem.getImageResource();
         String line1 = studyGroupItem.getText1();
@@ -74,6 +81,7 @@ public class StudyGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(StudyGroupActivity.this, GroupMemberList.class);
+                intent.putExtra("Study Group Data", studyGroupItem);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }
@@ -118,6 +126,23 @@ public class StudyGroupActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.study_group_menu, menu);
+
+        MenuItem leaveGroupMenuItem = menu.findItem(R.id.leave_group_option);
+        SpannableString s = new SpannableString(leaveGroupMenuItem.getTitle());
+        s.setSpan(new ForegroundColorSpan(Color.RED), 0, s.length(), 0);
+        leaveGroupMenuItem.setTitle(s);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -128,8 +153,9 @@ public class StudyGroupActivity extends AppCompatActivity {
     public void onBackPressed() {
 
 
-        Intent in = new Intent(getBaseContext(), StudyGroupActivity.class);
+        Intent in = new Intent(getBaseContext(), Dashboard.class);
         startActivity(in);
         overridePendingTransition(0, 0);
     }
 }
+

@@ -93,6 +93,11 @@ public class ProfilePage extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     // registers account with database and calls method to store info in DB
     private void createAccount() {
         final String email = mEmail.getText().toString();

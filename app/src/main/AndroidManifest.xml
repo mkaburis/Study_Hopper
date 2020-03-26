@@ -16,7 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".GroupMemberList" />
+        <activity
+            android:name=".GroupMemberList"
+            android:label="Group Members List" >
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="study_dev.testbed.studyhopper.StudyGroupActivity" />
+        </activity>
+
         <activity
             android:name=".StudyGroupActivity"
             android:value="study_dev.testbed.studyhopper.Dashboard" />
