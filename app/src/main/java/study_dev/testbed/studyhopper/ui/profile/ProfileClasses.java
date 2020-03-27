@@ -1,12 +1,19 @@
 package study_dev.testbed.studyhopper.ui.profile;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import study_dev.testbed.studyhopper.R;
 
@@ -20,6 +27,16 @@ public class ProfileClasses extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private RecyclerView mClassRecycleView;
+    private TextInputEditText mCourseName;
+    private TextInputEditText mSubject;
+    private TextInputEditText mNumber;
+    private TextInputEditText mSection;
+    private TextInputEditText mSemester;
+    private TextInputEditText mYear;
+    private Button mAddButton;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -47,5 +64,29 @@ public class ProfileClasses extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile_classes, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        mAuth = FirebaseAuth.getInstance();
+
+        mClassRecycleView = view.findViewById(R.id.classRecycleViewer);
+        mAddButton = view.findViewById(R.id.addCourseButton);
+
+        mCourseName = view.findViewById(R.id.courseNameText);
+        mSubject = view.findViewById(R.id.courseSubjectText);
+        mNumber = view.findViewById(R.id.courseNumberText);
+        mSection = view.findViewById(R.id.courseSectionText);
+        mYear = view.findViewById(R.id.courseYearText);
+        mSemester = view.findViewById(R.id.courseSemesterText);
+
+
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Class Saved.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
