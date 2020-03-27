@@ -22,27 +22,33 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
 public class DashboardFragment extends Fragment {
 
     private static final String TAG = "DashboardFragment";
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private StudyGroupAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private TextView welcomeMsg;
     private CardView groupFinderCard;
     private CardView studyRoomReservationCard;
 
-    private FirebaseAuth mAuth;
+    private String userName, personaName;
 
-    private String userName;
-
-    private String personaName;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private DocumentReference docRef = db.collection("users").document(getUserName());
 
     @SuppressLint("SetTextI18n")
     @Nullable
@@ -50,7 +56,7 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-        ArrayList<studyGroupItem> studyGroupList = new ArrayList<>();
+        final ArrayList<studyGroupItem> studyGroupList = new ArrayList<>();
         studyGroupList.add(new studyGroupItem(R.drawable.ic_study_group_color, "Mobile Devices", "COP 4656"));
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Automata Fun", "COT 4210"));
         studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_3, "How to not go to Jail", "CIS 4250"));
@@ -93,31 +99,33 @@ public class DashboardFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        // Retrieve user email and parse it
-        mAuth = FirebaseAuth.getInstance();
-        String email = mAuth.getCurrentUser().getEmail();
-        int parseIndex = email.indexOf('@');
-        userName = email.substring(0, parseIndex);
-
-        // Retreive first and last name of user from the database
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users").document(userName);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        mAdapter.setOnItemClickListener(new StudyGroupAdapter.OnItemClickListener() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document != null) {
-                        String first_name = document.getString("first-name");
-                        String last_name = document.getString("last-name");
+            public void onItemClick(int position) {
+                // start the dashboard activity
+                Intent intent = new Intent(getContext(), StudyGroupActivity.class);
+                intent.putExtra("Study Group Item", studyGroupList.get(position));
+                startActivity(intent);
+            }
+        });
 
-                        personaName = "Welcome " + first_name + " " + last_name + "!";
-                        welcomeMsg.setText(personaName);
+        // Retrieve first and last name of user from the database
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(e != null) {
+                    Toast.makeText(getContext(), "Error while loading!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, e.toString());
+                }
+                if(documentSnapshot.exists()) {
+                    String first_name = documentSnapshot.getString("first-name");
+                    String last_name = documentSnapshot.getString("last-name");
 
-                    } else {
-                        String exception = task.getException().toString();
-                        Toast.makeText(getContext(), exception, Toast.LENGTH_SHORT).show();
-                    }
+                    personaName = "Welcome " + first_name + " " + last_name + "!";
+                    welcomeMsg.setText(personaName);
+                }
+                else {
+                    welcomeMsg.setText("Error!");
                 }
             }
         });
@@ -126,4 +134,10 @@ public class DashboardFragment extends Fragment {
 
     }
 
+
+    private String getUserName() {
+        String email = mAuth.getCurrentUser().getEmail();
+        int parseIndex = email.indexOf('@');
+        return email.substring(0, parseIndex);
+    }
 }

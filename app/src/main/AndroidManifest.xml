@@ -16,9 +16,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
+        <activity android:name=".GroupMemberList" />
+        <activity
+            android:name=".StudyGroupActivity"
+            android:value="study_dev.testbed.studyhopper.Dashboard" />
         <activity
             android:name=".StudyRoomReservations"
-            android:label="@string/title_activity_reservation_page"></activity>
+            android:label="@string/title_activity_reservation_page" />
         <activity
             android:name=".Login"
             android:label="@string/title_activity_login">
@@ -66,20 +70,11 @@
         <activity
             android:name=".SessionDetails"
             android:label="@string/title_activity_session_details"
-            android:parentActivityName=".StudyGroupDetails"
+            android:parentActivityName=".StudyGroupActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.StudyGroupDetails" />
-        </activity>
-        <activity
-            android:name=".StudyGroupDetails"
-            android:label="@string/title_activity_study_group_details"
-            android:parentActivityName=".Dashboard"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.Dashboard" />
+                android:value="study_dev.testbed.studyhopper.StudyGroupActivity" />
         </activity>
         <activity
             android:name=".ui.profile.ProfilePage"
