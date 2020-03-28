@@ -59,4 +59,9 @@
     <string name="year">Year</string>
     <string name="add_button_text">Add</string>
     <string name="current_course_list">Current Course List</string>
+    <string name="ex_course_name">Software Development for Mobile Devices</string>
+    <string name="ex_course_code">COP</string>
+    <string name="ex_course_number">4656</string>
+    <string name="ex_course_section">01</string>
+    <string name="remove_button_desc">Button to remove class</string>
 </resources>
