@@ -1,5 +1,6 @@
 package study_dev.testbed.studyhopper.ui.profile;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -11,11 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import study_dev.testbed.studyhopper.R;
-import study_dev.testbed.studyhopper.studyGroupItem;
 
 public class ClassesListAdapter extends RecyclerView.Adapter<ClassesListAdapter.ClassesListViewHolder> {
 
-    private ArrayList<studyGroupItem> mClassList;
+    private ArrayList<classListItem> mClassList;
     private OnItemClickListener mListener;
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -24,22 +24,6 @@ public class ClassesListAdapter extends RecyclerView.Adapter<ClassesListAdapter.
 
     public interface OnItemClickListener {
         void onItemClick(int position);
-    }
-
-    @NonNull
-    @Override
-    public ClassesListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ClassesListViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return mClassList.size();
     }
 
     public static class ClassesListViewHolder extends RecyclerView.ViewHolder {
@@ -73,5 +57,32 @@ public class ClassesListAdapter extends RecyclerView.Adapter<ClassesListAdapter.
                 }
             });
         }
+    }
+
+    public ClassesListAdapter(ArrayList<classListItem> classList) {
+        mClassList = classList;
+    }
+
+    @NonNull
+    @Override
+    public ClassesListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.class_item, parent, false);
+        ClassesListViewHolder classListViewHolder = new ClassesListViewHolder(v, mListener);
+        return classListViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ClassesListViewHolder holder, int position) {
+        classListItem currentItem = mClassList.get(position);
+
+        holder.mClassName.setText(currentItem.getClassName());
+        holder.mClassSubject.setText(currentItem.getClassSubject());
+        holder.mClassNumber.setText(currentItem.getClassNumber());
+        holder.mClassSection.setText(currentItem.getClassSection());
+    }
+
+    @Override
+    public int getItemCount() {
+        return mClassList.size();
     }
 }

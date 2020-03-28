@@ -9,11 +9,14 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 
 import study_dev.testbed.studyhopper.R;
 
@@ -28,6 +31,9 @@ public class ProfileClasses extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
     private RecyclerView mClassRecycleView;
+    private ClassesListAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     private TextInputEditText mCourseName;
     private TextInputEditText mSubject;
     private TextInputEditText mNumber;
@@ -35,8 +41,10 @@ public class ProfileClasses extends Fragment {
     private TextInputEditText mSemester;
     private TextInputEditText mYear;
     private Button mAddButton;
+
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -62,8 +70,26 @@ public class ProfileClasses extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        final ArrayList<classListItem> classList = new ArrayList<>();
+
+        for (int i = 0; i < 10; ++i) {
+            int clasNum = 122 + i;
+            classListItem item = new classListItem(i + 1, "Computer Class", "COP", ("" + clasNum), "01");
+            classList.add(item);
+        }
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_classes, container, false);
+        View v = inflater.inflate(R.layout.fragment_profile_classes, container, false);
+
+        mClassRecycleView = v.getRootView().findViewById(R.id.classRecycleViewer);
+        mClassRecycleView.setHasFixedSize(true); //ONLY for FIXED Size recylcerView remove later
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mAdapter = new ClassesListAdapter(classList);
+        mClassRecycleView.setLayoutManager(mLayoutManager);
+        mClassRecycleView.setAdapter(mAdapter);
+
+        return v;
     }
 
     @Override
