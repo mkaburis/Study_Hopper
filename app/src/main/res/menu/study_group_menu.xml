@@ -4,7 +4,7 @@
 
         <item
             android:id="@+id/add_session_option"
-            android:icon="@drawable/ic_add_session"
+            android:icon="@drawable/ic_add"
             android:title="@string/study_group_add_session"
             app:showAsAction="ifRoom"/>
 

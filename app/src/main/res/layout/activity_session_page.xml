@@ -12,6 +12,7 @@
         android:id="@+id/edit_text_session_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:hint="@string/session_name"
         android:inputType="text"/>
 
@@ -19,6 +20,7 @@
         android:id="@+id/edit_text_session_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:hint="@string/session_description"
         android:inputType="textMultiLine" />
 
@@ -26,6 +28,7 @@
         android:id="@+id/edit_text_session_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:hint="@string/session_location"
         android:inputType="textPostalAddress" />
 
@@ -33,6 +36,7 @@
         android:id="@+id/edit_text_session_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:onClick="selectSessionDate"
         android:cursorVisible="false"
         android:focusable="false"
@@ -45,6 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/session_start_time"
+        android:layout_margin="10dp"
         android:onClick="selectSessionTime"
         android:cursorVisible="false"
         android:focusable="false"
@@ -54,6 +59,7 @@
         android:id="@+id/edit_text_session_end_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:hint="@string/session_end_time"
         android:onClick="selectSessionTime"
         android:cursorVisible="false"
@@ -61,10 +67,14 @@
         android:inputType="none" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/add_session_btn"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="15dp"
         android:text="@string/study_group_add_session"
-        android:textSize="20sp"/>
+        android:background="@color/safariGreen"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp" />
 
 </LinearLayout>

@@ -16,9 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
+        <activity android:name=".CreateGroup"></activity>
         <activity
             android:name=".SessionPage"
-            android:label="Study Session"/>
+            android:label="Study Session" />
         <activity
             android:name=".GroupMemberList"
             android:label="Group Members List">
@@ -40,7 +41,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="study_dev.testbed.studyhopper.Login" />
         </activity>
-        <activity android:name=".MyGroups" />
+        <activity
+            android:name=".MyGroups"
+            android:label="@string/my_groups" />
         <activity
             android:name=".StudyGroupFinder"
             android:label="StudyGroupFinder">
