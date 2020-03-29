@@ -17,13 +17,13 @@
         android:layout_margin="4dp">
 
         <TextView
-            android:id="@+id/studyGroupName"
+            android:id="@+id/text_view_group_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="20dp"
             android:text="Line 1"
-            android:layout_toStartOf="@id/studyGroupColor"
+            android:layout_toStartOf="@id/image_view_group_color"
             android:layout_alignParentStart="true"
             android:maxLines="1"
             android:textSize="20sp"
@@ -31,10 +31,10 @@
             android:ellipsize="end"
             android:textColor="@android:color/black"/>
         <TextView
-            android:id="@+id/courseName"
+            android:id="@+id/text_view_course_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/studyGroupName"
+            android:layout_below="@+id/text_view_group_name"
             android:layout_alignParentStart="true"
             android:layout_marginStart="18dp"
             android:layout_marginEnd="20dp"
@@ -42,7 +42,7 @@
             android:textSize="15sp"/>
 
         <ImageView
-            android:id="@+id/studyGroupColor"
+            android:id="@+id/image_view_group_color"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:padding="2dp"

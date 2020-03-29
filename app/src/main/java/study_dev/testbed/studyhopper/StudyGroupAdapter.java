@@ -33,9 +33,9 @@ public class StudyGroupAdapter extends RecyclerView.Adapter<StudyGroupAdapter.St
         public StudyGroupViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
 
-            mTextView1 = itemView.findViewById(R.id.studyGroupName);
-            mTextView2 = itemView.findViewById(R.id.courseName);
-            mImageView = itemView.findViewById(R.id.studyGroupColor);
+            mTextView1 = itemView.findViewById(R.id.text_view_group_name);
+            mTextView2 = itemView.findViewById(R.id.text_view_course_code);
+            mImageView = itemView.findViewById(R.id.image_view_group_color);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
