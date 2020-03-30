@@ -1,24 +1,35 @@
 package study_dev.testbed.studyhopper.ui.profile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
 import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.models.StudentClass;
 
 
 /**
@@ -34,6 +45,7 @@ public class ProfileClasses extends Fragment {
     private ClassesListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private String TAG;
     private TextInputEditText mCourseName;
     private TextInputEditText mSubject;
     private TextInputEditText mNumber;
@@ -41,6 +53,8 @@ public class ProfileClasses extends Fragment {
     private TextInputEditText mSemester;
     private TextInputEditText mYear;
     private Button mAddButton;
+
+    private ArrayList<classListItem> classList;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -70,20 +84,23 @@ public class ProfileClasses extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        classList = new ArrayList<>();
 
-        final ArrayList<classListItem> classList = new ArrayList<>();
+        fetchClassesFromDB();
 
-        for (int i = 0; i < 10; ++i) {
+        /*for (int i = 0; i < 10; ++i) {
             int clasNum = 122 + i;
-            classListItem item = new classListItem(i + 1, "Computer Class", "COP", ("" + clasNum), "01");
+            classListItem item = new classListItem("" + (i + 1), "Computer Class", "COP", ("" + clasNum), "01");
             classList.add(item);
-        }
+        }*/
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile_classes, container, false);
 
         mClassRecycleView = v.getRootView().findViewById(R.id.classRecycleViewer);
-        mClassRecycleView.setHasFixedSize(true); //ONLY for FIXED Size recylcerView remove later
+        mClassRecycleView.setHasFixedSize(false); //ONLY for FIXED Size recylcerView remove later
         mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new ClassesListAdapter(classList);
         mClassRecycleView.setLayoutManager(mLayoutManager);
@@ -94,8 +111,6 @@ public class ProfileClasses extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mAuth = FirebaseAuth.getInstance();
-
         mClassRecycleView = view.findViewById(R.id.classRecycleViewer);
         mAddButton = view.findViewById(R.id.addCourseButton);
 
@@ -110,9 +125,104 @@ public class ProfileClasses extends Fragment {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Class Saved.",
+                String name = mCourseName.getText().toString();
+                String subject = mSubject.getText().toString();
+                String number = mNumber.getText().toString();
+                String section = mSection.getText().toString();
+
+                boolean isValidated = true;
+
+                if (validateText(name)) {
+                    mCourseName.setError("Course Name cannot be empty");
+                    isValidated = false;
+                }
+                if (validateText(subject)) {
+                    mSubject.setError("Course Name cannot be empty");
+                    isValidated = false;
+                }
+                if (validateText(number)) {
+                    mNumber.setError("Course Name cannot be empty");
+                    isValidated = false;
+                }
+
+                if (isValidated) {
+                    StudentClass newClass = new StudentClass(name, subject, number, section);
+                    addClassToFireBase(newClass);
+                }
+            }
+        });
+    }
+
+    private void fetchClassesFromDB() {
+        String userName = getUsername();
+
+        DocumentReference userRef = db.collection("users").document(userName);
+
+        CollectionReference classRef = userRef.collection("classes");
+
+        classRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        StudentClass sClass = document.toObject(StudentClass.class);
+                        sClass.setDocumentId(document.getId());
+
+                        classListItem listItem = new classListItem(sClass.getDocumentId(), sClass.getClassName(), sClass.getSubject(), sClass.getNumber(), sClass.getSection());
+                        classList.add(listItem);
+                        reloadRecycler();
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), "Error pulling classes from database",
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void addClassToFireBase(StudentClass newClass) {
+        String userName = getUsername();
+
+        CollectionReference classRef = db.collection("users").document(userName).collection("classes");
+
+        classRef.document().set(newClass).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(getContext(), "Class added to db", Toast.LENGTH_SHORT).show();
+                reloadRecycler();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), "Error saving profile info to database",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private boolean validateText(String text) {
+        return text != null && text.isEmpty();
+    }
+
+    private String getUsername() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        final String email = user.getEmail();
+        if (email == null) {
+            return null;
+        }
+
+        return email.split("@")[0];
+    }
+
+    private void reloadRecycler() {
+        mAdapter = new ClassesListAdapter(classList);
+        mClassRecycleView.setAdapter(mAdapter);
     }
 }

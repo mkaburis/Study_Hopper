@@ -79,7 +79,8 @@
         <activity
             android:name=".ui.profile.ProfilePage"
             android:label="@string/title_activity_profile_page"
-            android:parentActivityName=".Dashboard">
+            android:parentActivityName=".Dashboard"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="study_dev.testbed.studyhopper.Dashboard" />

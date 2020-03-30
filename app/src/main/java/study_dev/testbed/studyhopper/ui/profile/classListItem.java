@@ -15,13 +15,13 @@ public class classListItem implements Parcelable {
             return new classListItem[size];
         }
     };
-    private int mClassId;
+    private String mClassId;
     private String mClassName;
     private String mClassSubject;
     private String mClassNumber;
     private String mClassSection;
 
-    public classListItem(int classId, String text1, String text2, String text3, String text4) {
+    public classListItem(String classId, String text1, String text2, String text3, String text4) {
         mClassId = classId;
         mClassName = text1;
         mClassSubject = text2;
@@ -30,7 +30,7 @@ public class classListItem implements Parcelable {
     }
 
     protected classListItem(Parcel in) {
-        mClassId = in.readInt();
+        mClassId = in.readString();
         mClassName = in.readString();
         mClassSubject = in.readString();
         mClassNumber = in.readString();
@@ -42,7 +42,7 @@ public class classListItem implements Parcelable {
         return 0;
     }
 
-    public int getClassId() {
+    public String getClassId() {
         return mClassId;
     }
 
@@ -64,7 +64,7 @@ public class classListItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mClassId);
+        dest.writeString(mClassId);
         dest.writeString(mClassName);
         dest.writeString(mClassSubject);
         dest.writeString(mClassNumber);
