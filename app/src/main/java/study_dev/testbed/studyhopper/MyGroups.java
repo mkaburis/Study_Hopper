@@ -3,8 +3,10 @@ package study_dev.testbed.studyhopper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,6 +34,7 @@ public class MyGroups extends AppCompatActivity {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Establishes the recycler view for the dropdown menu for groups
         setUpRecyclerView();
     }
 
@@ -70,6 +73,24 @@ public class MyGroups extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.create_group_option:
+                Intent intent = new Intent(MyGroups.this, CreateGroup.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+
+            case R.id.search_group_option:
+                // TODO implement search for group activity
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
@@ -80,6 +101,5 @@ public class MyGroups extends AppCompatActivity {
         Intent in = new Intent(getBaseContext(), Dashboard.class);
         startActivity(in);
         overridePendingTransition(0, 0);
-
     }
 }

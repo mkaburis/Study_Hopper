@@ -35,6 +35,9 @@
     <string name="session_start_time">Session Start Time</string>
     <string name="session_end_time">Session End Time</string>
     <string name="create_study_group">Create Study Group</string>
+    <string name="group_name">Group Name</string>
+    <string name="group_course_code">Course the Group is Connected With</string>
+    <string name="group_color">Customize the Color for the Group:</string>
     <string name="messages">Messages</string>
     <string name="my_groups">My Groups</string>
     <string name="study_locations">Study Locations</string>
@@ -55,4 +58,12 @@
     <string name="last_name">Last Name</string>
     <string name="password">Password</string>
     <string name="logoDescription">Study Hopper Logo</string>
+    <string name="max_group_members_prompt">Maximum Group Size:</string>
+    <string name="select_here">Select Here</string>
+    <string-array name="group_preferences">
+        <item/>
+        <item>Coed Group</item>
+        <item>Females Only Group</item>
+        <item>Males Only Group</item>
+    </string-array>
 </resources>
