@@ -60,6 +60,7 @@
     <string name="logoDescription">Study Hopper Logo</string>
     <string name="max_group_members_prompt">Maximum Group Size:</string>
     <string name="select_here">Select Here</string>
+    <string name="group_color_image_description">Group Color Selection</string>
     <string-array name="group_preferences">
         <item/>
         <item>Coed Group</item>

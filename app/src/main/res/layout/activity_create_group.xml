@@ -59,6 +59,8 @@
                 android:id="@+id/image_view_blue"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:padding="2dp"
+                android:contentDescription="@string/group_color_image_description"
                 android:src="@drawable/ic_group_color_blue"
                 android:layout_margin="15dp" />
 
@@ -66,6 +68,8 @@
                 android:id="@+id/image_view_green"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:padding="2dp"
+                android:contentDescription="@string/group_color_image_description"
                 android:src="@drawable/ic_group_color_green"
                 android:layout_margin="15dp" />
 
@@ -73,6 +77,8 @@
                 android:id="@+id/image_view_yellow"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:padding="2dp"
+                android:contentDescription="@string/group_color_image_description"
                 android:src="@drawable/ic_group_color_yellow"
                 android:layout_margin="15dp" />
 
@@ -80,6 +86,8 @@
                 android:id="@+id/image_view_red"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:padding="2dp"
+                android:contentDescription="@string/group_color_image_description"
                 android:src="@drawable/ic_group_color_red"
                 android:layout_margin="15dp" />
 
@@ -96,6 +104,8 @@
                     android:id="@+id/image_view_purple"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:padding="2dp"
+                    android:contentDescription="@string/group_color_image_description"
                     android:src="@drawable/ic_group_color_purple"
                     android:layout_margin="15dp" />
 
@@ -103,6 +113,8 @@
                     android:id="@+id/image_view_orange"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:padding="2dp"
+                    android:contentDescription="@string/group_color_image_description"
                     android:src="@drawable/ic_group_color_orange"
                     android:layout_margin="15dp" />
 
@@ -110,6 +122,8 @@
                     android:id="@+id/image_view_brown"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:padding="2dp"
+                    android:contentDescription="@string/group_color_image_description"
                     android:src="@drawable/ic_group_color_brown"
                     android:layout_margin="15dp" />
 
@@ -117,6 +131,8 @@
                     android:id="@+id/image_view_gray"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:padding="2dp"
+                    android:contentDescription="@string/group_color_image_description"
                     android:src="@drawable/ic_group_color_gray"
                     android:layout_margin="15dp" />
 
@@ -147,6 +163,7 @@
         android:layout_height="wrap_content"
         android:text="@string/max_group_members_prompt"
         android:layout_margin="8dp"
+        android:layout_centerVertical="true"
         android:textSize="20sp"
         android:textColor="@android:color/black" />
 
@@ -156,9 +173,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="30dp"
-            android:layout_toRightOf="@id/num_group_members_prompt"
+            android:layout_toEndOf="@id/num_group_members_prompt"
             android:hint="@string/select_here"
             android:textAlignment="center"
+            android:layout_centerVertical="true"
             android:onClick="selectMaxGroupSize"
             android:cursorVisible="false"
             android:focusable="false"
