@@ -96,7 +96,7 @@ public class ProfileClasses extends Fragment {
         mClassRecycleView = v.getRootView().findViewById(R.id.classRecycleViewer);
         mClassRecycleView.setHasFixedSize(false); //ONLY for FIXED Size recylcerView remove later
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new ClassesListAdapter(classList);
+        mAdapter = new ClassesListAdapter(classList, this);
         mClassRecycleView.setLayoutManager(mLayoutManager);
         mClassRecycleView.setAdapter(mAdapter);
 
@@ -216,7 +216,7 @@ public class ProfileClasses extends Fragment {
     }
 
     private void reloadRecycler() {
-        mAdapter = new ClassesListAdapter(classList);
+        mAdapter = new ClassesListAdapter(classList, this);
         mClassRecycleView.setAdapter(mAdapter);
     }
 
@@ -227,5 +227,14 @@ public class ProfileClasses extends Fragment {
         mSection.setText("");
         mSemester.setText("");
         mYear.setText("");
+    }
+
+    public void deleteClassFromFirebase(String id) {
+        String userName = getUsername();
+        DocumentReference classRef = db.collection("users").document(userName).collection("classes").document(id);
+
+        classRef.delete();
+
+        fetchClassesFromDB();
     }
 }
