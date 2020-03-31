@@ -20,17 +20,30 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class CreateGroup extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+    private EditText editTextGroupName;
+    private EditText editTextCourseCode;
+    private String groupColor, groupPreference;
     private Spinner groupPreferencesSpinner;
     private NumberPicker groupMaxSizePicker;
     private EditText editTextMaxSize;
     private TextView groupPreferencesPrompt;
+    private int colorSelected = 0;
     private ImageView blue, green, yellow, red, purple, orange, brown, gray;
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
+
+        editTextGroupName = findViewById(R.id.edit_text_group_name);
+        editTextCourseCode = findViewById(R.id.edit_text_group_course_code);
 
         editTextMaxSize = findViewById(R.id.edit_text_group_max);
         blue = findViewById(R.id.image_view_blue);
@@ -51,6 +64,9 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         brown.setOnClickListener(this);
         gray.setOnClickListener(this);
 
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        setTitle("Create Group");
+
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -59,6 +75,61 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
 
         groupPreferencesSpinner = findViewById(R.id.spinner_group_preferences);
         fillGroupPreferencesSpinner();
+    }
+
+    public void createStudyGroup(View v) {
+        String groupName = editTextGroupName.getText().toString();
+        String courseCode = editTextCourseCode.getText().toString();
+        String groupPreference = groupPreferencesSpinner.getSelectedItem().toString();
+        int groupMaxSize = Integer.parseInt(editTextMaxSize.getText().toString());
+        boolean coedGroup = false, femalesOnlyGroup = false, malesOnlyGroup = false;
+
+        if(groupName.trim().isEmpty() || courseCode.trim().isEmpty()) {
+            Toast.makeText(this, "Please input a group name and course code!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+            
+        if(groupPreference.trim().isEmpty()) {
+            Toast.makeText(this, "Please select a group preference from the dropdown!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(groupMaxSize == 0) {
+            Toast.makeText(this, "Please select the maximum number of members for the group!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (colorSelected == 0)
+        {
+            Toast.makeText(this, "Please select a color for the group", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(groupPreference.equals("Coed Group"))
+            coedGroup = true;
+        else if(groupPreference.equals("Females Only Group"))
+            femalesOnlyGroup = true;
+        else if(groupPreference.equals("Males Only Group"))
+            malesOnlyGroup = true;
+
+        // Firebase reference for "Groups" Collection
+        CollectionReference groupRef = FirebaseFirestore.getInstance()
+                .collection("groups");
+        // Firebase Reference for "Groups" in users sub-collection
+        CollectionReference userGroupRef = FirebaseFirestore.getInstance()
+                .collection("users").document(getUserName())
+                .collection("groups");
+
+        groupRef.add(new Group(groupName, courseCode, groupColor,
+                coedGroup, femalesOnlyGroup, malesOnlyGroup, groupMaxSize));
+
+        userGroupRef.add(new Group(groupName, courseCode, groupColor,
+                coedGroup, femalesOnlyGroup, malesOnlyGroup, groupMaxSize));
+
+        Toast.makeText(this, "Group added", Toast.LENGTH_SHORT).show();
+
+        finish();
+
     }
 
     public void selectMaxGroupSize(View v) {
@@ -110,6 +181,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         }
         else {
             Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
+
         }
 
 
@@ -137,53 +209,60 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
 
         Drawable highlight = getResources().getDrawable(R.drawable.highlight, null);
-        int selected = 0;
+        colorSelected = 0;
         clearBackground();
 
         switch(v.getId()) {
             case R.id.image_view_blue:
                 blue.setBackground(highlight);
-                selected = 1;
+                groupColor = "Blue";
+                colorSelected = 1;
                 break;
 
             case R.id.image_view_green:
                 green.setBackground(highlight);
-                selected = 2;
+                groupColor = "Green";
+                colorSelected = 2;
                 break;
 
             case R.id.image_view_yellow:
                 yellow.setBackground(highlight);
-                selected = 3;
+                groupColor = "Yellow";
+                colorSelected = 3;
                 break;
 
             case R.id.image_view_red:
                 red.setBackground(highlight);
-                selected = 4;
+                groupColor = "Red";
+                colorSelected = 4;
                 break;
 
             case R.id.image_view_purple:
                 purple.setBackground(highlight);
-                selected = 5;
+                groupColor = "Purple";
+                colorSelected = 5;
                 break;
 
             case R.id.image_view_orange:
                 orange.setBackground(highlight);
-                selected = 6;
+                groupColor = "Orange";
+                colorSelected = 6;
                 break;
 
             case R.id.image_view_brown:
                 brown.setBackground(highlight);
-                selected = 7;
+                groupColor = "Brown";
+                colorSelected = 7;
                 break;
 
             case R.id.image_view_gray:
                 gray.setBackground(highlight);
-                selected = 8;
+                groupColor = "Gray";
+                colorSelected = 8;
                 break;
         }
 
-        Toast.makeText(this, "Selected: " + selected, Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(this, "Selected: " + colorSelected, Toast.LENGTH_SHORT).show();
     }
 
     private void clearBackground() {
@@ -195,5 +274,11 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         orange.setBackgroundResource(0);
         brown.setBackgroundResource(0);
         gray.setBackgroundResource(0);
+    }
+
+    private String getUserName() {
+        String email = mAuth.getCurrentUser().getEmail();
+        int parseIndex = email.indexOf('@');
+        return email.substring(0, parseIndex);
     }
 }

@@ -79,8 +79,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 DocumentSnapshot document = task.getResult();
 
                 if (task.isSuccessful()) {
-                    String first_name = document.getString("first-name");
-                    String last_name = document.getString("last-name");
+                    String first_name = document.getString("firstName");
+                    String last_name = document.getString("lastName");
                     name = first_name + " " + last_name;
                     nameView.setText(name);
                 }

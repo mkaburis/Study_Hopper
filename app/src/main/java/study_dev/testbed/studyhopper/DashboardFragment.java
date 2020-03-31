@@ -113,8 +113,8 @@ public class DashboardFragment extends Fragment {
                     Log.d(TAG, e.toString());
                 }
                 if(documentSnapshot.exists()) {
-                    String first_name = documentSnapshot.getString("first-name");
-                    String last_name = documentSnapshot.getString("last-name");
+                    String first_name = documentSnapshot.getString("firstName");
+                    String last_name = documentSnapshot.getString("lastName");
 
                     personaName = "Welcome " + first_name + " " + last_name + "!";
                     welcomeMsg.setText(personaName);

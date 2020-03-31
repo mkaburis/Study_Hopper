@@ -13,13 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 public class MyGroups extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference groupRef = db.collection("groups");
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private CollectionReference groupRef = db.collection("users")
+            .document(getUserName()).collection("groups");
 
     private GroupAdapter adapter;
 
@@ -102,4 +105,11 @@ public class MyGroups extends AppCompatActivity {
         startActivity(in);
         overridePendingTransition(0, 0);
     }
+
+    private String getUserName() {
+        String email = mAuth.getCurrentUser().getEmail();
+        int parseIndex = email.indexOf('@');
+        return email.substring(0, parseIndex);
+    }
+
 }

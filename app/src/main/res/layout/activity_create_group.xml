@@ -190,6 +190,7 @@
         android:background="@color/safariGreen"
         android:layout_margin="8dp"
         android:text="@string/create_study_group"
+        android:onClick="createStudyGroup"
         android:textColor="@color/colorWhite"
         android:textSize="20sp"/>
 
