@@ -90,12 +90,6 @@ public class ProfileClasses extends Fragment {
 
         fetchClassesFromDB();
 
-        /*for (int i = 0; i < 10; ++i) {
-            int clasNum = 122 + i;
-            classListItem item = new classListItem("" + (i + 1), "Computer Class", "COP", ("" + clasNum), "01");
-            classList.add(item);
-        }*/
-
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile_classes, container, false);
 
@@ -159,16 +153,15 @@ public class ProfileClasses extends Fragment {
         DocumentReference userRef = db.collection("users").document(userName);
 
         CollectionReference classRef = userRef.collection("classes");
-
+        classList.clear();
         classRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         StudentClass sClass = document.toObject(StudentClass.class);
-                        sClass.setDocumentId(document.getId());
 
-                        classListItem listItem = new classListItem(sClass.getDocumentId(), sClass.getClassName(), sClass.getSubject(), sClass.getNumber(), sClass.getSection());
+                        classListItem listItem = new classListItem(document.getId(), sClass.getClassName(), sClass.getSubject(), sClass.getNumber(), sClass.getSection());
                         classList.add(listItem);
                         reloadRecycler();
                     }
@@ -195,7 +188,8 @@ public class ProfileClasses extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(getContext(), "Class added to db", Toast.LENGTH_SHORT).show();
-                reloadRecycler();
+                clearNewClassCard();
+                fetchClassesFromDB();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -224,5 +218,14 @@ public class ProfileClasses extends Fragment {
     private void reloadRecycler() {
         mAdapter = new ClassesListAdapter(classList);
         mClassRecycleView.setAdapter(mAdapter);
+    }
+
+    private void clearNewClassCard() {
+        mCourseName.setText("");
+        mSubject.setText("");
+        mNumber.setText("");
+        mSection.setText("");
+        mSemester.setText("");
+        mYear.setText("");
     }
 }

@@ -7,7 +7,6 @@ public class StudentClass {
     String Section;
     String Semester;
     int Year;
-    String DocumentId;
 
     public StudentClass() {
 
@@ -61,11 +60,4 @@ public class StudentClass {
         Section = section;
     }
 
-    public String getDocumentId() {
-        return DocumentId;
-    }
-
-    public void setDocumentId(String documentId) {
-        DocumentId = documentId;
-    }
 }
