@@ -1,12 +1,7 @@
-package study_dev.testbed.studyhopper;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+package study_dev.testbed.studyhopper.ui.dashboard;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -20,9 +15,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.models.Group;
 
 public class CreateGroup extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     private EditText editTextGroupName;
@@ -95,7 +97,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
             Toast.makeText(this, "Please input a group name and course code!", Toast.LENGTH_SHORT).show();
             return;
         }
-            
+
         if(groupPreference.trim().isEmpty()) {
             Toast.makeText(this, "Please select a group preference from the dropdown!", Toast.LENGTH_SHORT).show();
             return;

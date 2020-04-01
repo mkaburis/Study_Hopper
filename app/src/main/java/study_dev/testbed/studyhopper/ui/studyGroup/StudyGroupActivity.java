@@ -1,12 +1,5 @@
-package study_dev.testbed.studyhopper;
+package study_dev.testbed.studyhopper.ui.studyGroup;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,21 +12,29 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
+import study_dev.testbed.studyhopper.ui.messages.Messages;
+import study_dev.testbed.studyhopper.ui.sessions.SessionPage;
+
 public class StudyGroupActivity extends AppCompatActivity {
 
     private static final String TAG = "StudyGroupActivity";
-    private studyGroupItem studyGroupItem;
+    private study_dev.testbed.studyhopper.models.studyGroupItem studyGroupItem;
 
     private LineChart mChart;
     CardView groupMembersCard;

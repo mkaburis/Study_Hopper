@@ -1,4 +1,4 @@
-package study_dev.testbed.studyhopper;
+package study_dev.testbed.studyhopper.ui.dashboard;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.models.studyGroupItem;
 
 public class StudyGroupAdapter extends RecyclerView.Adapter<StudyGroupAdapter.StudyGroupViewHolder> {
     private ArrayList<studyGroupItem> mStudyGroupList;

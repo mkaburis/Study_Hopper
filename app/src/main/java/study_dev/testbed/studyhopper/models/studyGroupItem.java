@@ -1,4 +1,4 @@
-package study_dev.testbed.studyhopper;
+package study_dev.testbed.studyhopper.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

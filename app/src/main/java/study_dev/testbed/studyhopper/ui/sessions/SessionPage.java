@@ -1,7 +1,4 @@
-package study_dev.testbed.studyhopper;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+package study_dev.testbed.studyhopper.ui.sessions;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -12,9 +9,16 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
+import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.models.studyGroupItem;
+import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 
 public class SessionPage extends AppCompatActivity {
     private studyGroupItem item;

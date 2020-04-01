@@ -1,4 +1,4 @@
-package study_dev.testbed.studyhopper;
+package study_dev.testbed.studyhopper.ui.dashboard;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +14,9 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.models.Group;
 
 public class GroupAdapter extends FirestoreRecyclerAdapter<Group, GroupAdapter.GroupHolder> {
 

@@ -1,4 +1,4 @@
-package study_dev.testbed.studyhopper;
+package study_dev.testbed.studyhopper.ui.dashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,8 +25,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import study_dev.testbed.studyhopper.MainActivity;
+import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder;
+import study_dev.testbed.studyhopper.ui.messages.Messages;
 import study_dev.testbed.studyhopper.ui.profile.ProfilePage;
-import study_dev.testbed.studyhopper.ui.dashboard.DashboardFragment;
+import study_dev.testbed.studyhopper.ui.studyLocation.StudyLocationsMap;
 
 public class Dashboard extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
@@ -110,7 +114,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         if (savedInstanceState == null) {
             // Start activity in the dashboard fragment...
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new study_dev.testbed.studyhopper.DashboardFragment()).commit();
+                    new DashboardFragment()).commit();
             navigationView.setCheckedItem(R.id.dashboard_option);
         }
 
@@ -128,7 +132,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             case R.id.dashboard_option:
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new study_dev.testbed.studyhopper.DashboardFragment()).commit();
+                        new DashboardFragment()).commit();
                 break;
             case R.id.study_safari:
                 in = new Intent(getBaseContext(), StudyGroupFinder.class);
