@@ -262,7 +262,6 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                 break;
         }
 
-        Toast.makeText(this, "Selected: " + colorSelected, Toast.LENGTH_SHORT).show();
     }
 
     private void clearBackground() {

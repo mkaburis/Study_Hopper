@@ -9,7 +9,7 @@ public class Group {
     private String groupColor;
     private boolean coedGroup, femalesOnlyGroup, malesOnlyGroup;
     private int maxGroupMembers;
-    private String id;
+    private String documentId;
 
     public Group() {
         // empty constructor needed
@@ -56,11 +56,11 @@ public class Group {
     }
 
     public String getId() {
-        return id;
+        return documentId;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.documentId = documentId;
     }
 }
 
