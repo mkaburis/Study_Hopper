@@ -27,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class CreateGroup extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     private EditText editTextGroupName;
     private EditText editTextCourseCode;
-    private String groupColor, groupPreference;
+    private String groupColor, groupPreference, preferenceSelected;
     private Spinner groupPreferencesSpinner;
     private NumberPicker groupMaxSizePicker;
     private EditText editTextMaxSize;
@@ -108,11 +108,11 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         }
 
         if(groupPreference.equals("Coed Group"))
-            coedGroup = true;
+            preferenceSelected = "Coed";
         else if(groupPreference.equals("Females Only Group"))
-            femalesOnlyGroup = true;
+            preferenceSelected = "Females Only";
         else if(groupPreference.equals("Males Only Group"))
-            malesOnlyGroup = true;
+            preferenceSelected = "Males Only";
 
         // Firebase reference for "Groups" Collection
         CollectionReference groupRef = FirebaseFirestore.getInstance()
@@ -122,17 +122,12 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                 .collection("users").document(getUserName())
                 .collection("groups");
 
-        Group groupTemplate = new Group(groupName, courseCode, groupColor,
-                coedGroup, femalesOnlyGroup, malesOnlyGroup, groupSizeMax);
-
+        Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected, groupSizeMax);
         groupRef.add(groupTemplate);
-
         userGroupRef.add(groupTemplate);
 
         Toast.makeText(this, "Group added", Toast.LENGTH_SHORT).show();
-
         finish();
-
     }
 
     public void selectMaxGroupSize(View v) {

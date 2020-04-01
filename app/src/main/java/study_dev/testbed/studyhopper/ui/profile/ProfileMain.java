@@ -128,9 +128,8 @@ public class ProfileMain extends Fragment {
         });
     }
 
-
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
     }
 

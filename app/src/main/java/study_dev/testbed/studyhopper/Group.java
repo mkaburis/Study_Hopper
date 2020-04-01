@@ -7,7 +7,7 @@ public class Group {
     private String groupName;
     private String courseCode;
     private String groupColor;
-    private boolean coedGroup, femalesOnlyGroup, malesOnlyGroup;
+    private String groupPreference;
     private int maxGroupMembers;
     private String documentId;
 
@@ -16,14 +16,11 @@ public class Group {
     }
 
     public Group(String groupName, String courseCode, String groupColor,
-                 boolean coedGroup, boolean femalesOnlyGroup, boolean malesOnlyGroup,
-                 int maxGroupMembers) {
+                 String groupPreference, int maxGroupMembers) {
         this.groupName = groupName;
         this.courseCode = courseCode;
         this.groupColor = groupColor;
-        this.coedGroup = coedGroup;
-        this.femalesOnlyGroup = femalesOnlyGroup;
-        this.malesOnlyGroup = malesOnlyGroup;
+        this.groupPreference = groupPreference;
         this.maxGroupMembers = maxGroupMembers;
     }
 
@@ -39,27 +36,19 @@ public class Group {
         return groupColor;
     }
 
-    public boolean isCoedGroup() {
-        return coedGroup;
-    }
-
-    public boolean isFemalesOnlyGroup() {
-        return femalesOnlyGroup;
-    }
-
-    public boolean isMalesOnlyGroup() {
-        return malesOnlyGroup;
+    public String getGroupPreference() {
+        return groupPreference;
     }
 
     public int getMaxGroupMembers() {
         return maxGroupMembers;
     }
 
-    public String getId() {
+    public String getDocumentId() {
         return documentId;
     }
 
-    public void setId(String id) {
+    public void setDocumentId(String documentId) {
         this.documentId = documentId;
     }
 }
