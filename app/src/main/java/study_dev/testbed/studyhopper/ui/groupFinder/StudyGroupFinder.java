@@ -1,4 +1,4 @@
-package study_dev.testbed.studyhopper;
+package study_dev.testbed.studyhopper.ui.groupFinder;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,16 +6,15 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Messages extends AppCompatActivity {
-    private studyGroupItem item;
+import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
+
+public class StudyGroupFinder extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messages);
-
-        Intent intent = getIntent();
-        item = intent.getParcelableExtra("Study Group Data");
+        setContentView(R.layout.activity_study_group_finder);
 
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
@@ -33,11 +32,9 @@ public class Messages extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-
-        Intent in = new Intent(getBaseContext(), StudyGroupActivity.class);
-        in.putExtra("Study Group Item", item);
+        Intent in = new Intent(getBaseContext(), Dashboard.class);
         startActivity(in);
         overridePendingTransition(0, 0);
+
     }
 }

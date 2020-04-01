@@ -1,10 +1,9 @@
-package study_dev.testbed.studyhopper;
+package study_dev.testbed.studyhopper.ui.dashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.models.Group;
 
 public class MyGroups extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();

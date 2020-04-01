@@ -16,19 +16,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".CreateGroup"></activity>
+        <activity android:name=".ui.dashboard.CreateGroup"></activity>
         <activity
-            android:name=".SessionPage"
+            android:name=".ui.sessions.SessionPage"
             android:label="Study Session" />
         <activity
-            android:name=".GroupMemberList"
+            android:name=".ui.studyGroup.GroupMemberList"
             android:label="Group Members List">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.StudyGroupActivity" />
+                android:value="study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity" />
         </activity>
         <activity
-            android:name=".StudyGroupActivity"
+            android:name=".ui.studyGroup.StudyGroupActivity"
             android:label="Study Group"
             android:value="study_dev.testbed.studyhopper.Dashboard" />
         <activity
@@ -42,25 +42,25 @@
                 android:value="study_dev.testbed.studyhopper.Login" />
         </activity>
         <activity
-            android:name=".MyGroups"
+            android:name=".ui.dashboard.MyGroups"
             android:launchMode="singleTop"
             android:label="@string/my_groups" />
         <activity
-            android:name=".StudyGroupFinder"
+            android:name=".ui.groupFinder.StudyGroupFinder"
             android:label="StudyGroupFinder">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.Dashboard" />
+                android:value="study_dev.testbed.studyhopper.ui.dashboard.Dashboard" />
         </activity>
         <activity
-            android:name=".Messages"
+            android:name=".ui.messages.Messages"
             android:label="Messages">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.StudyGroupActivity" />
+                android:value="study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity" />
         </activity>
         <activity
-            android:name=".Dashboard"
+            android:name=".ui.dashboard.Dashboard"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -75,20 +75,20 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".StudyLocationsMap"
+            android:name=".ui.studyLocation.StudyLocationsMap"
             android:label="@string/title_activity_study_locations_map">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.Dashboard" />
+                android:value="study_dev.testbed.studyhopper.ui.dashboard.Dashboard" />
         </activity>
         <activity
             android:name=".ui.profile.ProfilePage"
             android:label="@string/title_activity_profile_page"
-            android:parentActivityName=".Dashboard"
+            android:parentActivityName=".ui.dashboard.Dashboard"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.Dashboard" />
+                android:value="study_dev.testbed.studyhopper.ui.dashboard.Dashboard" />
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>

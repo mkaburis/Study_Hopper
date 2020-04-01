@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;

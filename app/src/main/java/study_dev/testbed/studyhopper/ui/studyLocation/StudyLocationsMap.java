@@ -1,4 +1,4 @@
-package study_dev.testbed.studyhopper;
+package study_dev.testbed.studyhopper.ui.studyLocation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 
 public class StudyLocationsMap extends AppCompatActivity implements OnMapReadyCallback {
 

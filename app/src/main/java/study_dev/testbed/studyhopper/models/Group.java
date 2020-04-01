@@ -1,7 +1,4 @@
-package study_dev.testbed.studyhopper;
-
-import android.widget.ImageView;
-import android.widget.Switch;
+package study_dev.testbed.studyhopper.models;
 
 public class Group {
     private String groupName;

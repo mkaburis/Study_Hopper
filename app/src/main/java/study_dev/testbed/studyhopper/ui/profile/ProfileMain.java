@@ -2,17 +2,16 @@ package study_dev.testbed.studyhopper.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,12 +33,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.Executor;
 
-import study_dev.testbed.studyhopper.Dashboard;
+import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Major;
 import study_dev.testbed.studyhopper.models.Profile;
-import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 import study_dev.testbed.studyhopper.ui.main.PageViewModel;
 
 

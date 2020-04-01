@@ -1,10 +1,13 @@
-package study_dev.testbed.studyhopper;
+package study_dev.testbed.studyhopper.ui.studyGroup;
+
+import android.content.Intent;
+import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.os.Bundle;
+import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.models.studyGroupItem;
 
 public class GroupMemberList extends AppCompatActivity {
     private studyGroupItem item;
