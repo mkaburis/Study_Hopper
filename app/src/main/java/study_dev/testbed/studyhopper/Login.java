@@ -23,10 +23,14 @@ public class Login extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
+
     private EditText mEmailField;
     private EditText mPasswordField;
+
     private Button mLoginButton;
     private Button mRegisterButton;
+    private Button mForgotPasswordButton;
+
     private String TAG;
 
     @Override
@@ -40,6 +44,7 @@ public class Login extends AppCompatActivity {
 
         mLoginButton = findViewById(R.id.login);
         mRegisterButton = findViewById(R.id.register);
+        mForgotPasswordButton = findViewById(R.id.forgotPasswordButton);
 
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,10 +70,24 @@ public class Login extends AppCompatActivity {
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(Login.this, ProfilePage.class);
                 intent.putExtra("new-profile", true);
                 startActivity(intent);
+            }
+        });
+
+        mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String email = mEmailField.getText().toString();
+
+                if (email.isEmpty()) {
+                    Toast.makeText(Login.this, "Email cannot be empty.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                resetPassword(email);
             }
         });
     }
@@ -127,6 +146,21 @@ public class Login extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void resetPassword(String email) {
+        mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(Login.this, "Email Sent.",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(Login.this, "Email not found.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 }
