@@ -8,6 +8,7 @@ public class Group {
     private String courseCode;
     private String groupColor;
     private String groupPreference;
+    private String groupOwner;
     private int maxGroupMembers;
     private String documentId;
 
@@ -16,11 +17,12 @@ public class Group {
     }
 
     public Group(String groupName, String courseCode, String groupColor,
-                 String groupPreference, int maxGroupMembers) {
+                 String groupPreference, String groupOwner, int maxGroupMembers) {
         this.groupName = groupName;
         this.courseCode = courseCode;
         this.groupColor = groupColor;
         this.groupPreference = groupPreference;
+        this.groupOwner = groupOwner;
         this.maxGroupMembers = maxGroupMembers;
     }
 
@@ -34,6 +36,14 @@ public class Group {
 
     public String getGroupColor() {
         return groupColor;
+    }
+
+    public String getGroupOwner() {
+        return groupOwner;
+    }
+
+    public void setGroupOwner(String groupOwner) {
+        this.groupOwner = groupOwner;
     }
 
     public String getGroupPreference() {

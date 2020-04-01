@@ -122,7 +122,8 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                 .collection("users").document(getUserName())
                 .collection("groups");
 
-        Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected, groupSizeMax);
+        Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
+                getUserName(), groupSizeMax);
         groupRef.add(groupTemplate);
         userGroupRef.add(groupTemplate);
 
@@ -177,12 +178,6 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                 groupPreferencesPrompt.setTextColor(Color.GRAY);
             }
         }
-        else {
-            Toast.makeText(parent.getContext(), text, Toast.LENGTH_SHORT).show();
-
-        }
-
-
     }
 
     @Override

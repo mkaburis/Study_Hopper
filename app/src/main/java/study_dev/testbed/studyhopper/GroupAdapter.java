@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GroupAdapter extends FirestoreRecyclerAdapter<Group, GroupAdapter.GroupHolder> {
 
     public GroupAdapter(@NonNull FirestoreRecyclerOptions<Group> options) {
@@ -50,33 +53,46 @@ public class GroupAdapter extends FirestoreRecyclerAdapter<Group, GroupAdapter.G
     }
 
     private int findGroupColorId(String color){
-        if(color.equals("Red")){
-            return R.drawable.ic_group_color_red;
-        }
-        else if(color.equals("Yellow")) {
-            return R.drawable.ic_group_color_yellow;
-        }
-        else if(color.equals("Brown")) {
-            return R.drawable.ic_group_color_brown;
-        }
-        else if(color.equals("Blue")) {
-            return R.drawable.ic_group_color_blue;
-        }
-        else if(color.equals("Green")) {
-            return R.drawable.ic_group_color_green;
-        }
-        else if(color.equals("Purple")) {
-            return R.drawable.ic_group_color_purple;
-        }
-        else if(color.equals("Orange")) {
-            return R.drawable.ic_group_color_orange;
-        }
-        else if(color.equals("Gray")) {
-            return R.drawable.ic_group_color_gray;
-        }
-        else {
-            return R.drawable.ic_group_color_gray;
-        }
+
+        Map<String, Integer> colorMap = new HashMap<>();
+        colorMap.put("Blue", Integer.valueOf(R.drawable.ic_group_color_blue));
+        colorMap.put("Green", Integer.valueOf(R.drawable.ic_group_color_green));
+        colorMap.put("Yellow", Integer.valueOf(R.drawable.ic_group_color_yellow));
+        colorMap.put("Red", Integer.valueOf(R.drawable.ic_group_color_red));
+        colorMap.put("Purple", Integer.valueOf(R.drawable.ic_group_color_purple));
+        colorMap.put("Orange", Integer.valueOf(R.drawable.ic_group_color_orange));
+        colorMap.put("Brown", Integer.valueOf(R.drawable.ic_group_color_brown));
+        colorMap.put("Gray", Integer.valueOf(R.drawable.ic_group_color_gray));
+
+        return colorMap.get(color);
+
+//        if(color.equals("Red")){
+//            return R.drawable.ic_group_color_red;
+//        }
+//        else if(color.equals("Yellow")) {
+//            return R.drawable.ic_group_color_yellow;
+//        }
+//        else if(color.equals("Brown")) {
+//            return R.drawable.ic_group_color_brown;
+//        }
+//        else if(color.equals("Blue")) {
+//            return R.drawable.ic_group_color_blue;
+//        }
+//        else if(color.equals("Green")) {
+//            return R.drawable.ic_group_color_green;
+//        }
+//        else if(color.equals("Purple")) {
+//            return R.drawable.ic_group_color_purple;
+//        }
+//        else if(color.equals("Orange")) {
+//            return R.drawable.ic_group_color_orange;
+//        }
+//        else if(color.equals("Gray")) {
+//            return R.drawable.ic_group_color_gray;
+//        }
+//        else {
+//            return R.drawable.ic_group_color_gray;
+//        }
     }
 
 

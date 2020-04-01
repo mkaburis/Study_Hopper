@@ -109,7 +109,7 @@ public class SessionPage extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent in = new Intent(getBaseContext(), Dashboard.class);
+        Intent in = new Intent(getBaseContext(), StudyGroupActivity.class);
         in.putExtra("Study Group Item", item);
         startActivity(in);
         overridePendingTransition(0, 0);
