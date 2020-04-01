@@ -1,14 +1,18 @@
-package study_dev.testbed.studyhopper;
+package study_dev.testbed.studyhopper.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,8 +34,24 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.Executor;
 
-public class ProfilePage extends AppCompatActivity {
+import study_dev.testbed.studyhopper.Dashboard;
+import study_dev.testbed.studyhopper.models.Major;
+import study_dev.testbed.studyhopper.models.Profile;
+import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.ui.main.PageViewModel;
+
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link ProfileMain#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class ProfileMain extends Fragment {
+    private static final String ARG_SECTION_NUMBER = "section_number";
+    private PageViewModel pageViewModel;
+
     private String TAG;
     private TextInputEditText mFirstName;
     private TextInputEditText mLastName;
@@ -48,32 +68,48 @@ public class ProfilePage extends AppCompatActivity {
     private FirebaseFirestore db;
     private boolean newProfile = false;
 
+    public ProfileMain() {
+        // Required empty public constructor
+    }
+
+    public static ProfileMain newInstance(int index) {
+        ProfileMain fragment = new ProfileMain();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ARG_SECTION_NUMBER, index);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_page);
+        ProfilePage activity = (ProfilePage) getActivity();
+        newProfile = activity.IsNewProfile;
+    }
 
-        Bundle extras = getIntent().getExtras();
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_profile_main, container, false);
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
         mAuth = FirebaseAuth.getInstance();
 
-        mFirstName = findViewById(R.id.fnameText);
-        mLastName = findViewById(R.id.lnameText);
-        mEmail = findViewById(R.id.emailText);
-        mPassword = findViewById(R.id.passwordText);
-        mDob = findViewById(R.id.dobText);
-        mGender = findViewById(R.id.genderText);
-        mUniversity = findViewById(R.id.universityText);
-        mCollege = findViewById(R.id.collegeText);
-        mMajor = findViewById(R.id.majorText);
+        mFirstName = view.findViewById(R.id.fnameText);
+        mLastName = view.findViewById(R.id.lnameText);
+        mEmail = view.findViewById(R.id.emailText);
+        mPassword = view.findViewById(R.id.passwordText);
+        mDob = view.findViewById(R.id.dobText);
+        mGender = view.findViewById(R.id.genderText);
+        mUniversity = view.findViewById(R.id.universityText);
+        mCollege = view.findViewById(R.id.collegeText);
+        mMajor = view.findViewById(R.id.majorText);
 
-        mSaveButton = findViewById(R.id.saveButton);
+        mSaveButton = view.findViewById(R.id.saveButton);
         db = FirebaseFirestore.getInstance();
-
-        if (extras != null) {
-            newProfile = extras.getBoolean("new-profile");
-        }
 
         if (!newProfile) {
             fillInformation();
@@ -90,8 +126,8 @@ public class ProfilePage extends AppCompatActivity {
                 }
             }
         });
-
     }
+
 
     @Override
     protected void onStart() {
@@ -105,24 +141,24 @@ public class ProfilePage extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         if (email.isEmpty()) {
-            Toast.makeText(ProfilePage.this, "Email cannot be empty.",
+            Toast.makeText(getContext(), "Email cannot be empty.",
                     Toast.LENGTH_SHORT).show();
             return;
         }
         if (password.isEmpty()) {
-            Toast.makeText(ProfilePage.this, "Password cannot be empty.",
+            Toast.makeText(getContext(), "Password cannot be empty.",
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener((ProfilePage) getContext(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
-                            Toast.makeText(ProfilePage.this, "User created successfully.",
+                            Toast.makeText(getContext(), "User created successfully.",
                                     Toast.LENGTH_SHORT).show();
                             user = mAuth.getCurrentUser();
                             try {
@@ -135,7 +171,7 @@ public class ProfilePage extends AppCompatActivity {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
 
-                            Toast.makeText(ProfilePage.this, task.getException().getMessage(),
+                            Toast.makeText(getContext(), task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -157,6 +193,7 @@ public class ProfilePage extends AppCompatActivity {
         DocumentReference ref = db.collection("users").document(userName);
 
     }
+
     // fills text boxes with info from database
     private void fillInformation() {
         String userName = getUsername();
@@ -170,22 +207,22 @@ public class ProfilePage extends AppCompatActivity {
                 String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
                 if (profile == null) {
-                    Toast.makeText(ProfilePage.this, "Profile info not found",
+                    Toast.makeText(getContext(), "Profile info not found",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-                mFirstName.setText(profile.firstName);
-                mLastName.setText(profile.lastName);
-                mDob.setText(dateFormat.format(profile.dob));
-                mGender.setText(profile.gender);
+                mFirstName.setText(profile.getFirstName());
+                mLastName.setText(profile.getLastName());
+                mDob.setText(dateFormat.format(profile.getDob()));
+                mGender.setText(profile.getGender());
                 mEmail.setText(email);
-                mUniversity.setText(profile.university);
+                mUniversity.setText(profile.getUniversity());
 
 
-                TextInputLayout passwordLayout = findViewById(R.id.passwordLayout);
+                TextInputLayout passwordLayout = getActivity().findViewById(R.id.passwordLayout);
                 passwordLayout.setVisibility(View.GONE);
                 mPassword.setVisibility(View.GONE);
                 mEmail.setEnabled(false);
@@ -193,7 +230,7 @@ public class ProfilePage extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ProfilePage.this, "Error loading profile info",
+                Toast.makeText(getContext(), "Error loading profile info",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -204,8 +241,8 @@ public class ProfilePage extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Major currMajor = document.toObject(Major.class);
-                        mMajor.setText(currMajor.major);
-                        mCollege.setText(currMajor.college);
+                        mMajor.setText(currMajor.getMajor());
+                        mCollege.setText(currMajor.getCollege());
                     }
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
@@ -214,7 +251,7 @@ public class ProfilePage extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ProfilePage.this, "Error loading profile info",
+                Toast.makeText(getContext(), "Error loading profile info",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -231,13 +268,11 @@ public class ProfilePage extends AppCompatActivity {
         return email.split("@")[0];
     }
 
-    private Major getMajor(){
+    private Major getMajor() {
         String collegeStr = mCollege.getText().toString();
         final String majorStr = mMajor.getText().toString();
 
-        Major major = new Major();
-        major.college = collegeStr;
-        major.major = majorStr;
+        Major major = new Major(majorStr, collegeStr);
 
         return major;
     }
@@ -250,20 +285,20 @@ public class ProfilePage extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 boolean done = true;
-                userRef.document(docId).collection("majors").document().set(newMajor).addOnCompleteListener(new OnCompleteListener<Void>() {
+                userRef.document(docId).collection("majors").document(newMajor.getMajor()).set(newMajor).addOnCompleteListener(new OnCompleteListener<Void>() {
 
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(ProfilePage.this, "User information saved to database.",
+                        Toast.makeText(getContext(), "User information saved to database.",
                                 Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(ProfilePage.this, Dashboard.class);
+                        Intent intent = new Intent(getContext(), Dashboard.class);
                         intent.putExtra("user-ids", user.getUid());
                         startActivity(intent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ProfilePage.this, "Error saving profile info to database",
+                        Toast.makeText(getContext(), "Error saving profile info to database",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -271,7 +306,7 @@ public class ProfilePage extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ProfilePage.this, "Error saving profile info to database",
+                Toast.makeText(getContext(), "Error saving profile info to database",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -288,15 +323,6 @@ public class ProfilePage extends AppCompatActivity {
         DateFormat df = DateFormat.getDateInstance();
         Date dob = new Date();
 
-        Profile profile = new Profile();
-        profile.firstName = fName;
-        profile.lastName = lName;
-        profile.dob = dob;
-        profile.gender = gender;
-        profile.university = universityStr;
-
-        return profile;
+        return new Profile(fName, lName, dob, gender, universityStr);
     }
-
 }
-
