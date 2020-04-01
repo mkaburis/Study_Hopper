@@ -45,4 +45,23 @@
     <string name="last_name">Last Name</string>
     <string name="password">Password</string>
     <string name="logoDescription">Study Hopper Logo</string>
+    <string name="profile_tab">Profile</string>
+    <string name="classes_tab">Classes</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="course_number">Course Number</string>
+    <string name="course_section">Course Section</string>
+    <string name="course_subject">Course Subject</string>
+    <string name="add_new_class">Add New Class</string>
+    <string name="course_name">Course Name</string>
+    <string name="semester">Semester</string>
+    <string name="year">Year</string>
+    <string name="add_button_text">Add</string>
+    <string name="current_course_list">Current Course List</string>
+    <string name="ex_course_name">Software Development for Mobile Devices</string>
+    <string name="ex_course_code">COP</string>
+    <string name="ex_course_number">4656</string>
+    <string name="ex_course_section">01</string>
+    <string name="remove_button_desc">Button to remove class</string>
 </resources>
