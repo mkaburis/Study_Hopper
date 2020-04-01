@@ -81,8 +81,15 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         String groupName = editTextGroupName.getText().toString();
         String courseCode = editTextCourseCode.getText().toString();
         String groupPreference = groupPreferencesSpinner.getSelectedItem().toString();
-        int groupMaxSize = Integer.parseInt(editTextMaxSize.getText().toString());
+        int groupSizeMax;
         boolean coedGroup = false, femalesOnlyGroup = false, malesOnlyGroup = false;
+
+        if(editTextMaxSize.getText().toString().equals("")) {
+            Toast.makeText(this, "Please select the maximum number of members for the group!", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            groupSizeMax = groupMaxSizePicker.getValue();
+        }
 
         if(groupName.trim().isEmpty() || courseCode.trim().isEmpty()) {
             Toast.makeText(this, "Please input a group name and course code!", Toast.LENGTH_SHORT).show();
@@ -91,11 +98,6 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
             
         if(groupPreference.trim().isEmpty()) {
             Toast.makeText(this, "Please select a group preference from the dropdown!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if(groupMaxSize == 0) {
-            Toast.makeText(this, "Please select the maximum number of members for the group!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -120,11 +122,12 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                 .collection("users").document(getUserName())
                 .collection("groups");
 
-        groupRef.add(new Group(groupName, courseCode, groupColor,
-                coedGroup, femalesOnlyGroup, malesOnlyGroup, groupMaxSize));
+        Group groupTemplate = new Group(groupName, courseCode, groupColor,
+                coedGroup, femalesOnlyGroup, malesOnlyGroup, groupSizeMax);
 
-        userGroupRef.add(new Group(groupName, courseCode, groupColor,
-                coedGroup, femalesOnlyGroup, malesOnlyGroup, groupMaxSize));
+        groupRef.add(groupTemplate);
+
+        userGroupRef.add(groupTemplate);
 
         Toast.makeText(this, "Group added", Toast.LENGTH_SHORT).show();
 
