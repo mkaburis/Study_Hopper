@@ -128,6 +128,10 @@ public class ProfileMain extends Fragment {
         });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
     // registers account with database and calls method to store info in DB
     private void createAccount() {

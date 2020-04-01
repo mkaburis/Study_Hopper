@@ -69,6 +69,7 @@ public class StudyLocationsMap extends AppCompatActivity implements OnMapReadyCa
         Intent in = new Intent(getBaseContext(), Dashboard.class);
         startActivity(in);
         overridePendingTransition(0, 0);
-
     }
+
+
 }

@@ -16,9 +16,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".GroupMemberList" />
+        <activity android:name=".CreateGroup"></activity>
+        <activity
+            android:name=".SessionPage"
+            android:label="Study Session" />
+        <activity
+            android:name=".GroupMemberList"
+            android:label="Group Members List">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="study_dev.testbed.studyhopper.StudyGroupActivity" />
+        </activity>
         <activity
             android:name=".StudyGroupActivity"
+            android:label="Study Group"
             android:value="study_dev.testbed.studyhopper.Dashboard" />
         <activity
             android:name=".StudyRoomReservations"
@@ -30,7 +41,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="study_dev.testbed.studyhopper.Login" />
         </activity>
-        <activity android:name=".MyGroups" />
+        <activity
+            android:name=".MyGroups"
+            android:launchMode="singleTop"
+            android:label="@string/my_groups" />
         <activity
             android:name=".StudyGroupFinder"
             android:label="StudyGroupFinder">
@@ -43,7 +57,7 @@
             android:label="Messages">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.Dashboard" />
+                android:value="study_dev.testbed.studyhopper.StudyGroupActivity" />
         </activity>
         <activity
             android:name=".Dashboard"
@@ -66,15 +80,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="study_dev.testbed.studyhopper.Dashboard" />
-        </activity>
-        <activity
-            android:name=".SessionDetails"
-            android:label="@string/title_activity_session_details"
-            android:parentActivityName=".StudyGroupActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="study_dev.testbed.studyhopper.StudyGroupActivity" />
         </activity>
         <activity
             android:name=".ui.profile.ProfilePage"

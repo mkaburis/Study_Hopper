@@ -26,10 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Logger;
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 
 public class DashboardFragment extends Fragment {
@@ -56,13 +52,13 @@ public class DashboardFragment extends Fragment {
 
 
         final ArrayList<studyGroupItem> studyGroupList = new ArrayList<>();
-        studyGroupList.add(new studyGroupItem(R.drawable.ic_study_group_color, "Mobile Devices", "COP 4656"));
-        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Automata Fun", "COT 4210"));
-        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_3, "How to not go to Jail", "CIS 4250"));
-        studyGroupList.add(new studyGroupItem(R.drawable.ic_study_group_color, "Hendrix Fun", "COP 4970"));
-        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Hadoop & Big Data", "CIS 4930"));
-        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_3, "GRE Prep", "TestPrep"));
-        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_2, "Test", "Test"));
+        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_purple, "Mobile Devices", "COP 4656"));
+        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_blue, "Automata Fun", "COT 4210"));
+        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_green, "How to not go to Jail", "CIS 4250"));
+        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_purple, "Hendrix Fun", "COP 4970"));
+        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_blue, "Hadoop & Big Data", "CIS 4930"));
+        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_green, "GRE Prep", "TestPrep"));
+        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_blue, "Test", "Test"));
 
 
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
@@ -117,8 +113,8 @@ public class DashboardFragment extends Fragment {
                     Log.d(TAG, e.toString());
                 }
                 if(documentSnapshot.exists()) {
-                    String first_name = documentSnapshot.getString("first-name");
-                    String last_name = documentSnapshot.getString("last-name");
+                    String first_name = documentSnapshot.getString("firstName");
+                    String last_name = documentSnapshot.getString("lastName");
 
                     personaName = "Welcome " + first_name + " " + last_name + "!";
                     welcomeMsg.setText(personaName);

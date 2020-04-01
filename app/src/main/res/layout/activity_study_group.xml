@@ -42,7 +42,7 @@
             android:layout_marginEnd="20dp"
             android:layout_alignParentEnd="true"
             android:contentDescription="@string/study_group_circle_color_description"
-            android:src="@drawable/ic_study_group_color" />
+            android:src="@drawable/ic_group_color_purple" />
 
         <TextView
             android:id="@+id/groupCourseCode"
