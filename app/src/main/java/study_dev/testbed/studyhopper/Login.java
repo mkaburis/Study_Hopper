@@ -17,6 +17,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import study_dev.testbed.studyhopper.ui.profile.ProfilePage;
+
 public class Login extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
