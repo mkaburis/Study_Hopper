@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -45,6 +47,16 @@ public class MyGroups extends AppCompatActivity {
 
         // Establishes the recycler view for the dropdown menu for groups
         setUpRecyclerView();
+
+        adapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                Group group = documentSnapshot.toObject(Group.class);
+                String path = documentSnapshot.getReference().getPath();
+                String id = documentSnapshot.getId();
+                Toast.makeText(MyGroups.this, "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setUpRecyclerView() {

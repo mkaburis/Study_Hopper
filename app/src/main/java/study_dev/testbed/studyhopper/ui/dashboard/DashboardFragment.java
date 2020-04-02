@@ -101,6 +101,16 @@ public class DashboardFragment extends Fragment {
         // Setup recycler view for study groups
         recyclerView = v.getRootView().findViewById(R.id.study_group_recycler_view);
         setUpRecyclerView();
+        adapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                Group group = documentSnapshot.toObject(Group.class);
+                String path = documentSnapshot.getReference().getPath();
+                String id = documentSnapshot.getId();
+                Toast.makeText(getContext(),
+                        "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Retrieve first and last name of user from the database
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
