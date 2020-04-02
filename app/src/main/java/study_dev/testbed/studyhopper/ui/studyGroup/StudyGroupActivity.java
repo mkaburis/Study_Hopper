@@ -34,7 +34,7 @@ import study_dev.testbed.studyhopper.ui.sessions.SessionPage;
 public class StudyGroupActivity extends AppCompatActivity {
 
     private static final String TAG = "StudyGroupActivity";
-    private study_dev.testbed.studyhopper.models.studyGroupItem studyGroupItem;
+//    private study_dev.testbed.studyhopper.models.studyGroupItem studyGroupItem;
 
     private LineChart mChart;
     CardView groupMembersCard;
@@ -45,21 +45,21 @@ public class StudyGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_group);
 
-        Intent intent = getIntent();
-        studyGroupItem = intent.getParcelableExtra("Study Group Item");
+//        Intent intent = getIntent();
+//        studyGroupItem = intent.getParcelableExtra("Study Group Item");
 
-        int imageRes = studyGroupItem.getImageResource();
-        String line1 = studyGroupItem.getText1();
-        String line2 = studyGroupItem.getText2();
+//        int imageRes = studyGroupItem.getImageResource();
+//        String line1 = studyGroupItem.getText1();
+//        String line2 = studyGroupItem.getText2();
 
-        ImageView imageView = findViewById(R.id.groupCircleImage);
-        imageView.setImageResource(imageRes);
-
-        TextView textView1 = findViewById(R.id.groupName);
-        textView1.setText(line1);
-
-        TextView textView2 = findViewById(R.id.groupCourseCode);
-        textView2.setText(line2);
+//        ImageView imageView = findViewById(R.id.groupCircleImage);
+//        imageView.setImageResource(imageRes);
+//
+//        TextView textView1 = findViewById(R.id.groupName);
+//        textView1.setText(line1);
+//
+//        TextView textView2 = findViewById(R.id.groupCourseCode);
+//        textView2.setText(line2);
 
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
@@ -73,7 +73,6 @@ public class StudyGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(StudyGroupActivity.this, Messages.class);
-                intent.putExtra("Study Group Data", studyGroupItem);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }
@@ -84,7 +83,6 @@ public class StudyGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(StudyGroupActivity.this, GroupMemberList.class);
-                intent.putExtra("Study Group Data", studyGroupItem);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }
@@ -153,7 +151,6 @@ public class StudyGroupActivity extends AppCompatActivity {
 
             case R.id.add_session_option:
                 Intent in = new Intent(StudyGroupActivity.this, SessionPage.class);
-                in.putExtra("Study Group Data", studyGroupItem);
                 startActivity(in);
                 overridePendingTransition(0, 0);
                 return true;
@@ -180,8 +177,6 @@ public class StudyGroupActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-
         Intent in = new Intent(getBaseContext(), Dashboard.class);
         startActivity(in);
         overridePendingTransition(0, 0);

@@ -29,14 +29,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.StudyRoomReservations;
 import study_dev.testbed.studyhopper.models.Group;
-import study_dev.testbed.studyhopper.models.studyGroupItem;
 import study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder;
-import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 
 
 public class DashboardFragment extends Fragment {
