@@ -77,6 +77,12 @@ public class MyGroups extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.startListening();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
