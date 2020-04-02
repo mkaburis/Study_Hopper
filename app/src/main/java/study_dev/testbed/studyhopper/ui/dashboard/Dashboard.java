@@ -139,12 +139,11 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 startActivity(in);
                 overridePendingTransition(1, 0);
                 break;
-            case R.id.messages:
-                in = new Intent(getBaseContext(), Messages.class);
-                startActivity(in);
-                overridePendingTransition(1, 0);
-                break;
-
+//            case R.id.messages:
+//                in = new Intent(getBaseContext(), Messages.class);
+//                startActivity(in);
+//                overridePendingTransition(1, 0);
+//                break;
             case R.id.my_groups:
                 in = new Intent(getBaseContext(), MyGroups.class);
                 startActivity(in);
