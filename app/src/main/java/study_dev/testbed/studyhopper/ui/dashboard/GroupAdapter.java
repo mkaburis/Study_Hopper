@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
 
 public class GroupAdapter extends FirestoreRecyclerAdapter<Group, GroupAdapter.GroupHolder> {
+    private OnItemClickListener listener;
 
     public GroupAdapter(@NonNull FirestoreRecyclerOptions<Group> options) {
         super(options);
@@ -51,12 +53,31 @@ public class GroupAdapter extends FirestoreRecyclerAdapter<Group, GroupAdapter.G
             textViewGroupName = itemView.findViewById(R.id.text_view_group_name);
             textViewCourseCode = itemView.findViewById(R.id.text_view_course_code);
             imageViewGroupColor = itemView.findViewById(R.id.image_view_group_color);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION && listener != null) {
+                        listener.onItemClick(getSnapshots().getSnapshot(position), position);
+                    }
+                }
+            });
         }
+    }
+
+    public interface  OnItemClickListener {
+        void onItemClick(DocumentSnapshot documentSnapshot, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
 
     }
 
-    private int findGroupColorId(String color){
 
+
+    private int findGroupColorId(String color){
         Map<String, Integer> colorMap = new HashMap<>();
         colorMap.put("Blue", Integer.valueOf(R.drawable.ic_group_color_blue));
         colorMap.put("Green", Integer.valueOf(R.drawable.ic_group_color_green));
@@ -68,34 +89,6 @@ public class GroupAdapter extends FirestoreRecyclerAdapter<Group, GroupAdapter.G
         colorMap.put("Gray", Integer.valueOf(R.drawable.ic_group_color_gray));
 
         return colorMap.get(color);
-
-//        if(color.equals("Red")){
-//            return R.drawable.ic_group_color_red;
-//        }
-//        else if(color.equals("Yellow")) {
-//            return R.drawable.ic_group_color_yellow;
-//        }
-//        else if(color.equals("Brown")) {
-//            return R.drawable.ic_group_color_brown;
-//        }
-//        else if(color.equals("Blue")) {
-//            return R.drawable.ic_group_color_blue;
-//        }
-//        else if(color.equals("Green")) {
-//            return R.drawable.ic_group_color_green;
-//        }
-//        else if(color.equals("Purple")) {
-//            return R.drawable.ic_group_color_purple;
-//        }
-//        else if(color.equals("Orange")) {
-//            return R.drawable.ic_group_color_orange;
-//        }
-//        else if(color.equals("Gray")) {
-//            return R.drawable.ic_group_color_gray;
-//        }
-//        else {
-//            return R.drawable.ic_group_color_gray;
-//        }
     }
 
 

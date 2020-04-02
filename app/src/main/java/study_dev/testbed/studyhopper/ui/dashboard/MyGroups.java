@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -23,12 +25,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
+import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 
 public class MyGroups extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private CollectionReference groupRef = db.collection("users")
             .document(getUserName()).collection("groups");
+
+    private CollectionReference ref = db.collection("groups");
 
     private GroupAdapter adapter;
 
@@ -45,6 +50,20 @@ public class MyGroups extends AppCompatActivity {
 
         // Establishes the recycler view for the dropdown menu for groups
         setUpRecyclerView();
+
+        adapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                Group group = documentSnapshot.toObject(Group.class);
+                String path = documentSnapshot.getReference().getPath();
+                String id = documentSnapshot.getId();
+                Toast.makeText(MyGroups.this, "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MyGroups.this, StudyGroupActivity.class);
+                intent.putExtra("documentID", id);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
+        });
     }
 
     private void setUpRecyclerView() {
@@ -73,6 +92,12 @@ public class MyGroups extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         adapter.startListening();
     }
 

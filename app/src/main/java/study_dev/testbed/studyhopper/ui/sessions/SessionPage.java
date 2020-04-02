@@ -17,11 +17,10 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import study_dev.testbed.studyhopper.R;
-import study_dev.testbed.studyhopper.models.studyGroupItem;
 import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 
 public class SessionPage extends AppCompatActivity {
-    private studyGroupItem item;
+//    private studyGroupItem item;
     private EditText sessionDateEditText;
     private EditText sessionTimeStartEditText, sessionTimeEndEditText;
     private DatePickerDialog.OnDateSetListener dateListener;
@@ -32,8 +31,8 @@ public class SessionPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_page);
 
-        Intent intent = getIntent();
-        item = intent.getParcelableExtra("Study Group Data");
+//        Intent intent = getIntent();
+//        item = intent.getParcelableExtra("Study Group Data");
 
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
@@ -114,7 +113,6 @@ public class SessionPage extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent in = new Intent(getBaseContext(), StudyGroupActivity.class);
-        in.putExtra("Study Group Item", item);
         startActivity(in);
         overridePendingTransition(0, 0);
     }
