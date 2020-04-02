@@ -15,12 +15,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import study_dev.testbed.studyhopper.R;
@@ -30,6 +34,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private EditText editTextGroupName;
     private EditText editTextCourseCode;
     private String groupColor, groupPreference, preferenceSelected;
+    private String groupId;
     private Spinner groupPreferencesSpinner;
     private NumberPicker groupMaxSizePicker;
     private EditText editTextMaxSize;
@@ -119,15 +124,28 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         // Firebase reference for "Groups" Collection
         CollectionReference groupRef = FirebaseFirestore.getInstance()
                 .collection("groups");
-        // Firebase Reference for "Groups" in users sub-collection
+
+        // Firebase reference for "Groups" in users sub-collection
         CollectionReference userGroupRef = FirebaseFirestore.getInstance()
                 .collection("users").document(getUserName())
                 .collection("groups");
 
         Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
                 getUserName(), groupSizeMax);
-        groupRef.add(groupTemplate);
+
+        groupRef.add(groupTemplate).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentReference> task) {
+                if(task.isSuccessful()){
+                    groupId = task.getResult().getId();
+                }
+            }
+        });
         userGroupRef.add(groupTemplate);
+
+        CollectionReference groupMemberRef = FirebaseFirestore.getInstance()
+                .collection("groups").document(groupId)
+                .collection("members");
 
         Toast.makeText(this, "Group added", Toast.LENGTH_SHORT).show();
         finish();

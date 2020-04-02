@@ -25,12 +25,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
+import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 
 public class MyGroups extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private CollectionReference groupRef = db.collection("users")
             .document(getUserName()).collection("groups");
+
+    private CollectionReference ref = db.collection("groups");
 
     private GroupAdapter adapter;
 
@@ -55,6 +58,10 @@ public class MyGroups extends AppCompatActivity {
                 String path = documentSnapshot.getReference().getPath();
                 String id = documentSnapshot.getId();
                 Toast.makeText(MyGroups.this, "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MyGroups.this, StudyGroupActivity.class);
+                intent.putExtra("documentID", id);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
             }
         });
     }
