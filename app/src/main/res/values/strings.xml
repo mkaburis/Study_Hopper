@@ -62,7 +62,7 @@
     <string name="select_here">Select Here</string>
     <string name="group_color_image_description">Group Color Selection</string>
     <string-array name="group_preferences">
-        <item/>
+        <item />
         <item>Coed Group</item>
         <item>Females Only Group</item>
         <item>Males Only Group</item>
