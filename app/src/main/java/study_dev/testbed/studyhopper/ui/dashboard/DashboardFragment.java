@@ -33,6 +33,7 @@ import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.StudyRoomReservations;
 import study_dev.testbed.studyhopper.models.Group;
 import study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder;
+import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 
 
 public class DashboardFragment extends Fragment {
@@ -104,11 +105,14 @@ public class DashboardFragment extends Fragment {
         adapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                Group group = documentSnapshot.toObject(Group.class);
-                String path = documentSnapshot.getReference().getPath();
                 String id = documentSnapshot.getId();
                 Toast.makeText(getContext(),
                         "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
+                Activity activity = (Activity) getContext();
+                Intent intent = new Intent(getContext(), StudyGroupActivity.class);
+                intent.putExtra("documentID", id);
+                startActivity(intent);
+                activity.overridePendingTransition(0, 0);
             }
         });
 
