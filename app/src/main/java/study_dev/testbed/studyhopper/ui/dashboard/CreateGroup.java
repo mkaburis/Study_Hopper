@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,21 +17,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
+import study_dev.testbed.studyhopper.models.Member;
 
 public class CreateGroup extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+    private static final String TAG = "CreateGroup";
     private EditText editTextGroupName;
     private EditText editTextCourseCode;
     private String groupColor, groupPreference, preferenceSelected;
@@ -41,6 +53,8 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private TextView groupPreferencesPrompt;
     private int colorSelected = 0;
     private ImageView blue, green, yellow, red, purple, orange, brown, gray;
+    private Member newMember;
+    private String firstName, lastName;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -89,7 +103,6 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         String courseCode = editTextCourseCode.getText().toString();
         String groupPreference = groupPreferencesSpinner.getSelectedItem().toString();
         int groupSizeMax;
-        boolean coedGroup = false, femalesOnlyGroup = false, malesOnlyGroup = false;
 
         if(editTextMaxSize.getText().toString().equals("")) {
             Toast.makeText(this, "Please select the maximum number of members for the group!", Toast.LENGTH_SHORT).show();
@@ -133,19 +146,51 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
                 getUserName(), groupSizeMax);
 
-        groupRef.add(groupTemplate).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+
+
+//        groupRef.add(groupTemplate).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentReference> task) {
+//                if(task.isSuccessful()){
+//                    groupId = task.getResult().getId();
+//                    Toast.makeText(CreateGroup.this, "Group ID: " + groupId, Toast.LENGTH_SHORT).show();
+//                }
+//                else {
+//                    Toast.makeText(CreateGroup.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//        groupRef.add(groupTemplate);
+        groupId = FirebaseFirestore.getInstance().collection("groups").document().getId();
+        FirebaseFirestore.getInstance().collection("groups").document(groupId).set(groupTemplate);
+        userGroupRef.add(groupTemplate);
+
+        DocumentReference docRef = FirebaseFirestore.getInstance()
+                .collection("users").document(getUserName());
+
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentReference> task) {
-                if(task.isSuccessful()){
-                    groupId = task.getResult().getId();
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Toast.makeText(CreateGroup.this, "Error while loading!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, e.toString());
+                }
+                if (documentSnapshot.exists()) {
+                    firstName  = documentSnapshot.getString("firstName");
+                    lastName  = documentSnapshot.getString("lastName");
+
                 }
             }
         });
-        userGroupRef.add(groupTemplate);
 
         CollectionReference groupMemberRef = FirebaseFirestore.getInstance()
                 .collection("groups").document(groupId)
                 .collection("members");
+//
+        newMember = new Member(firstName, lastName, getUserName(), true,
+                Timestamp.now());
+//
+        groupMemberRef.add(newMember);
 
         Toast.makeText(this, "Group added", Toast.LENGTH_SHORT).show();
         finish();

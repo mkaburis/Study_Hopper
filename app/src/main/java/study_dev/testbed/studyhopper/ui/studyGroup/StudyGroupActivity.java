@@ -93,6 +93,20 @@ public class StudyGroupActivity extends AppCompatActivity {
                     groupNameTextView.setText(templateGroup.getGroupName());
                     courseCodeTextView.setText(templateGroup.getGroupName());
                     groupColorImageView.setImageResource(findGroupColorId(templateGroup.getGroupColor()));
+
+                    Query groupQuery = groupRef.whereEqualTo("groupName", templateGroup.getGroupName());
+
+                    groupQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()) {
+                                for(QueryDocumentSnapshot document : task.getResult()) {
+                                    groupID = document.getId();
+                                    Toast.makeText(StudyGroupActivity.this, "Doc ID: " + groupID, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    });
                 }
 
                 else {
@@ -103,20 +117,10 @@ public class StudyGroupActivity extends AppCompatActivity {
             }
         });
 
-        Query groupQuery = groupRef.whereEqualTo("groupName", "Ethics Final Project")
-                .whereEqualTo("groupOwner", "mkaburis");
+        String user = getUserName();
+//        String groupName = templateGroup.getGroupName();
 
-        groupQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-                    for(QueryDocumentSnapshot document : task.getResult()) {
-                        groupID = document.getId();
-                        Toast.makeText(StudyGroupActivity.this, "Doc ID: " + groupID, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
+
 
 
 //        Intent intent = getIntent();
