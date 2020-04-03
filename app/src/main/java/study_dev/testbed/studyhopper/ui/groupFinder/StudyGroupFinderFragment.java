@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,7 +22,15 @@ public class StudyGroupFinderFragment extends Fragment {
 
     private StudyGroupFinderViewModel mViewModel;
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private Spinner AgeRangeSpinner;
+    private Spinner ageRangeSpinner;
+    private Spinner locationSpinner;
+    private Spinner groupSizeSpinner;
+    private Spinner genderSpinner;
+
+    private EditText sTextInputubjectSearch;
+    private EditText courseNumberSearch;
+
+    private Button searchButton;
 
     public static StudyGroupFinderFragment newInstance() {
         return new StudyGroupFinderFragment();
@@ -41,8 +51,12 @@ public class StudyGroupFinderFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_study_group_finder, container, false);
         TextView noResultsText = v.getRootView().findViewById(R.id.NoResultsText);
         RecyclerView resultViewer = v.getRootView().findViewById(R.id.ResultRecycleViewer);
-        AgeRangeSpinner = v.getRootView().findViewById(R.id.AgeRangeSpinner);
-        fillGroupPreferencesSpinner();
+
+        ageRangeSpinner = v.getRootView().findViewById(R.id.AgeRangeSpinner);
+        locationSpinner = v.getRootView().findViewById(R.id.LocationSpinner);
+        groupSizeSpinner = v.getRootView().findViewById(R.id.SizeSpinner);
+        genderSpinner = v.getRootView().findViewById(R.id.GenderSpinner);
+        fillGroupPreferencesSpinners();
 
         if (resultViewer.getChildCount() == 0) {
             noResultsText.setVisibility(View.VISIBLE);
@@ -58,12 +72,27 @@ public class StudyGroupFinderFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
-    private void fillGroupPreferencesSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.group_size, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        AgeRangeSpinner.setAdapter(adapter);
+    private void fillGroupPreferencesSpinners() {
+        ArrayAdapter<CharSequence> ageRangeAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.age_range_preference, android.R.layout.simple_spinner_item);
+        ageRangeAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        ageRangeSpinner.setAdapter(ageRangeAdapter);
         //groupPreferencesSpinner.setOnItemSelectedListener(this);
+
+        ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.group_preferences, android.R.layout.simple_spinner_item);
+        genderAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        genderSpinner.setAdapter(genderAdapter);
+
+        ArrayAdapter<CharSequence> locationAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.location_preference, android.R.layout.simple_spinner_item);
+        locationAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        locationSpinner.setAdapter(locationAdapter);
+
+        ArrayAdapter<CharSequence> groupSizeAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.group_size_preference, android.R.layout.simple_spinner_item);
+        groupSizeAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        groupSizeSpinner.setAdapter(groupSizeAdapter);
     }
 
 }
