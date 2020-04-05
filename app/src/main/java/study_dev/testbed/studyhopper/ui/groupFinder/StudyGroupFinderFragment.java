@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -127,8 +128,9 @@ public class StudyGroupFinderFragment extends Fragment {
     private void getGroupsFromFirebase() {
         CollectionReference groupsRef = db.collection("groups");
 
+        Query query = buildQuery(groupsRef);
 
-        groupsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -158,6 +160,43 @@ public class StudyGroupFinderFragment extends Fragment {
             mAdapter = new GroupSearchAdapter(groupList);
             mGroupRecycleView.setAdapter(mAdapter);
         }
+    }
+
+    private Query buildQuery(CollectionReference groupsReference) {
+        Query newQuery = groupsReference.whereEqualTo("isActive", true);
+
+        String courseSubject = subjectSearch.getText().toString();
+        String courseNumber = courseNumberSearch.getText().toString();
+        String ageRange = ageRangeSpinner.getSelectedItem().toString();
+        String meetingLocation = locationSpinner.getSelectedItem().toString();
+        String groupSize = groupSizeSpinner.getSelectedItem().toString();
+        String genderSpecific = genderSpinner.getSelectedItem().toString();
+
+        if (!courseSubject.isEmpty() && !courseNumber.isEmpty()) {
+            String subjectCode = courseSubject + " " + courseNumber;
+            newQuery = newQuery.whereEqualTo("courseCode", subjectCode);
+        }
+        if (!ageRange.isEmpty()) {
+            newQuery = newQuery.whereEqualTo("ageRange", ageRange);
+        }
+        if (!meetingLocation.isEmpty()) {
+            newQuery = newQuery.whereEqualTo("meetingLocation", meetingLocation);
+        }
+        if (!groupSize.isEmpty()) {
+            newQuery = newQuery.whereEqualTo("groupSize", groupSize);
+        }
+        if (!genderSpecific.isEmpty()) {
+            String dbGender = "";
+            if (genderSpecific.equals("Coed Group"))
+                dbGender = "Coed";
+            else if (genderSpecific.equals("Females Only Group"))
+                dbGender = "Females Only";
+            else if (genderSpecific.equals("Males Only Group"))
+                dbGender = "Males Only";
+            newQuery = newQuery.whereEqualTo("groupPreference", dbGender);
+        }
+
+        return newQuery;
     }
 
 }
