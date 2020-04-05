@@ -7,18 +7,31 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.models.Member;
+import study_dev.testbed.studyhopper.models.Profile;
 
 public class GroupMemberList extends AppCompatActivity {
     private String userGroupDocID;
@@ -28,8 +41,10 @@ public class GroupMemberList extends AppCompatActivity {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("users");
+    private CollectionReference groupMemberRef;
     private String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
     private Pattern emailPattern = Pattern.compile(emailRegex);
+    private boolean closeDialog = false, memberExists = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +53,12 @@ public class GroupMemberList extends AppCompatActivity {
 
         Intent intent = getIntent();
         userGroupDocID = intent.getStringExtra("userDocId");
+        groupDocID = intent.getStringExtra("groupDocId");
+
+
+        groupMemberRef = FirebaseFirestore.getInstance()
+                .collection("groups").document(groupDocID)
+                .collection("members");
 
 
         // Enable back button
@@ -47,7 +68,8 @@ public class GroupMemberList extends AppCompatActivity {
         }
     }
 
-    public void addGroupMember(View v){
+    public void addGroupMember(View v) {
+        closeDialog = false;
         View addMemberView = getLayoutInflater().inflate(R.layout.dialog_add_member, null);
         memberCandidateEditText = addMemberView.findViewById(R.id.edit_member);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -73,19 +95,65 @@ public class GroupMemberList extends AppCompatActivity {
         addMemberDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Boolean closeDialog = false;
+                memberExists = false;
 
-                String memberEmail = memberCandidateEditText.getText().toString();
+                final String memberEmail = memberCandidateEditText.getText().toString();
 
                 Matcher matcher = emailPattern.matcher(memberEmail.trim());
 
-                if(!matcher.matches()){
+                if (!matcher.matches()) {
                     memberCandidateEditText.setError("Invalid email!");
-                }
-                else
-                    closeDialog = true;
+                    return;
+                } else {
+                    usersRef.document(getUsername(memberEmail)).get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                if(closeDialog)
+                                    Profile tempProfile = documentSnapshot.toObject(Profile.class);
+
+                                    if (tempProfile != null) {
+                                        String fName = tempProfile.getFirstName();
+                                        String lName = tempProfile.getLastName();
+
+                                        final Member newMember = new Member(fName, lName
+                                                , getUsername(memberEmail), false, Timestamp.now());
+
+                                        groupMemberRef.whereEqualTo("userDocId", getUsername(memberEmail))
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if(task.isSuccessful()) {
+                                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                if (document != null) {
+                                                                    memberCandidateEditText.setError("Member is already in group!");
+                                                                    memberExists = true;
+                                                                    closeDialog = false;
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                });
+
+                                        // Only add a new member once we ensure a member does not already exist
+                                        if (!memberExists) {
+                                            groupMemberRef.add(newMember);
+                                            closeDialog = true;
+                                        }
+
+                                    }
+                                    else {
+                                        memberCandidateEditText.setError("Email does not exist within system");
+                                        closeDialog = false;
+                                    }
+                                }
+                            });
+                }
+
+
+                if (closeDialog)
                     addMemberDialog.dismiss();
             }
         });

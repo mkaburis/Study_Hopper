@@ -91,7 +91,7 @@ public class StudyGroupActivity extends AppCompatActivity {
                     templateGroup = documentSnapshot.toObject(Group.class);
 
                     groupNameTextView.setText(templateGroup.getGroupName());
-                    courseCodeTextView.setText(templateGroup.getGroupName());
+                    courseCodeTextView.setText(templateGroup.getCourseCode());
                     groupColorImageView.setImageResource(findGroupColorId(templateGroup.getGroupColor()));
 
                     Query groupQuery = groupRef.whereEqualTo("groupName", templateGroup.getGroupName());
