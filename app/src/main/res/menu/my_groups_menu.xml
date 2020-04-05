@@ -5,13 +5,7 @@
     <item
         android:id="@+id/create_group_option"
         android:icon="@drawable/ic_add_group"
-        android:title="@string/create_study_group"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/search_group_option"
-        android:icon="@drawable/ic_finder_icon"
-        android:title="@string/study_group_add_session"
+        android:title="@string/add_group_member"
         app:showAsAction="ifRoom"/>
 
 </menu>

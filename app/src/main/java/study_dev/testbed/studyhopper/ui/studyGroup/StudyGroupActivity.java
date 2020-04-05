@@ -110,7 +110,7 @@ public class StudyGroupActivity extends AppCompatActivity {
                 }
 
                 else {
-                    groupNameTextView.setText("Problem!");
+                    groupNameTextView.setText("Error!");
                     courseCodeTextView.setText("N/A");
                     groupColorImageView.setImageResource(findGroupColorId("Gray"));
                 }
@@ -118,26 +118,6 @@ public class StudyGroupActivity extends AppCompatActivity {
         });
 
         String user = getUserName();
-//        String groupName = templateGroup.getGroupName();
-
-
-
-
-//        Intent intent = getIntent();
-//        studyGroupItem = intent.getParcelableExtra("Study Group Item");
-
-//        int imageRes = studyGroupItem.getImageResource();
-//        String line1 = studyGroupItem.getText1();
-//        String line2 = studyGroupItem.getText2();
-
-
-//        imageView.setImageResource(imageRes);
-//
-//        TextView textView1 = findViewById(R.id.groupName);
-//        textView1.setText(line1);
-//
-//        TextView textView2 = findViewById(R.id.groupCourseCode);
-//        textView2.setText(line2);
 
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
@@ -162,6 +142,8 @@ public class StudyGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(StudyGroupActivity.this, GroupMemberList.class);
+                intent.putExtra("userDocId", docID);
+                intent.putExtra("groupDocId", groupID);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }

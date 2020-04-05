@@ -122,10 +122,6 @@ public class MyGroups extends AppCompatActivity {
                 overridePendingTransition(0, 0);
                 return true;
 
-            case R.id.search_group_option:
-                // TODO implement search for group activity
-                return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }

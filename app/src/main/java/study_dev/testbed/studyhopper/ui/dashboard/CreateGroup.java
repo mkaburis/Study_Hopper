@@ -54,7 +54,6 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private int colorSelected = 0;
     private ImageView blue, green, yellow, red, purple, orange, brown, gray;
     private Member newMember;
-    private String firstName, lastName;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -176,21 +175,18 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                     Log.d(TAG, e.toString());
                 }
                 if (documentSnapshot.exists()) {
-                    firstName  = documentSnapshot.getString("firstName");
-                    lastName  = documentSnapshot.getString("lastName");
+                    String firstName  = documentSnapshot.getString("firstName");
+                    String lastName  = documentSnapshot.getString("lastName");
 
+                    CollectionReference groupMemberRef = FirebaseFirestore.getInstance()
+                            .collection("groups").document(groupId)
+                            .collection("members");
+                    newMember = new Member(firstName, lastName, getUserName(), true,
+                            Timestamp.now());
+                    groupMemberRef.add(newMember);
                 }
             }
         });
-
-        CollectionReference groupMemberRef = FirebaseFirestore.getInstance()
-                .collection("groups").document(groupId)
-                .collection("members");
-//
-        newMember = new Member(firstName, lastName, getUserName(), true,
-                Timestamp.now());
-//
-        groupMemberRef.add(newMember);
 
         Toast.makeText(this, "Group added", Toast.LENGTH_SHORT).show();
         finish();
