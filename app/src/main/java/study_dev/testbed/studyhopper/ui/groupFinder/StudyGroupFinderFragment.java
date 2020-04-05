@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,17 +25,18 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import study_dev.testbed.studyhopper.R;
-import study_dev.testbed.studyhopper.ui.profile.classListItem;
+import study_dev.testbed.studyhopper.models.Group;
 
 public class StudyGroupFinderFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private FirebaseFirestore db;
     private String TAG;
     private GroupSearchAdapter mAdapter;
-    private ArrayList<classListItem> groupList;
+    TextView noResultsText;
+    private ArrayList<groupListItem> groupList;
+    private RecyclerView mGroupRecycleView;
 
     private Spinner ageRangeSpinner;
     private Spinner locationSpinner;
@@ -44,6 +46,7 @@ public class StudyGroupFinderFragment extends Fragment {
     private EditText subjectSearch;
     private EditText courseNumberSearch;
     private Button searchButton;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public static StudyGroupFinderFragment newInstance() {
         return new StudyGroupFinderFragment();
@@ -61,10 +64,18 @@ public class StudyGroupFinderFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
+        groupList = new ArrayList<>();
 
         View v = inflater.inflate(R.layout.fragment_study_group_finder, container, false);
-        TextView noResultsText = v.getRootView().findViewById(R.id.NoResultsText);
-        RecyclerView resultViewer = v.getRootView().findViewById(R.id.ResultRecycleViewer);
+        noResultsText = v.getRootView().findViewById(R.id.NoResultsText);
+
+        mGroupRecycleView = v.getRootView().findViewById(R.id.ResultRecycleViewer);
+        mGroupRecycleView.setHasFixedSize(false); //ONLY for FIXED Size recylcerView remove later
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mAdapter = new GroupSearchAdapter(groupList);
+        mGroupRecycleView.setLayoutManager(mLayoutManager);
+        mGroupRecycleView.setAdapter(mAdapter);
+
 
         ageRangeSpinner = v.getRootView().findViewById(R.id.AgeRangeSpinner);
         locationSpinner = v.getRootView().findViewById(R.id.LocationSpinner);
@@ -83,7 +94,7 @@ public class StudyGroupFinderFragment extends Fragment {
             }
         });
 
-        if (resultViewer.getChildCount() == 0) {
+        if (mGroupRecycleView.getChildCount() == 0) {
             noResultsText.setVisibility(View.VISIBLE);
         }
 
@@ -121,12 +132,17 @@ public class StudyGroupFinderFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    groupList.clear();
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Map group = document.getData();
+                        Group group = document.toObject(Group.class);
 
+                        groupListItem listItem = new groupListItem(group.getGroupName(),
+                                group.getCourseCode(),
+                                group.getGroupColor());
 
-                        //reloadRecycler();
+                        groupList.add(listItem);
                     }
+                    reloadRecycler();
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
@@ -135,8 +151,13 @@ public class StudyGroupFinderFragment extends Fragment {
     }
 
     private void reloadRecycler() {
-        mAdapter = new GroupSearchAdapter(new ArrayList<String>());
-        //mClassRecycleView.setAdapter(mAdapter);
+        if (groupList.size() == 0) {
+            noResultsText.setVisibility(View.VISIBLE);
+        } else {
+            noResultsText.setVisibility(View.GONE);
+            mAdapter = new GroupSearchAdapter(groupList);
+            mGroupRecycleView.setAdapter(mAdapter);
+        }
     }
 
 }

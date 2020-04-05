@@ -284,7 +284,8 @@
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/ResultRecycleViewer"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="16dp" />
 
                     </LinearLayout>
                 </ScrollView>
