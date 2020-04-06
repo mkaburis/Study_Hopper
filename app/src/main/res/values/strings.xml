@@ -89,5 +89,6 @@
     <string name="forgot_password_button_text">Forgot Password</string>
     <string name="add_group_member">Add Group Member</string>
     <string name="group_member_edit_text_hint">Type in an email address</string>
+    <string name="remove_members">Remove Members</string>
 
 </resources>

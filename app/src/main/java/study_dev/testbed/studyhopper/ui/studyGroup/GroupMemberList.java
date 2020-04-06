@@ -116,8 +116,8 @@ public class GroupMemberList extends AppCompatActivity {
                                         String fName = tempProfile.getFirstName();
                                         String lName = tempProfile.getLastName();
 
-                                        final Member newMember = new Member(fName, lName
-                                                , getUsername(memberEmail), false, Timestamp.now());
+                                        final Member newMember = new Member(fName, lName, getUsername(memberEmail),
+                                                getUsername(memberEmail), false, Timestamp.now());
 
                                         groupMemberRef.whereEqualTo("userDocId", getUsername(memberEmail))
                                                 .get()

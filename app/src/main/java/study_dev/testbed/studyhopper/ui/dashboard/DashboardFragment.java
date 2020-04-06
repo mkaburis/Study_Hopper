@@ -19,7 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,6 +30,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import study_dev.testbed.studyhopper.R;
@@ -48,35 +52,69 @@ public class DashboardFragment extends Fragment {
     private CardView studyRoomReservationCard;
 
     private String userName, personaName;
+    private String userEmail;
+    private String userDocumentId;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private DocumentReference docRef = db.collection("users").document(getUserName());
-    private CollectionReference groupRef = db.collection("users")
-            .document(getUserName()).collection("groups");
+    private CollectionReference userRef = db.collection("users");
+    private CollectionReference groupRef;
+
+//    private CollectionReference groupRef = db.collection("users")
+//            .document(getUserName()).collection("groups");
 
     @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
-//        final ArrayList<studyGroupItem> studyGroupList = new ArrayList<>();
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_purple, "Mobile Devices", "COP 4656"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_blue, "Automata Fun", "COT 4210"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_green, "How to not go to Jail", "CIS 4250"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_purple, "Hendrix Fun", "COP 4970"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_blue, "Hadoop & Big Data", "CIS 4930"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_green, "GRE Prep", "TestPrep"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_blue, "Test", "Test"));
-
-
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         welcomeMsg = v.getRootView().findViewById(R.id.welcome_txt);
 
         groupFinderCard = v.getRootView().findViewById(R.id.studyGroupFinderCard);
+        recyclerView = v.getRootView().findViewById(R.id.study_group_recycler_view);
 
+        // Retrieve user's email address from FirebaseAuth
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null){
+            userEmail = user.getEmail();
+            Toast.makeText(getContext(), userEmail, Toast.LENGTH_SHORT).show();
+        }
+
+        Query userQuery = userRef.whereEqualTo("email", userEmail);
+
+        userQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for(QueryDocumentSnapshot document : task.getResult()) {
+                                userDocumentId = document.getId();
+                                groupRef = db.collection("users").document(userDocumentId)
+                                        .collection("groups");
+                                buildWelcomeMsg();
+
+                                setUpRecyclerView();
+
+                                adapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                                        String id = documentSnapshot.getId();
+                                        Toast.makeText(getContext(),
+                                                "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
+                                        Activity activity = (Activity) getContext();
+                                        Intent intent = new Intent(getContext(), StudyGroupActivity.class);
+                                        intent.putExtra("documentID", id);
+                                        startActivity(intent);
+                                        activity.overridePendingTransition(0, 0);
+                                    }
+                                });
+
+                            }
+                        }
+                    }
+                });
 
         groupFinderCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,25 +137,13 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        // Setup recycler view for study groups
-        recyclerView = v.getRootView().findViewById(R.id.study_group_recycler_view);
-        setUpRecyclerView();
-        adapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                String id = documentSnapshot.getId();
-                Toast.makeText(getContext(),
-                        "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
-                Activity activity = (Activity) getContext();
-                Intent intent = new Intent(getContext(), StudyGroupActivity.class);
-                intent.putExtra("documentID", id);
-                startActivity(intent);
-                activity.overridePendingTransition(0, 0);
-            }
-        });
+        return v;
 
+    }
+
+    private void buildWelcomeMsg() {
         // Retrieve first and last name of user from the database
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        userRef.document(userDocumentId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
@@ -135,12 +161,10 @@ public class DashboardFragment extends Fragment {
                 }
             }
         });
-
-        return v;
-
     }
 
     private void setUpRecyclerView() {
+        // Setup recycler view for study groups
         Query query = groupRef.orderBy("groupName", Query.Direction.DESCENDING);
 
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -157,6 +181,7 @@ public class DashboardFragment extends Fragment {
         adapter = new GroupAdapter(options);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+        adapter.startListening();
     }
 
 
@@ -169,7 +194,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        adapter.startListening();
+
     }
 
 

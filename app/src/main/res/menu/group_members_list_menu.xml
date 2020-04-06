@@ -5,7 +5,6 @@
     <item
         android:id="@+id/create_group_option"
         android:icon="@drawable/ic_add_group"
-        android:title="@string/create_study_group"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/remove_members" />
 
 </menu>

@@ -181,7 +181,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                     CollectionReference groupMemberRef = FirebaseFirestore.getInstance()
                             .collection("groups").document(groupId)
                             .collection("members");
-                    newMember = new Member(firstName, lastName, getUserName(), true,
+                    newMember = new Member(firstName, lastName, getUserName(), getUserName(), true,
                             Timestamp.now());
                     groupMemberRef.add(newMember);
                 }
