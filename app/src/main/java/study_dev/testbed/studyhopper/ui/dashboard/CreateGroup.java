@@ -23,9 +23,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
@@ -43,11 +47,14 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private ImageView blue, green, yellow, red, purple, orange, brown, gray;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private String userProfileId;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
+        db = FirebaseFirestore.getInstance();
 
         editTextGroupName = findViewById(R.id.edit_text_group_name);
         editTextCourseCode = findViewById(R.id.edit_text_group_course_code);
@@ -122,12 +129,12 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
             preferenceSelected = "Males Only";
 
         // Firebase reference for "Groups" Collection
-        CollectionReference groupRef = FirebaseFirestore.getInstance()
+        CollectionReference groupRef = db
                 .collection("groups");
 
         // Firebase reference for "Groups" in users sub-collection
-        CollectionReference userGroupRef = FirebaseFirestore.getInstance()
-                .collection("users").document(getUserName())
+        CollectionReference userGroupRef = db
+                .collection("users").document(userProfileId)
                 .collection("groups");
 
         Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
@@ -143,7 +150,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         });
         userGroupRef.add(groupTemplate);
 
-        CollectionReference groupMemberRef = FirebaseFirestore.getInstance()
+        CollectionReference groupMemberRef = db
                 .collection("groups").document(groupId)
                 .collection("members");
 
@@ -288,9 +295,37 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         gray.setBackgroundResource(0);
     }
 
+    private String getEmail() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            return null;
+        }
+        return user.getEmail();
+    }
+
     private String getUserName() {
-        String email = mAuth.getCurrentUser().getEmail();
-        int parseIndex = email.indexOf('@');
-        return email.substring(0, parseIndex);
+        String username = getEmail();
+
+        int index = username.indexOf('@');
+
+        return username.substring(0, index);
+    }
+
+    private void getProfileDocId() {
+        // userProfileId
+        String email = getEmail();
+        Query profileQuery = db.collection("users").whereEqualTo("email", email).limit(1);
+
+        profileQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        userProfileId = document.getReference().getId();
+                        userProfileId = document.getId();
+                    }
+                }
+            }
+        });
     }
 }

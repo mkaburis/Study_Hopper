@@ -88,7 +88,9 @@ public class ProfileClasses extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         classList = new ArrayList<>();
 
-        fetchClassesFromDB();
+        if (mAuth.getCurrentUser() != null && mAuth.getCurrentUser().isAnonymous()) {
+            fetchClassesFromDB();
+        }
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile_classes, container, false);

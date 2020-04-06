@@ -7,6 +7,28 @@ import java.util.Date;
 public class Profile {
     String firstName;
     String lastName;
+
+    String email;
+
+    public Profile(String firstName, String lastName, Date dob, String gender, String university, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.gender = gender;
+        this.university = university;
+        this.email = email;
+    }
+
+    public Profile(String firstName, String lastName, Date dob, String gender, String university, String email, Timestamp lastLogin) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.gender = gender;
+        this.university = university;
+        this.email = email;
+        this.lastLogin = lastLogin;
+    }
+
     Date dob;
     String gender;
     String university;
@@ -16,21 +38,12 @@ public class Profile {
 
     }
 
-    public Profile(String firstName, String lastName, Date dob, String gender, String university) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dob = dob;
-        this.gender = gender;
-        this.university = university;
+    public String getEmail() {
+        return email;
     }
 
-    public Profile(String firstName, String lastName, Date dob, String gender, String university, Timestamp lastLogin) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dob = dob;
-        this.gender = gender;
-        this.university = university;
-        this.lastLogin = lastLogin;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirstName() {
