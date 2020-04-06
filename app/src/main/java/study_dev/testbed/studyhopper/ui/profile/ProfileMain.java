@@ -33,6 +33,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Major;
@@ -123,7 +124,11 @@ public class ProfileMain extends Fragment {
                 if (newProfile) {
                     createAccount();
                 } else {
-                    updateAccount();
+                    try {
+                        updateAccount();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -187,7 +192,7 @@ public class ProfileMain extends Fragment {
     }
 
     // overwrites existing user's info in database
-    private void updateAccount() {
+    private void updateAccount() throws ParseException {
         Profile newProfile = getProfile();
         final Major newMajor = getMajor();
 
@@ -353,14 +358,17 @@ public class ProfileMain extends Fragment {
 
     }
 
-    private Profile getProfile() {
+    private Profile getProfile() throws ParseException {
         String fName = mFirstName.getText().toString();
         String lName = mLastName.getText().toString();
         String birthday = mDob.getText().toString();
         String gender = mGender.getText().toString();
         String universityStr = mUniversity.getText().toString();
 
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+        Date dob;
         String email = "";
+
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
             email = mEmail.getText().toString();
@@ -368,10 +376,7 @@ public class ProfileMain extends Fragment {
             email = user.getEmail();
         }
 
-
-
-        DateFormat df = DateFormat.getDateInstance();
-        Date dob = new Date();
+        dob = df.parse(birthday);
 
         return new Profile(fName, lName, dob, gender, universityStr, email);
     }
