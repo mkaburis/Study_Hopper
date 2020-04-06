@@ -62,13 +62,33 @@
     <string name="select_here">Select Here</string>
     <string name="group_color_image_description">Group Color Selection</string>
     <string-array name="group_preferences">
-        <item/>
         <item>Coed Group</item>
         <item>Females Only Group</item>
         <item>Males Only Group</item>
     </string-array>
     <string name="profile_tab">Profile</string>
     <string name="classes_tab">Classes</string>
+    <string name="search_group_tab">Search Group</string>
+    <string name="search_people_tab">Search People</string>
+    <string-array name="age_range_preference">
+        <item />
+        <item>18 - 21</item>
+        <item>22 - 25</item>
+        <item>26 - 30</item>
+        <item>31 - 40</item>
+        <item>40+</item>
+    </string-array>
+    <string-array name="location_preference">
+        <item />
+        <item>On Campus</item>
+        <item>Off Campus</item>
+    </string-array>
+    <string-array name="group_size_preference">
+        <item />
+        <item>2-5</item>
+        <item>6-10</item>
+        <item>11+</item>
+    </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -87,4 +107,19 @@
     <string name="ex_course_section">01</string>
     <string name="remove_button_desc">Button to remove class</string>
     <string name="forgot_password_button_text">Forgot Password</string>
+    <string name="search_by_name">Search by Name</string>
+    <string name="male_only">Male Only</string>
+    <string name="female_only">Female Only</string>
+    <string name="coed">Coed</string>
+    <string name="results">Results</string>
+    <string name="gender_preference">Gender Preference</string>
+    <string name="no_results_found">No Results Found</string>
+    <string name="search_by_categories">Search By Categories</string>
+    <string name="location_preference">Location Preference</string>
+    <string name="on_campus">On-Campus Only</string>
+    <string name="age_range">Age Range</string>
+    <string name="subject">Subject</string>
+    <string name="search_by_course">Search By Course</string>
+    <string name="search_groups">Search Groups</string>
+    <string name="group_size">Group Size</string>
 </resources>
