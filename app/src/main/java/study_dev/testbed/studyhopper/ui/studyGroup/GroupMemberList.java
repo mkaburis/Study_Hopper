@@ -6,13 +6,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,6 +24,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -30,21 +35,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.models.Group;
 import study_dev.testbed.studyhopper.models.Member;
 import study_dev.testbed.studyhopper.models.Profile;
 
 public class GroupMemberList extends AppCompatActivity {
     private String userGroupDocID;
+    private String userDocId;
     private String groupDocID;
+    private int maxMembers;
+    private int groupSize;
 
     private EditText memberCandidateEditText;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("users");
     private CollectionReference groupMemberRef;
+    private DocumentReference groupDoc;
     private String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
     private Pattern emailPattern = Pattern.compile(emailRegex);
     private boolean closeDialog = false, memberExists = false;
+
+    private MemberAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +64,36 @@ public class GroupMemberList extends AppCompatActivity {
         setContentView(R.layout.activity_group_members_list);
 
         Intent intent = getIntent();
-        userGroupDocID = intent.getStringExtra("userDocId");
+        userGroupDocID = intent.getStringExtra("userGroupDocId");
+        userDocId = intent.getStringExtra("userDocId");
+        Toast.makeText(this, "Keep value " + userGroupDocID, Toast.LENGTH_SHORT).show();
         groupDocID = intent.getStringExtra("groupDocId");
 
+        groupDoc = db.collection("groups").document(groupDocID);
 
-        groupMemberRef = FirebaseFirestore.getInstance()
-                .collection("groups").document(groupDocID)
+        groupMemberRef = db.collection("groups").document(groupDocID)
                 .collection("members");
+
+        // Get the group size
+        groupMemberRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                groupSize = queryDocumentSnapshots.size();
+            }
+        });
+
+
+        groupDoc.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        Group group = documentSnapshot.toObject(Group.class);
+                        maxMembers = group.getMaxGroupMembers();
+                    }
+                });
+
+        setUpRecyclerView();
 
 
         // Enable back button
@@ -66,6 +101,22 @@ public class GroupMemberList extends AppCompatActivity {
         if (supportActionBar != null) {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private void setUpRecyclerView() {
+        Query query = groupMemberRef.orderBy("firstName", Query.Direction.DESCENDING);
+
+        FirestoreRecyclerOptions<Member> options = new FirestoreRecyclerOptions.Builder<Member>()
+                .setQuery(query, Member.class)
+                .build();
+
+        adapter = new MemberAdapter(options);
+
+        RecyclerView recyclerView = findViewById(R.id.member_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
     }
 
     public void addGroupMember(View v) {
@@ -103,7 +154,6 @@ public class GroupMemberList extends AppCompatActivity {
 
                 if (!matcher.matches()) {
                     memberCandidateEditText.setError("Invalid email!");
-                    return;
                 } else {
                     usersRef.document(getUsername(memberEmail)).get()
                             .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -133,16 +183,18 @@ public class GroupMemberList extends AppCompatActivity {
                                                                     break;
                                                                 }
                                                             }
+                                                            // Only add a new member once we ensure a member does not already exist
+                                                            if (!memberExists) {
+                                                                if(groupSize + 1 <= maxMembers )
+                                                                {
+                                                                    groupMemberRef.add(newMember);
+                                                                    addGroupToUserProfile();
+                                                                    closeDialog = true;
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 });
-
-                                        // Only add a new member once we ensure a member does not already exist
-                                        if (!memberExists) {
-                                            groupMemberRef.add(newMember);
-                                            closeDialog = true;
-                                        }
-
                                     }
                                     else {
                                         memberCandidateEditText.setError("Email does not exist within system");
@@ -152,11 +204,38 @@ public class GroupMemberList extends AppCompatActivity {
                             });
                 }
 
-
                 if (closeDialog)
                     addMemberDialog.dismiss();
             }
         });
+    }
+
+    private void addGroupToUserProfile()
+    {
+        final CollectionReference newUserGroup = usersRef.document(userDocId).collection("groups");
+
+        groupDoc.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                Group groupData = documentSnapshot.toObject(Group.class);
+                newUserGroup.add(groupData);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
     @Override

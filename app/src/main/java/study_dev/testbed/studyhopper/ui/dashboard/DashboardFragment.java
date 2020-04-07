@@ -57,12 +57,8 @@ public class DashboardFragment extends Fragment {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private DocumentReference docRef = db.collection("users").document(getUserName());
     private CollectionReference userRef = db.collection("users");
     private CollectionReference groupRef;
-
-//    private CollectionReference groupRef = db.collection("users")
-//            .document(getUserName()).collection("groups");
 
     @SuppressLint("SetTextI18n")
     @Nullable
@@ -182,13 +178,6 @@ public class DashboardFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         adapter.startListening();
-    }
-
-
-    private String getUserName() {
-        String email = mAuth.getCurrentUser().getEmail();
-        int parseIndex = email.indexOf('@');
-        return email.substring(0, parseIndex);
     }
 
     @Override

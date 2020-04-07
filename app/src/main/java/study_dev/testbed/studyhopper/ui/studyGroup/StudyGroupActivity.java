@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -54,8 +55,10 @@ public class StudyGroupActivity extends AppCompatActivity {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private Group templateGroup;
-    private String docID, groupID;
+    private String userEmail;
+    private String userGroupDocId, userDocId, groupID;
     private DocumentReference userGroupDocRef ;
+    private CollectionReference userRef = db.collection("users");
     private CollectionReference groupRef = db.collection("groups");
     private TextView groupNameTextView;
     private TextView courseCodeTextView;
@@ -69,55 +72,43 @@ public class StudyGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_group);
         Intent intent = getIntent();
-        docID = intent.getStringExtra("documentID");
+
+        // Value for user groupDocId
+        userGroupDocId = intent.getStringExtra("documentID");
 
         groupNameTextView = findViewById(R.id.groupName);
         courseCodeTextView = findViewById(R.id.groupCourseCode);
         groupColorImageView = findViewById(R.id.groupCircleImage);
 
-        Toast.makeText(this, "DocID: " + docID, Toast.LENGTH_SHORT).show();
+        // Retrieve user's email address from FirebaseAuth
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null){
+            userEmail = user.getEmail();
+            Toast.makeText(this, userEmail, Toast.LENGTH_SHORT).show();
+        }
 
-        userGroupDocRef = db.collection("users").document(getUserName()).
-                collection("groups").document(docID);
+        Query userQuery = userRef.whereEqualTo("email", userEmail);
+        userQuery.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for(QueryDocumentSnapshot document : task.getResult()) {
+                                userDocId = document.getId();
 
-        userGroupDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Toast.makeText(StudyGroupActivity.this, "Error while loading!", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, e.toString());
-                }
-                if(documentSnapshot.exists()){
-                    templateGroup = documentSnapshot.toObject(Group.class);
+                                userGroupDocRef = userRef.document(userDocId)
+                                        .collection("groups").document(userGroupDocId);
 
-                    groupNameTextView.setText(templateGroup.getGroupName());
-                    courseCodeTextView.setText(templateGroup.getCourseCode());
-                    groupColorImageView.setImageResource(findGroupColorId(templateGroup.getGroupColor()));
+                                getGroupInformation();
 
-                    Query groupQuery = groupRef.whereEqualTo("groupName", templateGroup.getGroupName());
-
-                    groupQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()) {
-                                for(QueryDocumentSnapshot document : task.getResult()) {
-                                    groupID = document.getId();
-                                    Toast.makeText(StudyGroupActivity.this, "Doc ID: " + groupID, Toast.LENGTH_SHORT).show();
-                                }
                             }
                         }
-                    });
-                }
+                    }
+                });
 
-                else {
-                    groupNameTextView.setText("Error!");
-                    courseCodeTextView.setText("N/A");
-                    groupColorImageView.setImageResource(findGroupColorId("Gray"));
-                }
-            }
-        });
 
-        String user = getUserName();
+
+
 
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
@@ -131,7 +122,7 @@ public class StudyGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(StudyGroupActivity.this, Messages.class);
-                intent.putExtra("docId", docID);
+                intent.putExtra("docId", userDocId);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }
@@ -142,7 +133,8 @@ public class StudyGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(StudyGroupActivity.this, GroupMemberList.class);
-                intent.putExtra("userDocId", docID);
+                intent.putExtra("userGroupDocId", userGroupDocId);
+                intent.putExtra("userDocId", userDocId);
                 intent.putExtra("groupDocId", groupID);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
@@ -186,6 +178,45 @@ public class StudyGroupActivity extends AppCompatActivity {
 
         mChart.setData(data);
 
+    }
+
+    private void getGroupInformation() {
+        userGroupDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Toast.makeText(StudyGroupActivity.this, "Error while loading!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, e.toString());
+                }
+                if(documentSnapshot.exists()){
+                    templateGroup = documentSnapshot.toObject(Group.class);
+
+                    groupNameTextView.setText(templateGroup.getGroupName());
+                    courseCodeTextView.setText(templateGroup.getCourseCode());
+                    groupColorImageView.setImageResource(findGroupColorId(templateGroup.getGroupColor()));
+
+                    Query groupQuery = groupRef.whereEqualTo("groupName", templateGroup.getGroupName());
+
+                    groupQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()) {
+                                for(QueryDocumentSnapshot document : task.getResult()) {
+                                    groupID = document.getId();
+                                    Toast.makeText(StudyGroupActivity.this, "Group Doc ID: " + groupID, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    });
+                }
+
+                else {
+                    groupNameTextView.setText("Error!");
+                    courseCodeTextView.setText("N/A");
+                    groupColorImageView.setImageResource(findGroupColorId("Gray"));
+                }
+            }
+        });
     }
 
 
@@ -257,10 +288,5 @@ public class StudyGroupActivity extends AppCompatActivity {
         return colorMap.get(color);
     }
 
-    private String getUserName() {
-        String email = mAuth.getCurrentUser().getEmail();
-        int parseIndex = email.indexOf('@');
-        return email.substring(0, parseIndex);
-    }
 }
 
