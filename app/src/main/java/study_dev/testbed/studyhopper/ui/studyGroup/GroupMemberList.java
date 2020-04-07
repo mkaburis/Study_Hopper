@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +44,8 @@ public class GroupMemberList extends AppCompatActivity {
     private String userGroupDocID;
     private String userDocId;
     private String groupDocID;
+    private String memberDocId;
+    private String memberEmail;
     private int maxMembers;
     private int groupSize;
 
@@ -56,6 +59,8 @@ public class GroupMemberList extends AppCompatActivity {
     private Pattern emailPattern = Pattern.compile(emailRegex);
     private boolean closeDialog = false, memberExists = false;
 
+
+    private AlertDialog addMemberDialog;
     private MemberAdapter adapter;
 
     @Override
@@ -103,6 +108,23 @@ public class GroupMemberList extends AppCompatActivity {
         }
     }
 
+    private void getMemberDocId(String email) {
+        Query query = usersRef.whereEqualTo("email", email);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    for(QueryDocumentSnapshot document : task.getResult()) {
+                        memberDocId = document.getId();
+                        nextPhase();
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
     private void setUpRecyclerView() {
         Query query = groupMemberRef.orderBy("firstName", Query.Direction.DESCENDING);
 
@@ -116,6 +138,65 @@ public class GroupMemberList extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
+
+                new AlertDialog.Builder(viewHolder.itemView.getContext())
+                        .setMessage("Are you sure you would like to delete this member?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int position = viewHolder.getAdapterPosition();
+
+                                adapter.setOnItemClickListener(new MemberAdapter.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+                                        Member member = documentSnapshot.toObject(Member.class);
+
+                                        if(!member.isOwner()) {
+                                            adapter.deleteItem(position);
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(GroupMemberList.this,
+                                                    "Cannot delete group owner!", Toast.LENGTH_SHORT).show();
+                                            adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                                        }
+                                    }
+                                });
+
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                            }
+                        })
+                .create()
+                .show();
+            }
+        }).attachToRecyclerView(recyclerView);
+
+        adapter.setOnItemClickListener(new MemberAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+
+
+            }
+        });
+
+
 
     }
 
@@ -140,79 +221,34 @@ public class GroupMemberList extends AppCompatActivity {
             }
         });
 
-        final AlertDialog addMemberDialog = builder.create();
+        addMemberDialog = builder.create();
         addMemberDialog.show();
 
         addMemberDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 memberExists = false;
-
-                final String memberEmail = memberCandidateEditText.getText().toString();
+                memberEmail = memberCandidateEditText.getText().toString();
 
                 Matcher matcher = emailPattern.matcher(memberEmail.trim());
 
                 if (!matcher.matches()) {
                     memberCandidateEditText.setError("Invalid email!");
                 } else {
-                    usersRef.document(getUsername(memberEmail)).get()
-                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                                    Profile tempProfile = documentSnapshot.toObject(Profile.class);
-
-                                    if (tempProfile != null) {
-                                        String fName = tempProfile.getFirstName();
-                                        String lName = tempProfile.getLastName();
-
-                                        final Member newMember = new Member(fName, lName, getUsername(memberEmail),
-                                                getUsername(memberEmail), false, Timestamp.now());
-
-                                        groupMemberRef.whereEqualTo("userDocId", getUsername(memberEmail))
-                                                .get()
-                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                        if(task.isSuccessful()) {
-                                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                                if (document != null) {
-                                                                    memberCandidateEditText.setError("Member is already in group!");
-                                                                    memberExists = true;
-                                                                    closeDialog = false;
-                                                                    break;
-                                                                }
-                                                            }
-                                                            // Only add a new member once we ensure a member does not already exist
-                                                            if (!memberExists) {
-                                                                if(groupSize + 1 <= maxMembers )
-                                                                {
-                                                                    groupMemberRef.add(newMember);
-                                                                    addGroupToUserProfile();
-                                                                    closeDialog = true;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                    }
-                                    else {
-                                        memberCandidateEditText.setError("Email does not exist within system");
-                                        closeDialog = false;
-                                    }
-                                }
-                            });
+                    getMemberDocId(memberEmail);
                 }
 
-                if (closeDialog)
-                    addMemberDialog.dismiss();
+
+//                if (closeDialog)
+//                    addMemberDialog.dismiss();
             }
         });
     }
 
     private void addGroupToUserProfile()
     {
-        final CollectionReference newUserGroup = usersRef.document(userDocId).collection("groups");
+        final CollectionReference newUserGroup = usersRef.document(memberDocId).collection("groups");
 
         groupDoc.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -223,8 +259,62 @@ public class GroupMemberList extends AppCompatActivity {
                 newUserGroup.add(groupData);
             }
         });
-
     }
+
+    private void nextPhase() {
+            usersRef.document(memberDocId).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                            Profile tempProfile = documentSnapshot.toObject(Profile.class);
+
+                            if (tempProfile != null) {
+                                String fName = tempProfile.getFirstName();
+                                String lName = tempProfile.getLastName();
+                                String userName = getUsername(memberEmail);
+
+                                final Member newMember = new Member(fName, lName, memberDocId,
+                                        userName, false, Timestamp.now());
+
+                                groupMemberRef.whereEqualTo("userDocId", memberDocId)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if(task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        if (document != null) {
+                                                            memberCandidateEditText.setError("Member is already in group!");
+                                                            memberExists = true;
+//                                                            closeDialog = false;
+                                                            break;
+                                                        }
+                                                    }
+                                                    // Only add a new member once we ensure a member does not already exist
+                                                    if (!memberExists) {
+                                                        if(groupSize + 1 <= maxMembers )
+                                                        {
+                                                            groupMemberRef.add(newMember);
+                                                            addGroupToUserProfile();
+                                                            closeDialog = true;
+                                                            addMemberDialog.dismiss();
+                                                        } else {
+                                                            memberCandidateEditText.setError("The group is full!");
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                            }
+                            else {
+                                memberCandidateEditText.setError("Email does not exist within system");
+//                                closeDialog = false;
+                            }
+                        }
+                    });
+    }
+
 
     @Override
     protected void onStart() {

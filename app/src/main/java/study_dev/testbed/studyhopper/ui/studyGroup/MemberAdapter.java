@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Member;
 
 public class MemberAdapter extends FirestoreRecyclerAdapter<Member, MemberAdapter.MemberHolder> {
+    private OnItemClickListener listener;
 
     public MemberAdapter(@NonNull FirestoreRecyclerOptions<Member> options) {
         super(options);
@@ -41,6 +43,12 @@ public class MemberAdapter extends FirestoreRecyclerAdapter<Member, MemberAdapte
         return new MemberHolder(v);
     }
 
+    public void deleteItem(int position) {
+        getSnapshots().getSnapshot(position).getReference().delete();
+    }
+
+
+
 
     class MemberHolder extends RecyclerView.ViewHolder {
         ImageView imageViewProfile;
@@ -55,6 +63,25 @@ public class MemberAdapter extends FirestoreRecyclerAdapter<Member, MemberAdapte
             screenName = itemView.findViewById(R.id.text_view_screen_name);
             imageViewGroupOwner = itemView.findViewById(R.id.image_view_group_owner);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION && listener != null) {
+                        listener.onItemClick(getSnapshots().getSnapshot(position), position);
+                    }
+                }
+            });
+
         }
     }
+
+    public interface  OnItemClickListener {
+        void onItemClick(DocumentSnapshot documentSnapshot, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
 }
