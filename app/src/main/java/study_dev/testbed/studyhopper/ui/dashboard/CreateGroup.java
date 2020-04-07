@@ -27,9 +27,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
@@ -55,6 +52,9 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
         db = FirebaseFirestore.getInstance();
+
+        Intent intent = getIntent();
+        userProfileId = intent.getStringExtra("firestore-id");
 
         editTextGroupName = findViewById(R.id.edit_text_group_name);
         editTextCourseCode = findViewById(R.id.edit_text_group_course_code);
@@ -309,23 +309,5 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         int index = username.indexOf('@');
 
         return username.substring(0, index);
-    }
-
-    private void getProfileDocId() {
-        // userProfileId
-        String email = getEmail();
-        Query profileQuery = db.collection("users").whereEqualTo("email", email).limit(1);
-
-        profileQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        userProfileId = document.getReference().getId();
-                        userProfileId = document.getId();
-                    }
-                }
-            }
-        });
     }
 }

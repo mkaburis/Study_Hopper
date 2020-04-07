@@ -30,8 +30,8 @@ import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 public class MyGroups extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private CollectionReference groupRef = db.collection("users")
-            .document(getUserName()).collection("groups");
+    private CollectionReference groupRef;
+    private String firestoreId;
 
     private CollectionReference ref = db.collection("groups");
 
@@ -41,6 +41,11 @@ public class MyGroups extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_groups);
+
+        Bundle extras = getIntent().getExtras();
+        firestoreId = extras.getString("firestore-id");
+
+        groupRef = db.collection("users").document(firestoreId).collection("groups");
 
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
@@ -118,6 +123,7 @@ public class MyGroups extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.create_group_option:
                 Intent intent = new Intent(MyGroups.this, CreateGroup.class);
+                intent.putExtra("firestore-id", firestoreId);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 return true;

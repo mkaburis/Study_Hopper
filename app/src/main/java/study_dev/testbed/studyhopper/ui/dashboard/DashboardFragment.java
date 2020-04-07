@@ -19,7 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,6 +30,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import study_dev.testbed.studyhopper.R;
@@ -50,33 +54,36 @@ public class DashboardFragment extends Fragment {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private DocumentReference docRef = db.collection("users").document(getUserName());
-    private CollectionReference groupRef = db.collection("users")
-            .document(getUserName()).collection("groups");
+    private DocumentReference docRef;
+    private CollectionReference groupRef;
 
     @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
-//        final ArrayList<studyGroupItem> studyGroupList = new ArrayList<>();
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_purple, "Mobile Devices", "COP 4656"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_blue, "Automata Fun", "COT 4210"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_green, "How to not go to Jail", "CIS 4250"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_purple, "Hendrix Fun", "COP 4970"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_blue, "Hadoop & Big Data", "CIS 4930"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_green, "GRE Prep", "TestPrep"));
-//        studyGroupList.add(new studyGroupItem(R.drawable.ic_group_color_blue, "Test", "Test"));
-
-
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+        String email = getEmail();
+        Query query = db.collection("users").whereEqualTo("email", email).limit(1);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        docRef = doc.getReference();
+                        groupRef = docRef.collection("groups");
+
+                        callDbFunctions();
+                    }
+                }
+            }
+        });
 
         welcomeMsg = v.getRootView().findViewById(R.id.welcome_txt);
 
         groupFinderCard = v.getRootView().findViewById(R.id.studyGroupFinderCard);
-
-
         groupFinderCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +107,32 @@ public class DashboardFragment extends Fragment {
 
         // Setup recycler view for study groups
         recyclerView = v.getRootView().findViewById(R.id.study_group_recycler_view);
+
+        return v;
+
+    }
+
+    private void setUpRecyclerView() {
+        Query query = groupRef.orderBy("groupName", Query.Direction.DESCENDING);
+
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+            }
+        });
+
+        FirestoreRecyclerOptions<Group> options = new FirestoreRecyclerOptions.Builder<Group>()
+                .setQuery(query, Group.class)
+                .build();
+
+        adapter = new GroupAdapter(options);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+    }
+
+
+    private void callDbFunctions() {
         setUpRecyclerView();
         adapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
             @Override
@@ -131,47 +164,32 @@ public class DashboardFragment extends Fragment {
                 }
             }
         });
-
-        return v;
-
     }
 
-    private void setUpRecyclerView() {
-        Query query = groupRef.orderBy("groupName", Query.Direction.DESCENDING);
+    private String getEmail() {
+        FirebaseUser user = mAuth.getCurrentUser();
 
-        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-
-            }
-        });
-
-        FirestoreRecyclerOptions<Group> options = new FirestoreRecyclerOptions.Builder<Group>()
-                .setQuery(query, Group.class)
-                .build();
-
-        adapter = new GroupAdapter(options);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-    }
-
-
-    private String getUserName() {
-        String email = mAuth.getCurrentUser().getEmail();
-        int parseIndex = email.indexOf('@');
-        return email.substring(0, parseIndex);
+        if (user == null) {
+            return null;
+        }
+        return user.getEmail();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        adapter.startListening();
+
+        if (adapter != null) {
+            adapter.startListening();
+        }
     }
 
 
     @Override
     public void onStop() {
         super.onStop();
-        adapter.stopListening();
+        if (adapter != null) {
+            adapter.stopListening();
+        }
     }
 }
