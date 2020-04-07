@@ -3,7 +3,12 @@ package study_dev.testbed.studyhopper.ui.studyGroup;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Adapter;
@@ -11,8 +16,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,12 +29,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -48,6 +58,7 @@ public class GroupMemberList extends AppCompatActivity {
     private String memberEmail;
     private int maxMembers;
     private int groupSize;
+    private String groupName;
 
     private EditText memberCandidateEditText;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -58,6 +69,11 @@ public class GroupMemberList extends AppCompatActivity {
     private String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
     private Pattern emailPattern = Pattern.compile(emailRegex);
     private boolean closeDialog = false, memberExists = false;
+    private ColorDrawable swipeBackground = new ColorDrawable(Color.parseColor("#FF0000"));
+    private Drawable deleteIcon;
+
+    private int removedPosition;
+    private int removedMember;
 
 
     private AlertDialog addMemberDialog;
@@ -67,6 +83,8 @@ public class GroupMemberList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_members_list);
+
+        deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete);
 
         Intent intent = getIntent();
         userGroupDocID = intent.getStringExtra("userGroupDocId");
@@ -95,6 +113,7 @@ public class GroupMemberList extends AppCompatActivity {
 
                         Group group = documentSnapshot.toObject(Group.class);
                         maxMembers = group.getMaxGroupMembers();
+                        groupName = group.getGroupName();
                     }
                 });
 
@@ -140,7 +159,43 @@ public class GroupMemberList extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT) {
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                View itemView = viewHolder.itemView;
+
+                int iconMargin = (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
+                if(dX > 0) {
+                    swipeBackground.setBounds(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
+                    deleteIcon.setBounds(itemView.getLeft() + iconMargin, itemView.getTop() + iconMargin,
+                            itemView.getLeft() + iconMargin + deleteIcon.getIntrinsicWidth(),
+                            itemView.getBottom() - iconMargin);
+
+                } else {
+                    swipeBackground.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                    deleteIcon.setBounds(itemView.getRight() - iconMargin - deleteIcon.getIntrinsicWidth(), itemView.getTop() + iconMargin,
+                            itemView.getRight() - iconMargin, itemView.getBottom() - iconMargin);
+                }
+
+                swipeBackground.draw(c);
+
+                c.save();
+
+                if(dX >0)
+                    c.clipRect(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
+                else
+                    c.clipRect(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                deleteIcon.draw(c);
+
+                c.restore();
+
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -154,25 +209,56 @@ public class GroupMemberList extends AppCompatActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                int position = viewHolder.getAdapterPosition();
+                                final int position = viewHolder.getAdapterPosition();
 
-                                adapter.setOnItemClickListener(new MemberAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                                db.collection("groups").document(groupDocID)
+                                        .collection("members").document(adapter.getDocId(position))
+                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                                if(e != null) {
+                                                    Toast.makeText(GroupMemberList.this, "Error while loading!", Toast.LENGTH_SHORT).show();
 
-                                        Member member = documentSnapshot.toObject(Member.class);
+                                                }
 
-                                        if(!member.isOwner()) {
-                                            adapter.deleteItem(position);
-                                        }
-                                        else
-                                        {
-                                            Toast.makeText(GroupMemberList.this,
-                                                    "Cannot delete group owner!", Toast.LENGTH_SHORT).show();
-                                            adapter.notifyItemChanged(viewHolder.getAdapterPosition());
-                                        }
-                                    }
-                                });
+                                                if(documentSnapshot.exists())
+                                                {
+                                                   final Member member = documentSnapshot.toObject(Member.class);
+                                                    if(!member.isOwner()) {
+                                                        adapter.deleteItem(position);
+
+                                                        Query findMemberToDelete = db.collection("users").document(member.getUserDocId()).collection("groups").
+                                                                whereEqualTo("groupName",groupName);
+
+                                                        findMemberToDelete.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                                                                String memberGroupDocId;
+
+                                                                if(task.isSuccessful())
+                                                                {
+                                                                    for(QueryDocumentSnapshot document : task.getResult()){
+                                                                        memberGroupDocId = document.getId();
+                                                                        db.collection("users").document(member.getUserDocId())
+                                                                                .collection("groups").document(memberGroupDocId).delete();
+                                                                        break;
+                                                                    }
+
+                                                                }
+                                                            }
+                                                        });
+                                                        Snackbar.make(viewHolder.itemView, member.getFirstName() + " " +
+                                                                member.getLastName() + " has been removed!", Snackbar.LENGTH_LONG).show();
+                                                    }
+                                                    else
+                                                    {
+                                                        Snackbar.make(viewHolder.itemView, "Group owner cannot be removed from group!", Snackbar.LENGTH_LONG).show();
+                                                        adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                                                    }
+                                                }
+                                            }
+                                        });
 
                             }
                         })
@@ -186,17 +272,6 @@ public class GroupMemberList extends AppCompatActivity {
                 .show();
             }
         }).attachToRecyclerView(recyclerView);
-
-        adapter.setOnItemClickListener(new MemberAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-
-
-
-            }
-        });
-
-
 
     }
 
@@ -238,10 +313,6 @@ public class GroupMemberList extends AppCompatActivity {
 
                     getMemberDocId(memberEmail);
                 }
-
-
-//                if (closeDialog)
-//                    addMemberDialog.dismiss();
             }
         });
     }
@@ -287,7 +358,6 @@ public class GroupMemberList extends AppCompatActivity {
                                                         if (document != null) {
                                                             memberCandidateEditText.setError("Member is already in group!");
                                                             memberExists = true;
-//                                                            closeDialog = false;
                                                             break;
                                                         }
                                                     }
@@ -299,6 +369,7 @@ public class GroupMemberList extends AppCompatActivity {
                                                             addGroupToUserProfile();
                                                             closeDialog = true;
                                                             addMemberDialog.dismiss();
+
                                                         } else {
                                                             memberCandidateEditText.setError("The group is full!");
                                                         }
@@ -309,7 +380,6 @@ public class GroupMemberList extends AppCompatActivity {
                             }
                             else {
                                 memberCandidateEditText.setError("Email does not exist within system");
-//                                closeDialog = false;
                             }
                         }
                     });

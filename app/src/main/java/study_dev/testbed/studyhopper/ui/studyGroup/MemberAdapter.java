@@ -47,6 +47,10 @@ public class MemberAdapter extends FirestoreRecyclerAdapter<Member, MemberAdapte
         getSnapshots().getSnapshot(position).getReference().delete();
     }
 
+    public String getDocId(int position) {
+        return getSnapshots().getSnapshot(position).getReference().getId();
+    }
+
 
 
 
