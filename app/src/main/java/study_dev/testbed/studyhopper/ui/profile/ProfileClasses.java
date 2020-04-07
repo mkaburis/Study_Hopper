@@ -58,6 +58,7 @@ public class ProfileClasses extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private DocumentReference globalUserRef;
 
 
     // TODO: Rename and change types of parameters
@@ -91,6 +92,17 @@ public class ProfileClasses extends Fragment {
         if (mAuth.getCurrentUser() != null && mAuth.getCurrentUser().isAnonymous()) {
             fetchClassesFromDB();
         }
+        String email = getEmail();
+        db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        globalUserRef = doc.getReference();
+                    }
+                }
+            }
+        });
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile_classes, container, false);
@@ -150,11 +162,8 @@ public class ProfileClasses extends Fragment {
     }
 
     private void fetchClassesFromDB() {
-        String userName = getUsername();
 
-        DocumentReference userRef = db.collection("users").document(userName);
-
-        CollectionReference classRef = userRef.collection("classes");
+        CollectionReference classRef = globalUserRef.collection("classes");
         classList.clear();
         classRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -181,9 +190,7 @@ public class ProfileClasses extends Fragment {
     }
 
     private void addClassToFireBase(StudentClass newClass) {
-        String userName = getUsername();
-
-        CollectionReference classRef = db.collection("users").document(userName).collection("classes");
+        CollectionReference classRef = globalUserRef.collection("classes");
 
         classRef.document().set(newClass).addOnCompleteListener(new OnCompleteListener<Void>() {
 
@@ -205,6 +212,16 @@ public class ProfileClasses extends Fragment {
 
     private boolean validateText(String text) {
         return text != null && text.isEmpty();
+    }
+
+    private String getEmail() {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user == null) {
+            return null;
+        }
+
+        return user.getEmail();
     }
 
     private String getUsername() {
@@ -232,8 +249,7 @@ public class ProfileClasses extends Fragment {
     }
 
     public void deleteClassFromFirebase(String id) {
-        String userName = getUsername();
-        DocumentReference classRef = db.collection("users").document(userName).collection("classes").document(id);
+        DocumentReference classRef = globalUserRef.collection("classes").document(id);
 
         classRef.delete();
 

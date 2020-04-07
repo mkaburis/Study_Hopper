@@ -66,7 +66,7 @@ public class ProfileMain extends Fragment {
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    DocumentReference globalProfileRef;
+    private DocumentReference globalProfileRef;
 
     private boolean newProfile = false;
 
