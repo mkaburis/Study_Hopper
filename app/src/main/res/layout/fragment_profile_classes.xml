@@ -30,9 +30,10 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                 android:visibility="visible" />
 
-            <ScrollView
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fillViewport="true"
                 android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_vertical_margin">
@@ -49,7 +50,7 @@
 
                     </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
-            </ScrollView>
+            </androidx.core.widget.NestedScrollView>
 
             <Space
                 android:layout_width="wrap_content"
