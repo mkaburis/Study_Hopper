@@ -180,10 +180,10 @@ public class DashboardFragment extends Fragment {
         super.onStart();
 
         if (adapter != null) {
+            setUpRecyclerView();
             adapter.startListening();
         }
     }
-
 
     @Override
     public void onStop() {
