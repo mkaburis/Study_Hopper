@@ -10,13 +10,11 @@
         android:id="@+id/messageFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="10dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:src="@drawable/ic_chat_icon"
-        android:contentDescription="@string/messages"
-        />
-
+        android:contentDescription="@string/messages" />
 
     <RelativeLayout
         android:id="@+id/group_name_layout"

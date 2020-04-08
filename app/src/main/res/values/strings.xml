@@ -107,6 +107,10 @@
     <string name="ex_course_section">01</string>
     <string name="remove_button_desc">Button to remove class</string>
     <string name="forgot_password_button_text">Forgot Password</string>
+    <string name="add_group_member">Add Group Member</string>
+    <string name="group_member_edit_text_hint">Type in an email address</string>
+    <string name="remove_members">Remove Members</string>
+    <string name ="delete">Delete</string>
     <string name="search_by_name">Search by Name</string>
     <string name="male_only">Male Only</string>
     <string name="female_only">Female Only</string>
