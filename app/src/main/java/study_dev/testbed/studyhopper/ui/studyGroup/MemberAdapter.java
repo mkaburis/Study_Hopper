@@ -28,7 +28,7 @@ public class MemberAdapter extends FirestoreRecyclerAdapter<Member, MemberAdapte
     protected void onBindViewHolder(@NonNull MemberHolder holder, int position, @NonNull Member model) {
         holder.textViewName.setText(model.getFirstName() + " " + model.getLastName());
         holder.screenName.setText(model.getScreenName());
-        if(model.isOwner())
+        if(model.getIsOwner())
         {
             holder.imageViewGroupOwner.setImageResource(R.drawable.ic_group_leader);
         }

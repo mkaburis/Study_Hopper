@@ -7,6 +7,7 @@ public class Member {
     private String firstName;
     private String lastName;
     private String userDocId;
+    private String userGroupDocId;
     private String screenName;
     private boolean isOwner;
     private Timestamp whenJoined;
@@ -15,11 +16,12 @@ public class Member {
         // empty constructor needed
     }
 
-    public Member(String firstName, String lastName, String userDocId, String screenName,
+    public Member(String firstName, String lastName, String userDocId, String userGroupDocId, String screenName,
                   boolean isOwner, Timestamp whenJoined) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userDocId = userDocId;
+        this.userGroupDocId = userGroupDocId;
         this.screenName = screenName;
         this.isOwner = isOwner;
         this.whenJoined = whenJoined;
@@ -37,11 +39,15 @@ public class Member {
         return userDocId;
     }
 
+    public String getUserGroupDocId() {
+        return userGroupDocId;
+    }
+
     public String getScreenName(){
         return screenName;
     }
 
-    public boolean isOwner() {
+    public boolean getIsOwner() {
         return isOwner;
     }
 
@@ -61,9 +67,13 @@ public class Member {
         this.userDocId = userDocId;
     }
 
+    public void setUserGroupDocId(String userGroupDocId) {
+        this.userGroupDocId = userGroupDocId;
+    }
+
     public void setScreenName(String screenName){ this.screenName = screenName; }
 
-    public void setOwner(boolean owner) {
+    public void setIsOwner(boolean owner) {
         isOwner = owner;
     }
 

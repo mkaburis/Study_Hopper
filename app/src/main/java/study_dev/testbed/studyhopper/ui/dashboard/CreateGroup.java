@@ -27,12 +27,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -46,7 +50,10 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private EditText editTextGroupName;
     private EditText editTextCourseCode;
     private String groupColor, groupPreference, preferenceSelected;
+    private String userEmail;
+    private String userDocId;
     private String groupId;
+    private String userGroupId;
     private Spinner groupPreferencesSpinner;
     private NumberPicker groupMaxSizePicker;
     private EditText editTextMaxSize;
@@ -56,6 +63,8 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private Member newMember;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference userRef = db.collection("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +95,27 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         setTitle("Create Group");
+
+        // Retrieve user's email address from FirebaseAuth
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null){
+            userEmail = user.getEmail();
+        }
+
+        Query userQuery = userRef.whereEqualTo("email", userEmail);
+
+        userQuery.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                userDocId = documentSnapshot.getId();
+                            }
+                        }
+
+                    }
+                });
 
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
@@ -134,17 +164,12 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
             preferenceSelected = "Males Only";
 
         // Firebase reference for "Groups" Collection
-        CollectionReference groupRef = FirebaseFirestore.getInstance()
-                .collection("groups");
+        CollectionReference groupRef = db.collection("groups");
 
-        // Firebase reference for "Groups" in users sub-collection
-        CollectionReference userGroupRef = FirebaseFirestore.getInstance()
-                .collection("users").document(getUserName())
-                .collection("groups");
+
 
         Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
                 getUserName(), groupSizeMax);
-
 
 
 //        groupRef.add(groupTemplate).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -160,12 +185,17 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
 //            }
 //        });
 //        groupRef.add(groupTemplate);
-        groupId = FirebaseFirestore.getInstance().collection("groups").document().getId();
-        FirebaseFirestore.getInstance().collection("groups").document(groupId).set(groupTemplate);
-        userGroupRef.add(groupTemplate);
 
-        DocumentReference docRef = FirebaseFirestore.getInstance()
-                .collection("users").document(getUserName());
+        groupId = db.collection("groups").document().getId();
+        db.collection("groups").document(groupId).set(groupTemplate);
+
+        // Firebase reference for "Groups" in users sub-collection
+        userGroupId = db.collection("user").document(userDocId)
+                .collection("groups").document().getId();
+        db.collection("users").document(userDocId)
+                .collection("groups").document(userGroupId).set(groupTemplate);
+
+        DocumentReference docRef = db.collection("users").document(userDocId);
 
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -178,10 +208,9 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                     String firstName  = documentSnapshot.getString("firstName");
                     String lastName  = documentSnapshot.getString("lastName");
 
-                    CollectionReference groupMemberRef = FirebaseFirestore.getInstance()
-                            .collection("groups").document(groupId)
+                    CollectionReference groupMemberRef = db.collection("groups").document(groupId)
                             .collection("members");
-                    newMember = new Member(firstName, lastName, getUserName(), getUserName(), true,
+                    newMember = new Member(firstName, lastName, userDocId, userGroupId, getUserName(), true,
                             Timestamp.now());
                     groupMemberRef.add(newMember);
                 }
@@ -189,6 +218,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         });
 
         Toast.makeText(this, "Group added", Toast.LENGTH_SHORT).show();
+        MyGroups.adapter.notifyDataSetChanged();
         finish();
     }
 

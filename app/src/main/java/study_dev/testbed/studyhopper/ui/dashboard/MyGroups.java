@@ -39,7 +39,7 @@ public class MyGroups extends AppCompatActivity {
     private CollectionReference groupRef;
     private CollectionReference ref = db.collection("groups");
 
-    private GroupAdapter adapter;
+    protected static GroupAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,16 +108,20 @@ public class MyGroups extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.group_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
         adapter.startListening();
+        recyclerView.setAdapter(adapter);
     }
 
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//    }
+
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(adapter != null)
+            adapter.startListening();
+    }
 
 //    @Override
 //    protected void onResume() {

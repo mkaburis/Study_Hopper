@@ -224,7 +224,7 @@ public class GroupMemberList extends AppCompatActivity {
                                                 if(documentSnapshot.exists())
                                                 {
                                                    final Member member = documentSnapshot.toObject(Member.class);
-                                                    if(!member.isOwner()) {
+                                                    if(!member.getIsOwner()) {
                                                         adapter.deleteItem(position);
 
                                                         Query findMemberToDelete = db.collection("users").document(member.getUserDocId()).collection("groups").
@@ -345,7 +345,7 @@ public class GroupMemberList extends AppCompatActivity {
                                 String lName = tempProfile.getLastName();
                                 String userName = getUsername(memberEmail);
 
-                                final Member newMember = new Member(fName, lName, memberDocId,
+                                final Member newMember = new Member(fName, lName, memberDocId, userGroupDocID,
                                         userName, false, Timestamp.now());
 
                                 groupMemberRef.whereEqualTo("userDocId", memberDocId)
@@ -417,12 +417,6 @@ public class GroupMemberList extends AppCompatActivity {
         in.putExtra("documentID", userGroupDocID);
         startActivity(in);
         overridePendingTransition(0, 0);
-    }
-
-    private String getUserName() {
-        String email = auth.getCurrentUser().getEmail();
-        int parseIndex = email.indexOf('@');
-        return email.substring(0, parseIndex);
     }
 
     private String getUsername(String email) {
