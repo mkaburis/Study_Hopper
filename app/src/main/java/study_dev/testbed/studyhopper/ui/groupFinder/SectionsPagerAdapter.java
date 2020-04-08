@@ -1,4 +1,4 @@
-package study_dev.testbed.studyhopper.ui.profile;
+package study_dev.testbed.studyhopper.ui.groupFinder;
 
 import android.content.Context;
 
@@ -17,7 +17,7 @@ import study_dev.testbed.studyhopper.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.profile_tab, R.string.classes_tab};
+    private static final int[] TAB_TITLES = new int[]{R.string.search_group_tab, R.string.search_people_tab};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -27,10 +27,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if(position == 1){
-            return ProfileClasses.newInstance(position);
-        }else{
-            return ProfileMain.newInstance(position);
+        if (position == 1) {
+            return StudyGroupFinderFragment.newInstance(position);
+        } else {
+            return StudyGroupFinderFragment.newInstance(position);
         }
     }
 
