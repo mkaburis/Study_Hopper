@@ -65,11 +65,15 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference userRef = db.collection("users");
+    private String userProfileId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
+
+        Intent intent = getIntent();
+        userProfileId = intent.getStringExtra("firestore-id");
 
         editTextGroupName = findViewById(R.id.edit_text_group_name);
         editTextCourseCode = findViewById(R.id.edit_text_group_course_code);
@@ -166,7 +170,10 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         // Firebase reference for "Groups" Collection
         CollectionReference groupRef = db.collection("groups");
 
-
+        // Firebase reference for "Groups" in users sub-collection
+        CollectionReference userGroupRef = db
+                .collection("users").document(userProfileId)
+                .collection("groups");
 
         Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
                 getUserName(), groupSizeMax);
@@ -359,9 +366,19 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         gray.setBackgroundResource(0);
     }
 
+    private String getEmail() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            return null;
+        }
+        return user.getEmail();
+    }
+
     private String getUserName() {
-        String email = mAuth.getCurrentUser().getEmail();
-        int parseIndex = email.indexOf('@');
-        return email.substring(0, parseIndex);
+        String username = getEmail();
+
+        int index = username.indexOf('@');
+
+        return username.substring(0, index);
     }
 }

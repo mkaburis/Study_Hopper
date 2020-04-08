@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -24,15 +23,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Major;
@@ -61,9 +62,12 @@ public class ProfileMain extends Fragment {
     private TextInputEditText mCollege;
     private TextInputEditText mMajor;
     private Button mSaveButton;
+
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private DocumentReference globalProfileRef;
+
     private boolean newProfile = false;
 
     public ProfileMain() {
@@ -110,7 +114,7 @@ public class ProfileMain extends Fragment {
         db = FirebaseFirestore.getInstance();
 
         if (!newProfile) {
-            fillInformation();
+            fillBasicInformation();
         }
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +124,11 @@ public class ProfileMain extends Fragment {
                 if (newProfile) {
                     createAccount();
                 } else {
-                    updateAccount();
+                    try {
+                        updateAccount();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -179,50 +187,84 @@ public class ProfileMain extends Fragment {
     private void addAccount() throws ParseException {
         Profile newProfile = getProfile();
         Major newMajor = getMajor();
-        String docId = getUsername();
 
-        saveNewProfileToFireBase(docId, newProfile, newMajor);
+        saveNewProfileToFireBase(newProfile, newMajor);
     }
 
     // overwrites existing user's info in database
-    private void updateAccount() {
-        String userName = getUsername();
-        DocumentReference ref = db.collection("users").document(userName);
+    private void updateAccount() throws ParseException {
+        Profile newProfile = getProfile();
+        final Major newMajor = getMajor();
 
+        if (globalProfileRef == null) {
+            String email = getEmail();
+            db.collection("users").whereEqualTo("email", email).limit(1)
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            globalProfileRef = document.getReference();
+                        }
+                    }
+                }
+            });
+
+        }
+
+        globalProfileRef.set(newProfile, SetOptions.merge());
+
+        globalProfileRef.collection("majors").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    boolean isNewMajor = true;
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        String oldMajor = document.get("major").toString();
+                        if (oldMajor.equals(newMajor.getMajor())) {
+                            isNewMajor = false;
+                        }
+                    }
+
+                    if (isNewMajor) {
+                        globalProfileRef.collection("majors").add(newMajor);
+                    }
+                }
+            }
+        });
     }
 
     // fills text boxes with info from database
-    private void fillInformation() {
-        String userName = getUsername();
-        DocumentReference profileRef = db.collection("users").document(userName);
-        CollectionReference majorsRef = db.collection("users").document(userName).collection("majors");
+    private void fillBasicInformation() {
+        String email = getEmail();
+        Query profileRef = db.collection("users").whereEqualTo("email", email).limit(1);
 
-        profileRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        profileRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Profile profile = documentSnapshot.toObject(Profile.class);
-                String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        globalProfileRef = document.getReference();
 
-                if (profile == null) {
-                    Toast.makeText(getContext(), "Profile info not found",
-                            Toast.LENGTH_SHORT).show();
-                    return;
+                        fillMajors();
+
+                        Profile profile = document.toObject(Profile.class);
+
+                        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+                        mFirstName.setText(profile.getFirstName());
+                        mLastName.setText(profile.getLastName());
+                        mDob.setText(dateFormat.format(profile.getDob()));
+                        mGender.setText(profile.getGender());
+                        mEmail.setText(profile.getEmail());
+                        mUniversity.setText(profile.getUniversity());
+
+                        TextInputLayout passwordLayout = getActivity().findViewById(R.id.passwordLayout);
+                        passwordLayout.setVisibility(View.GONE);
+                        mPassword.setVisibility(View.GONE);
+                        mEmail.setEnabled(false);
+                    }
                 }
-
-                DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-
-                mFirstName.setText(profile.getFirstName());
-                mLastName.setText(profile.getLastName());
-                mDob.setText(dateFormat.format(profile.getDob()));
-                mGender.setText(profile.getGender());
-                mEmail.setText(email);
-                mUniversity.setText(profile.getUniversity());
-
-
-                TextInputLayout passwordLayout = getActivity().findViewById(R.id.passwordLayout);
-                passwordLayout.setVisibility(View.GONE);
-                mPassword.setVisibility(View.GONE);
-                mEmail.setEnabled(false);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -231,6 +273,13 @@ public class ProfileMain extends Fragment {
                         Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
+    }
+
+    private void fillMajors() {
+        CollectionReference majorsRef = globalProfileRef.collection("majors");
 
         majorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -252,17 +301,16 @@ public class ProfileMain extends Fragment {
                         Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
-    private String getUsername(){
+    private String getEmail() {
         FirebaseUser user = mAuth.getCurrentUser();
-        final String email = user.getEmail();
-        if (email == null){
+        if (user == null) {
             return null;
         }
+        return user.getEmail();
 
-        return email.split("@")[0];
+
     }
 
     private Major getMajor() {
@@ -274,15 +322,15 @@ public class ProfileMain extends Fragment {
         return major;
     }
 
-    private void saveNewProfileToFireBase(final String docId, Profile newProfile, final Major newMajor) {
+    private void saveNewProfileToFireBase(Profile newProfile, final Major newMajor) {
         final CollectionReference userRef = db.collection("users");
 
-        userRef.document(docId).set(newProfile).addOnCompleteListener(new OnCompleteListener<Void>() {
+        userRef.document().set(newProfile).addOnCompleteListener(new OnCompleteListener<Void>() {
 
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 boolean done = true;
-                userRef.document(docId).collection("majors").document(newMajor.getMajor()).set(newMajor).addOnCompleteListener(new OnCompleteListener<Void>() {
+                userRef.document().collection("majors").document(newMajor.getMajor()).set(newMajor).addOnCompleteListener(new OnCompleteListener<Void>() {
 
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -310,16 +358,26 @@ public class ProfileMain extends Fragment {
 
     }
 
-    private Profile getProfile() {
+    private Profile getProfile() throws ParseException {
         String fName = mFirstName.getText().toString();
         String lName = mLastName.getText().toString();
         String birthday = mDob.getText().toString();
         String gender = mGender.getText().toString();
         String universityStr = mUniversity.getText().toString();
 
-        DateFormat df = DateFormat.getDateInstance();
-        Date dob = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+        Date dob;
+        String email = "";
 
-        return new Profile(fName, lName, dob, gender, universityStr);
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            email = mEmail.getText().toString();
+        } else {
+            email = user.getEmail();
+        }
+
+        dob = df.parse(birthday);
+
+        return new Profile(fName, lName, dob, gender, universityStr, email);
     }
 }

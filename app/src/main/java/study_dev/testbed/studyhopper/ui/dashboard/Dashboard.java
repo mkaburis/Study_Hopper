@@ -22,13 +22,14 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import study_dev.testbed.studyhopper.MainActivity;
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder;
-import study_dev.testbed.studyhopper.ui.messages.Messages;
 import study_dev.testbed.studyhopper.ui.profile.ProfilePage;
 import study_dev.testbed.studyhopper.ui.studyLocation.StudyLocationsMap;
 
@@ -38,6 +39,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     private FirebaseFirestore db;
     private TextView emailView, nameView;
     private String email, name, userName;
+    private DocumentReference userDocRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,21 +80,21 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         int parseIndex = email.indexOf('@');
         userName = email.substring(0, parseIndex);
         db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users").document(userName);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        final Query query = db.collection("users").whereEqualTo("email", email);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot document = task.getResult();
-
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    String first_name = document.getString("firstName");
-                    String last_name = document.getString("lastName");
-                    name = first_name + " " + last_name;
-                    nameView.setText(name);
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        userDocRef = doc.getReference();
+                        String first_name = doc.getString("firstName");
+                        String last_name = doc.getString("lastName");
+                        name = first_name + " " + last_name;
+                        nameView.setText(name);
+                    }
                 }
             }
         });
-
 
         ImageView profileButton = headerView.findViewById(R.id.profile_image);
 
@@ -146,6 +148,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 //                break;
             case R.id.my_groups:
                 in = new Intent(getBaseContext(), MyGroups.class);
+                in.putExtra("firestore-id", userDocRef.getId());
                 startActivity(in);
                 overridePendingTransition(0, 0);
                 break;

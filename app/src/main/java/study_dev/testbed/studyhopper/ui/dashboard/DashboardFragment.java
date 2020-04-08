@@ -59,6 +59,7 @@ public class DashboardFragment extends Fragment {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference userRef = db.collection("users");
     private CollectionReference groupRef;
+    private DocumentReference docRef;
 
     @SuppressLint("SetTextI18n")
     @Nullable
@@ -66,6 +67,21 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+        String email = getEmail();
+        Query query = db.collection("users").whereEqualTo("email", email).limit(1);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        docRef = doc.getReference();
+                        groupRef = docRef.collection("groups");
+                    }
+                }
+            }
+        });
 
         welcomeMsg = v.getRootView().findViewById(R.id.welcome_txt);
 
@@ -159,6 +175,15 @@ public class DashboardFragment extends Fragment {
         });
     }
 
+    private String getEmail() {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user == null) {
+            return null;
+        }
+        return user.getEmail();
+    }
+
     private void setUpRecyclerView() {
         // Setup recycler view for study groups
         Query query = groupRef.orderBy("groupName", Query.Direction.DESCENDING);
@@ -187,10 +212,11 @@ public class DashboardFragment extends Fragment {
             adapter.startListening();
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
-        adapter.stopListening();
+        if (adapter != null) {
+            adapter.stopListening();
+        }
     }
 }
