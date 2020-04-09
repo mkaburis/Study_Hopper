@@ -175,10 +175,6 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                 .collection("users").document(userProfileId)
                 .collection("groups");
 
-        Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
-                getUserName(), groupSizeMax);
-
-
 //        groupRef.add(groupTemplate).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
 //            @Override
 //            public void onComplete(@NonNull Task<DocumentReference> task) {
@@ -194,6 +190,10 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
 //        groupRef.add(groupTemplate);
 
         groupId = db.collection("groups").document().getId();
+
+        Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
+                getUserName(), groupSizeMax, db.collection("groups").document(groupId));
+
         db.collection("groups").document(groupId).set(groupTemplate);
 
         // Firebase reference for "Groups" in users sub-collection
@@ -276,7 +276,9 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                 groupPreferencesPrompt.setTextColor(Color.GRAY);
             }
         }
+
     }
+
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {

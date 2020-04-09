@@ -12,6 +12,8 @@ import android.widget.TimePicker;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -19,20 +21,23 @@ import java.util.Locale;
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 
-public class SessionPage extends AppCompatActivity {
+public class CreateSession extends AppCompatActivity {
 //    private studyGroupItem item;
     private EditText sessionDateEditText;
     private EditText sessionTimeStartEditText, sessionTimeEndEditText;
     private DatePickerDialog.OnDateSetListener dateListener;
     private TimePickerDialog.OnTimeSetListener timeListener;
+    private DocumentReference groupDocRef;
+    private String userGroupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_page);
 
-//        Intent intent = getIntent();
-//        item = intent.getParcelableExtra("Study Group Data");
+        Intent intent = getIntent();
+        userGroupId = intent.getStringExtra("userGroupId");
+        String groupId = intent.getStringExtra("groupDocRef");
 
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
@@ -60,7 +65,7 @@ public class SessionPage extends AppCompatActivity {
             }
         };
 
-        new DatePickerDialog(SessionPage.this, dateListener, myCalendar
+        new DatePickerDialog(CreateSession.this, dateListener, myCalendar
         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
@@ -77,7 +82,7 @@ public class SessionPage extends AppCompatActivity {
             }
         };
 
-        new TimePickerDialog(SessionPage.this, timeListener, myCalendar.get(Calendar.HOUR_OF_DAY),
+        new TimePickerDialog(CreateSession.this, timeListener, myCalendar.get(Calendar.HOUR_OF_DAY),
                 myCalendar.get(Calendar.MINUTE), false).show();
 
 
@@ -113,6 +118,7 @@ public class SessionPage extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent in = new Intent(getBaseContext(), StudyGroupActivity.class);
+        in.putExtra("documentID", userGroupId);
         startActivity(in);
         overridePendingTransition(0, 0);
     }

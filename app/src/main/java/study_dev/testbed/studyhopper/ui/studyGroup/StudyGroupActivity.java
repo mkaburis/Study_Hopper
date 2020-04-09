@@ -3,6 +3,7 @@ package study_dev.testbed.studyhopper.ui.studyGroup;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -39,6 +40,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.local.ReferenceSet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +50,7 @@ import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
 import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 import study_dev.testbed.studyhopper.ui.messages.Messages;
-import study_dev.testbed.studyhopper.ui.sessions.SessionPage;
+import study_dev.testbed.studyhopper.ui.sessions.CreateSession;
 
 public class StudyGroupActivity extends AppCompatActivity {
     private static final String TAG = "StudyGroupActivity";
@@ -58,6 +60,7 @@ public class StudyGroupActivity extends AppCompatActivity {
     private String userEmail;
     private String userGroupDocId, userDocId, groupID;
     private DocumentReference userGroupDocRef ;
+    private DocumentReference groupDocRef;
     private CollectionReference userRef = db.collection("users");
     private CollectionReference groupRef = db.collection("groups");
     private TextView groupNameTextView;
@@ -195,16 +198,13 @@ public class StudyGroupActivity extends AppCompatActivity {
                     courseCodeTextView.setText(templateGroup.getCourseCode());
                     groupColorImageView.setImageResource(findGroupColorId(templateGroup.getGroupColor()));
 
-                    Query groupQuery = groupRef.whereEqualTo("groupName", templateGroup.getGroupName());
+                    groupDocRef = templateGroup.getDocumentId();
 
-                    groupQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    groupDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()) {
-                                for(QueryDocumentSnapshot document : task.getResult()) {
-                                    groupID = document.getId();
-                                    Toast.makeText(StudyGroupActivity.this, "Group Doc ID: " + groupID, Toast.LENGTH_SHORT).show();
-                                }
+                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                            if(documentSnapshot.exists()){
+                                groupID = documentSnapshot.getId();
                             }
                         }
                     });
@@ -242,7 +242,9 @@ public class StudyGroupActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.add_session_option:
-                Intent in = new Intent(StudyGroupActivity.this, SessionPage.class);
+                Intent in = new Intent(StudyGroupActivity.this, CreateSession.class);
+                in.putExtra("userGroupId",userGroupDocId);
+                in.putExtra("groupDocRef", groupID);
                 startActivity(in);
                 overridePendingTransition(0, 0);
                 return true;

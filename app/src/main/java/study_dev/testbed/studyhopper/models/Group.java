@@ -1,5 +1,7 @@
 package study_dev.testbed.studyhopper.models;
 
+import com.google.firebase.firestore.DocumentReference;
+
 public class Group {
     private String groupName;
     private String courseCode;
@@ -7,20 +9,21 @@ public class Group {
     private String groupPreference;
     private String groupOwner;
     private int maxGroupMembers;
-    private String documentId;
+    private DocumentReference documentId;
 
     public Group() {
         // empty constructor needed
     }
 
     public Group(String groupName, String courseCode, String groupColor,
-                 String groupPreference, String groupOwner, int maxGroupMembers) {
+                 String groupPreference, String groupOwner, int maxGroupMembers, DocumentReference documentId) {
         this.groupName = groupName;
         this.courseCode = courseCode;
         this.groupColor = groupColor;
         this.groupPreference = groupPreference;
         this.groupOwner = groupOwner;
         this.maxGroupMembers = maxGroupMembers;
+        this.documentId = documentId;
     }
 
     public String getGroupName() {
@@ -51,11 +54,11 @@ public class Group {
         return maxGroupMembers;
     }
 
-    public String getDocumentId() {
+    public DocumentReference getDocumentId() {
         return documentId;
     }
 
-    public void setDocumentId(String documentId) {
+    public void setDocumentId(DocumentReference documentId) {
         this.documentId = documentId;
     }
 }

@@ -18,7 +18,7 @@
         tools:ignore="AllowBackup">
         <activity android:name=".ui.dashboard.CreateGroup"></activity>
         <activity
-            android:name=".ui.sessions.SessionPage"
+            android:name=".ui.sessions.CreateSession"
             android:label="Study Session" />
         <activity
             android:name=".ui.studyGroup.GroupMemberList"
