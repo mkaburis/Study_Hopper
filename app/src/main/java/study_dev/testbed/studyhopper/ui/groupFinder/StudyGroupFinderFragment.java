@@ -35,7 +35,7 @@ public class StudyGroupFinderFragment extends Fragment {
     private FirebaseFirestore db;
     private String TAG;
     private GroupSearchAdapter mAdapter;
-    TextView noResultsText;
+    private TextView noResultsText;
     private ArrayList<groupListItem> groupList;
     private RecyclerView mGroupRecycleView;
 
