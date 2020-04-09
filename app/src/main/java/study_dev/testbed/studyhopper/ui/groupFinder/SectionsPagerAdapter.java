@@ -28,7 +28,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 1) {
-            return StudyGroupFinderFragment.newInstance(position);
+            return PeopleSearchFragment.newInstance(position);
         } else {
             return StudyGroupFinderFragment.newInstance(position);
         }
