@@ -114,13 +114,13 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/SizeTextView"
+                                android:id="@+id/AgePrefTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/group_size" />
 
                             <Spinner
-                                android:id="@+id/SizeSpinner"
+                                android:id="@+id/AgeSpinner"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
 

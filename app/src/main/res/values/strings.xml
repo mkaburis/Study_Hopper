@@ -126,4 +126,9 @@
     <string name="search_by_course">Search By Course</string>
     <string name="search_groups">Search Groups</string>
     <string name="group_size">Group Size</string>
+    <string name="search_by_major">Search by Major</string>
+    <string name="hint_major">i.e. Physics</string>
+    <string name="search_by_college">Search by College</string>
+    <string name="i_e_arts_science"><![CDATA[i.e. Arts & Science]]></string>
+    <string name="search_people">Search People</string>
 </resources>
