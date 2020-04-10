@@ -2,7 +2,6 @@ package study_dev.testbed.studyhopper.ui.dashboard;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +22,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,9 +36,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
 import study_dev.testbed.studyhopper.models.Member;
@@ -49,15 +44,20 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private static final String TAG = "CreateGroup";
     private EditText editTextGroupName;
     private EditText editTextCourseCode;
+    private NumberPicker groupMaxSizePicker;
+    private EditText editTextMaxSize;
+    private TextView groupPreferencesPrompt;
+
+    private Spinner groupPreferencesSpinner;
+    private Spinner ageSpinner;
+    private Spinner locationSpinner;
+
     private String groupColor, groupPreference, preferenceSelected;
     private String userEmail;
     private String userDocId;
     private String groupId;
     private String userGroupId;
-    private Spinner groupPreferencesSpinner;
-    private NumberPicker groupMaxSizePicker;
-    private EditText editTextMaxSize;
-    private TextView groupPreferencesPrompt;
+
     private int colorSelected = 0;
     private ImageView blue, green, yellow, red, purple, orange, brown, gray;
     private Member newMember;
@@ -128,6 +128,8 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         }
 
         groupPreferencesSpinner = findViewById(R.id.spinner_group_preferences);
+        locationSpinner = findViewById(R.id.locationSpinner);
+        ageSpinner = findViewById(R.id.ageSpinner);
         fillGroupPreferencesSpinner();
     }
 
@@ -261,21 +263,22 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                 R.array.group_preferences, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         groupPreferencesSpinner.setAdapter(adapter);
-        groupPreferencesSpinner.setOnItemSelectedListener(this);
+
+        ArrayAdapter<CharSequence> locationAdapter = ArrayAdapter.createFromResource(this,
+                R.array.location_preference, android.R.layout.simple_spinner_item);
+        locationAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        locationSpinner.setAdapter(locationAdapter);
+
+        ArrayAdapter<CharSequence> ageRangeAdapter = ArrayAdapter.createFromResource(this,
+                R.array.age_range_preference, android.R.layout.simple_spinner_item);
+        ageRangeAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        ageSpinner.setAdapter(ageRangeAdapter);
+
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String text = parent.getItemAtPosition(position).toString();
-        TextView groupPreferencesPrompt = (TextView) groupPreferencesSpinner.getChildAt(position);
 
-        if(position == 0)
-        {
-            if(groupPreferencesPrompt != null) {
-                groupPreferencesPrompt.setText("Select Gender Preferences for Group");
-                groupPreferencesPrompt.setTextColor(Color.GRAY);
-            }
-        }
     }
 
     @Override

@@ -79,7 +79,6 @@
         <item>40+</item>
     </string-array>
     <string-array name="location_preference">
-        <item />
         <item>On Campus</item>
         <item>Off Campus</item>
     </string-array>
@@ -126,4 +125,7 @@
     <string name="search_by_course">Search By Course</string>
     <string name="search_groups">Search Groups</string>
     <string name="group_size">Group Size</string>
+    <string name="select_study_location_text">Select Study Location for Group</string>
+    <string name="select_age_range_text">Select Age Range for Group</string>
+    <string name="select_gender_pref_text">Select Gender Preferences for Group</string>
 </resources>
