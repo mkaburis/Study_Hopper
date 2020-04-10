@@ -74,7 +74,7 @@
                                 android:ems="10"
                                 android:hint="@string/i_e_arts_science"
                                 android:importantForAutofill="no"
-                                android:inputType="textPersonName" />
+                                android:inputType="textPersonName|textCapWords" />
 
 
                         </LinearLayout>
@@ -108,7 +108,7 @@
                                 android:ems="10"
                                 android:hint="@string/hint_major"
                                 android:importantForAutofill="no"
-                                android:inputType="textPersonName" />
+                                android:inputType="textCapWords" />
 
 
                         </LinearLayout>

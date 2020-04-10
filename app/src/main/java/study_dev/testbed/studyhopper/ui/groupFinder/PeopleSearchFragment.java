@@ -134,7 +134,7 @@ public class PeopleSearchFragment extends Fragment {
         //groupPreferencesSpinner.setOnItemSelectedListener(this);
 
         ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.group_preferences, android.R.layout.simple_spinner_item);
+                R.array.gender_preferences, android.R.layout.simple_spinner_item);
         genderAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         genderSpinner.setAdapter(genderAdapter);
     }
@@ -204,10 +204,7 @@ public class PeopleSearchFragment extends Fragment {
             groupQuery = groupQuery.whereGreaterThan("dob", lowerBound).whereLessThan("dob", upperBound);
         }
         if (!genderSpecific.isEmpty()) {
-            if (genderSpecific.equals("Females Only Group"))
-                groupQuery = groupQuery.whereEqualTo("gender".toLowerCase(), "Female");
-            else if (genderSpecific.equals("Males Only Group"))
-                groupQuery = groupQuery.whereEqualTo("gender".toLowerCase(), "Male");
+            groupQuery = groupQuery.whereEqualTo("gender", genderSpecific);
         }
 
         return groupQuery;

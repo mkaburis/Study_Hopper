@@ -89,6 +89,11 @@
         <item>6-10</item>
         <item>11+</item>
     </string-array>
+    <string-array name="gender_preferences">
+        <item />
+        <item>Female</item>
+        <item>Male</item>
+    </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
