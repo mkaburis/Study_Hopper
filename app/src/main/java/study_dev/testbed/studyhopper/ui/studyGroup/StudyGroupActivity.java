@@ -3,7 +3,6 @@ package study_dev.testbed.studyhopper.ui.studyGroup;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -20,7 +19,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -29,6 +31,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -40,17 +43,19 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.local.ReferenceSet;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
+import study_dev.testbed.studyhopper.models.Session;
 import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 import study_dev.testbed.studyhopper.ui.messages.Messages;
 import study_dev.testbed.studyhopper.ui.sessions.CreateSession;
+import study_dev.testbed.studyhopper.ui.sessions.SessionAdapter;
 
 public class StudyGroupActivity extends AppCompatActivity {
     private static final String TAG = "StudyGroupActivity";
@@ -59,15 +64,20 @@ public class StudyGroupActivity extends AppCompatActivity {
     private Group templateGroup;
     private String userEmail;
     private String userGroupDocId, userDocId, groupID;
+    private String groupDocId;
     private DocumentReference userGroupDocRef ;
     private DocumentReference groupDocRef;
     private CollectionReference userRef = db.collection("users");
     private CollectionReference groupRef = db.collection("groups");
+    private CollectionReference sessionRef;
     private TextView groupNameTextView;
     private TextView courseCodeTextView;
     private ImageView groupColorImageView;
     private LineChart mChart;
     CardView groupMembersCard;
+
+    private SessionAdapter sessionAdapter;
+    private ArrayList<Session> sessionList = new ArrayList<>();
 
 
     @Override
@@ -79,9 +89,12 @@ public class StudyGroupActivity extends AppCompatActivity {
         // Value for user groupDocId
         userGroupDocId = intent.getStringExtra("documentID");
 
+        groupDocId = intent.getStringExtra("groupDocId");
+
         groupNameTextView = findViewById(R.id.groupName);
         courseCodeTextView = findViewById(R.id.groupCourseCode);
         groupColorImageView = findViewById(R.id.groupCircleImage);
+
 
         // Retrieve user's email address from FirebaseAuth
         FirebaseUser user = mAuth.getCurrentUser();
@@ -89,6 +102,8 @@ public class StudyGroupActivity extends AppCompatActivity {
             userEmail = user.getEmail();
             Toast.makeText(this, userEmail, Toast.LENGTH_SHORT).show();
         }
+
+        setUpSessionRecyclerView();
 
         Query userQuery = userRef.whereEqualTo("email", userEmail);
         userQuery.get()
@@ -204,6 +219,7 @@ public class StudyGroupActivity extends AppCompatActivity {
                         @Override
                         public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                             if(documentSnapshot.exists()){
+
                                 groupID = documentSnapshot.getId();
                             }
                         }
@@ -219,6 +235,55 @@ public class StudyGroupActivity extends AppCompatActivity {
         });
     }
 
+    private void setUpSessionRecyclerView() {
+
+        Toast.makeText(this, "Made it!", Toast.LENGTH_SHORT).show();
+
+        sessionRef = db.collection("groups").document(groupDocId).collection("sessions");
+        Query query = sessionRef.orderBy("sessionType", Query.Direction.DESCENDING);
+
+        query.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            for(QueryDocumentSnapshot document : task.getResult()) {
+                                String name = document.getString("sessionName");
+                                Toast.makeText(StudyGroupActivity.this, name, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+
+        FirestoreRecyclerOptions<Session> options = new FirestoreRecyclerOptions.Builder<Session>()
+                .setQuery(query, Session.class)
+                .build();
+
+
+
+        sessionAdapter = new SessionAdapter(options);
+
+        RecyclerView recyclerView = findViewById(R.id.sessionRecyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        sessionAdapter.startListening();
+        recyclerView.setAdapter(sessionAdapter);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(sessionAdapter != null)
+            sessionAdapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        sessionAdapter.stopListening();
+    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
@@ -244,7 +309,7 @@ public class StudyGroupActivity extends AppCompatActivity {
             case R.id.add_session_option:
                 Intent in = new Intent(StudyGroupActivity.this, CreateSession.class);
                 in.putExtra("userGroupId",userGroupDocId);
-                in.putExtra("groupDocRef", groupID);
+                in.putExtra("groupId", groupID);
                 startActivity(in);
                 overridePendingTransition(0, 0);
                 return true;

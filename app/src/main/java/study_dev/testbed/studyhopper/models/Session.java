@@ -5,6 +5,7 @@ import com.google.firebase.Timestamp;
 public class Session {
     private String sessionName;
     private String sessionDescription;
+    private String sessionLocation;
     private Timestamp sessionDate;
     private Timestamp sessionStartTime;
     private Timestamp sessionEndTime;
@@ -14,14 +15,23 @@ public class Session {
         //Empty constructor needed
     }
 
-    public Session(String sessionName, String sessionDescription, Timestamp sessionDate,
+    public Session(String sessionName, String sessionDescription, String sessionLocation, Timestamp sessionDate,
                    Timestamp sessionStartTime, Timestamp sessionEndTime, int sessionType) {
         this.sessionName = sessionName;
         this.sessionDescription = sessionDescription;
+        this.sessionLocation = sessionLocation;
         this.sessionDate = sessionDate;
         this.sessionStartTime = sessionStartTime;
         this.sessionEndTime = sessionEndTime;
         this.sessionType = sessionType;
+    }
+
+    public String getSessionLocation() {
+        return sessionLocation;
+    }
+
+    public void setSessionLocation(String sessionLocation) {
+        this.sessionLocation = sessionLocation;
     }
 
     public String getSessionName() {

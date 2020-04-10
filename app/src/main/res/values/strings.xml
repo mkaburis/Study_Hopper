@@ -73,10 +73,10 @@
     <string name="search_people_tab">Search People</string>
     <string-array name="age_range_preference">
         <item />
-        <item>18 - 21</item>
-        <item>22 - 25</item>
-        <item>26 - 30</item>
-        <item>31 - 40</item>
+        <item>18 — 21</item>
+        <item>22 — 25</item>
+        <item>26 — 30</item>
+        <item>31 — 40</item>
         <item>40+</item>
     </string-array>
     <string-array name="location_preference">
@@ -127,4 +127,8 @@
     <string name="search_by_course">Search By Course</string>
     <string name="search_groups">Search Groups</string>
     <string name="group_size">Group Size</string>
+    <string name="session_type_prompt">What type of study session is this?</string>
+    <string name="session_type_collaborative">Collaborative Session</string>
+    <string name="session_type_quiet">Quiet Session</string>
+    <string name="session_type_review">Review Session</string>
 </resources>

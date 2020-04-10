@@ -65,6 +65,49 @@
         android:focusable="false"
         android:inputType="none" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/session_type_prompt"
+        android:layout_margin="10dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="15sp"
+        />
+
+
+    <RadioGroup
+        android:id="@+id/sessionPreferenceRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radio_button_collaborative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/session_type_collaborative"
+            android:onClick="onRadioButtonClicked" />
+
+        <RadioButton
+            android:id="@+id/radio_button_quiet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/session_type_quiet"
+            android:onClick="onRadioButtonClicked" />
+
+        <RadioButton
+            android:id="@+id/radio_button_review"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/session_type_review"
+            android:onClick="onRadioButtonClicked" />
+
+    </RadioGroup>
+
+
     <Button
         android:id="@+id/add_session_btn"
         android:layout_width="match_parent"
@@ -74,6 +117,7 @@
         android:text="@string/study_group_add_session"
         android:background="@color/safariGreen"
         android:textColor="@color/colorWhite"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:onClick="addSession"/>
 
 </LinearLayout>

@@ -7,28 +7,44 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TimePicker;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.sql.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.models.Session;
 import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 
 public class CreateSession extends AppCompatActivity {
 //    private studyGroupItem item;
+    private EditText sessionNameEditText;
+    private EditText sessionDescriptionEditText;
+    private EditText sessionLocationEditText;
     private EditText sessionDateEditText;
     private EditText sessionTimeStartEditText, sessionTimeEndEditText;
     private DatePickerDialog.OnDateSetListener dateListener;
     private TimePickerDialog.OnTimeSetListener timeListener;
     private DocumentReference groupDocRef;
     private String userGroupId;
+    private int sessionSelected = -1;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference sessionRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +53,9 @@ public class CreateSession extends AppCompatActivity {
 
         Intent intent = getIntent();
         userGroupId = intent.getStringExtra("userGroupId");
-        String groupId = intent.getStringExtra("groupDocRef");
+        String groupId = intent.getStringExtra("groupId");
+
+        sessionRef = db.collection("groups").document(groupId).collection("sessions");
 
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
@@ -45,6 +63,9 @@ public class CreateSession extends AppCompatActivity {
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        sessionNameEditText = findViewById(R.id.edit_text_session_name);
+        sessionDescriptionEditText = findViewById(R.id.edit_text_session_description);
+        sessionLocationEditText = findViewById(R.id.edit_text_session_location);
         sessionDateEditText = findViewById(R.id.edit_text_session_date);
         sessionTimeStartEditText = findViewById(R.id.edit_text_session_start_time);
         sessionTimeEndEditText = findViewById(R.id.edit_text_session_end_time);
@@ -121,6 +142,108 @@ public class CreateSession extends AppCompatActivity {
         in.putExtra("documentID", userGroupId);
         startActivity(in);
         overridePendingTransition(0, 0);
+    }
+
+    public void onRadioButtonClicked(View view){
+        boolean checked = ((RadioButton) view).isChecked();
+
+        switch (view.getId()){
+
+            case R.id.radio_button_collaborative:
+                if(checked)
+                    sessionSelected = 0;
+                break;
+
+            case R.id.radio_button_quiet:
+                if(checked)
+                    sessionSelected = 1;
+                break;
+
+            case R.id.radio_button_review:
+                if(checked)
+                    sessionSelected = 2;
+                break;
+        }
+    }
+
+    public void addSession(View view) throws ParseException {
+
+        String sessionName = sessionNameEditText.getText().toString();
+        String sessionDescription = sessionDescriptionEditText.getText().toString();
+        String sessionLocation = sessionLocationEditText.getText().toString();
+        String sessionDate = sessionDateEditText.getText().toString();
+        String sessionStartTime = sessionTimeStartEditText.getText().toString();
+        String sessionEndTime = sessionTimeEndEditText.getText().toString();
+
+        boolean invalidInput = false;
+
+        if(sessionName.trim().isEmpty()) {
+            sessionNameEditText.setError("A title is required!");
+            invalidInput = true;
+        }
+        else {
+            sessionNameEditText.setError(null);
+        }
+
+        if(sessionLocation.trim().isEmpty()) {
+            sessionLocationEditText.setError("A location is required!");
+            invalidInput = true;
+        } else {
+            sessionLocationEditText.setError(null);
+        }
+
+
+
+        if(sessionDate.trim().isEmpty()) {
+            sessionDateEditText.setError("A date is required!");
+            invalidInput = true;
+        } else {
+            sessionDateEditText.setError(null);
+        }
+
+        if(sessionStartTime.trim().isEmpty()) {
+            sessionTimeStartEditText.setError("A start time is required!");
+            invalidInput = true;
+        }
+        else {
+            sessionTimeStartEditText.setError(null);
+        }
+
+        if(sessionEndTime.trim().isEmpty()) {
+            sessionTimeEndEditText.setError("An end time is required!");
+            invalidInput = true;
+        }
+        else {
+            sessionTimeEndEditText.setError(null);
+        }
+
+        if(sessionSelected == -1) {
+            Snackbar.make(view, "You must select a preference for this study session!", Snackbar.LENGTH_LONG).show();
+            invalidInput = true;
+        }
+
+        if(invalidInput) {
+            // Do nothing
+        }
+
+        else{
+            Date dateOfSession = new SimpleDateFormat("MM/dd/yyyy").parse(sessionDate);
+            Date startTimeOfSession = new SimpleDateFormat("hh:mm aa").parse(sessionStartTime);
+            Date endTimeOfSession = new SimpleDateFormat("hh:mm aa").parse(sessionEndTime);
+
+            Timestamp newDate = new Timestamp(dateOfSession);
+            Timestamp newStartTime = new Timestamp(startTimeOfSession);
+            Timestamp newEndTime = new Timestamp(endTimeOfSession);
+
+            Session newSession = new Session(sessionName, sessionDescription, sessionLocation,
+                    newDate, newStartTime, newEndTime, sessionSelected);
+
+            sessionRef.add(newSession);
+            finish();
+        }
+
+
+
     }
 
 }

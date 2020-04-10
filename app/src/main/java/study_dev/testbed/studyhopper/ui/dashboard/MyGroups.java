@@ -2,6 +2,7 @@ package study_dev.testbed.studyhopper.ui.dashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import study_dev.testbed.studyhopper.models.Group;
 import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 
 public class MyGroups extends AppCompatActivity {
+    private static final String TAG = "MyGroups";
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String userEmail, userDocId;
@@ -83,9 +85,14 @@ public class MyGroups extends AppCompatActivity {
                             @Override
                             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
                                 String id = documentSnapshot.getId();
+
+                                Group mockGroup = documentSnapshot.toObject(Group.class);
+
+                                String groupDocId = mockGroup.getDocumentId().getId();
                                 Toast.makeText(MyGroups.this, "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(MyGroups.this, StudyGroupActivity.class);
                                 intent.putExtra("documentID", id);
+                                intent.putExtra("groupDocId", groupDocId);
                                 startActivity(intent);
                                 overridePendingTransition(0, 0);
                             }
@@ -98,13 +105,6 @@ public class MyGroups extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         Query query = groupRef.orderBy("groupName", Query.Direction.DESCENDING);
-
-        query.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-
-            }
-        });
 
         FirestoreRecyclerOptions<Group> options = new FirestoreRecyclerOptions.Builder<Group>()
                 .setQuery(query, Group.class)

@@ -66,6 +66,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference userRef = db.collection("users");
     private String userProfileId;
+    private Group groupTemplate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,7 +192,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
 
         groupId = db.collection("groups").document().getId();
 
-        Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
+        groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
                 getUserName(), groupSizeMax, db.collection("groups").document(groupId));
 
         db.collection("groups").document(groupId).set(groupTemplate);
