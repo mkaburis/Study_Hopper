@@ -137,6 +137,9 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         String groupName = editTextGroupName.getText().toString();
         String courseCode = editTextCourseCode.getText().toString();
         String groupPreference = groupPreferencesSpinner.getSelectedItem().toString();
+        String agePreference = ageSpinner.getSelectedItem().toString();
+        String locationPreference = locationSpinner.getSelectedItem().toString();
+
         int groupSizeMax;
 
         if(editTextMaxSize.getText().toString().equals("")) {
@@ -178,7 +181,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                 .collection("groups");
 
         Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
-                getUserName(), groupSizeMax);
+                getUserName(), groupSizeMax, locationPreference, agePreference);
 
 
 //        groupRef.add(groupTemplate).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {

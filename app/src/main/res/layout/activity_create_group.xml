@@ -240,17 +240,16 @@
 
             </RelativeLayout>
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@color/safariGreen"
+                android:onClick="createStudyGroup"
+                android:text="@string/create_study_group"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp" />
+
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@color/safariGreen"
-        android:onClick="createStudyGroup"
-        android:text="@string/create_study_group"
-        android:textColor="@color/colorWhite"
-        android:textSize="20sp" />
-
 </LinearLayout>

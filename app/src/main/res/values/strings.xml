@@ -71,7 +71,7 @@
     <string name="search_group_tab">Search Group</string>
     <string name="search_people_tab">Search People</string>
     <string-array name="age_range_preference">
-        <item />
+        <item>All Ages</item>
         <item>18 - 21</item>
         <item>22 - 25</item>
         <item>26 - 30</item>

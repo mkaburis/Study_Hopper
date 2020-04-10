@@ -177,7 +177,9 @@ public class StudyGroupFinderFragment extends Fragment {
             newQuery = newQuery.whereEqualTo("courseCode", subjectCode);
         }
         if (!ageRange.isEmpty()) {
-            newQuery = newQuery.whereEqualTo("ageRange", ageRange);
+            if (!ageRange.equals("All Ages")) {
+                newQuery = newQuery.whereEqualTo("ageRange", ageRange);
+            }
         }
         if (!meetingLocation.isEmpty()) {
             newQuery = newQuery.whereEqualTo("meetingLocation", meetingLocation);
