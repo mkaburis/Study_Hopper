@@ -136,6 +136,8 @@ public class DashboardFragment extends Fragment {
             public void onClick(View v) {
                 Activity activity = (Activity) getContext();
                 Intent in = new Intent(getContext(), StudyGroupFinder.class);
+                Bundle bundle = new Bundle();
+                in.putExtra("firestore-id", docRef.getId());
                 startActivity(in);
                 activity.overridePendingTransition(0, 0);
             }

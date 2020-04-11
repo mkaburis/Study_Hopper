@@ -72,15 +72,14 @@
     <string name="search_group_tab">Search Group</string>
     <string name="search_people_tab">Search People</string>
     <string-array name="age_range_preference">
-        <item />
-        <item>18 — 21</item>
-        <item>22 — 25</item>
-        <item>26 — 30</item>
-        <item>31 — 40</item>
+        <item>All Ages</item>
+        <item>18 - 21</item>
+        <item>22 - 25</item>
+        <item>26 - 30</item>
+        <item>31 - 40</item>
         <item>40+</item>
     </string-array>
     <string-array name="location_preference">
-        <item />
         <item>On Campus</item>
         <item>Off Campus</item>
     </string-array>
@@ -89,6 +88,11 @@
         <item>2–5</item>
         <item>6–10</item>
         <item>11+</item>
+    </string-array>
+    <string-array name="gender_preferences">
+        <item />
+        <item>Female</item>
+        <item>Male</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -111,7 +115,7 @@
     <string name="add_group_member">Add Group Member</string>
     <string name="group_member_edit_text_hint">Type in an email address</string>
     <string name="remove_members">Remove Members</string>
-    <string name ="delete">Delete</string>
+    <string name="delete">Delete</string>
     <string name="search_by_name">Search by Name</string>
     <string name="male_only">Male Only</string>
     <string name="female_only">Female Only</string>
@@ -132,4 +136,12 @@
     <string name="session_type_quiet">Quiet Session</string>
     <string name="session_type_review">Review Session</string>
     <string name="em_dash">–</string>
+    <string name="select_study_location_text">Select Study Location for Group</string>
+    <string name="select_age_range_text">Select Age Range for Group</string>
+    <string name="select_gender_pref_text">Select Gender Preferences for Group</string>
+    <string name="search_by_major">Search by Major</string>
+    <string name="hint_major">i.e. Physics</string>
+    <string name="search_by_college">Search by College</string>
+    <string name="i_e_arts_science"><![CDATA[i.e. Arts & Science]]></string>
+    <string name="search_people">Search People</string>
 </resources>

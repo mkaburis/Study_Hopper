@@ -99,6 +99,7 @@ public class ProfileClasses extends Fragment {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         globalUserRef = doc.getReference();
+                        fetchClassesFromDB();
                     }
                 }
             }
@@ -222,16 +223,6 @@ public class ProfileClasses extends Fragment {
         }
 
         return user.getEmail();
-    }
-
-    private String getUsername() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        final String email = user.getEmail();
-        if (email == null) {
-            return null;
-        }
-
-        return email.split("@")[0];
     }
 
     private void reloadRecycler() {

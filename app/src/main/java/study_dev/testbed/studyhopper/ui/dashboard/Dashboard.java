@@ -138,6 +138,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 break;
             case R.id.study_safari:
                 in = new Intent(getBaseContext(), StudyGroupFinder.class);
+                in.putExtra("firestore-id", userDocRef.getId());
                 startActivity(in);
                 overridePendingTransition(1, 0);
                 break;

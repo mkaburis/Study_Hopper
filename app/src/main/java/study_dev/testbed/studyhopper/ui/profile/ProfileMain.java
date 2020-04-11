@@ -36,7 +36,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import study_dev.testbed.studyhopper.R;
-import study_dev.testbed.studyhopper.models.Major;
 import study_dev.testbed.studyhopper.models.Profile;
 import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 import study_dev.testbed.studyhopper.ui.main.PageViewModel;
@@ -186,15 +185,13 @@ public class ProfileMain extends Fragment {
     // adds new user's info to database
     private void addAccount() throws ParseException {
         Profile newProfile = getProfile();
-        Major newMajor = getMajor();
 
-        saveNewProfileToFireBase(newProfile, newMajor);
+        saveNewProfileToFireBase(newProfile);
     }
 
     // overwrites existing user's info in database
     private void updateAccount() throws ParseException {
         Profile newProfile = getProfile();
-        final Major newMajor = getMajor();
 
         if (globalProfileRef == null) {
             String email = getEmail();
@@ -209,29 +206,8 @@ public class ProfileMain extends Fragment {
                     }
                 }
             });
-
         }
-
         globalProfileRef.set(newProfile, SetOptions.merge());
-
-        globalProfileRef.collection("majors").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    boolean isNewMajor = true;
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String oldMajor = document.get("major").toString();
-                        if (oldMajor.equals(newMajor.getMajor())) {
-                            isNewMajor = false;
-                        }
-                    }
-
-                    if (isNewMajor) {
-                        globalProfileRef.collection("majors").add(newMajor);
-                    }
-                }
-            }
-        });
     }
 
     // fills text boxes with info from database
@@ -246,8 +222,6 @@ public class ProfileMain extends Fragment {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         globalProfileRef = document.getReference();
 
-                        fillMajors();
-
                         Profile profile = document.toObject(Profile.class);
 
                         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -258,6 +232,8 @@ public class ProfileMain extends Fragment {
                         mGender.setText(profile.getGender());
                         mEmail.setText(profile.getEmail());
                         mUniversity.setText(profile.getUniversity());
+                        mMajor.setText(profile.getMajor());
+                        mCollege.setText(profile.getCollege());
 
                         TextInputLayout passwordLayout = getActivity().findViewById(R.id.passwordLayout);
                         passwordLayout.setVisibility(View.GONE);
@@ -278,31 +254,6 @@ public class ProfileMain extends Fragment {
 
     }
 
-    private void fillMajors() {
-        CollectionReference majorsRef = globalProfileRef.collection("majors");
-
-        majorsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Major currMajor = document.toObject(Major.class);
-                        mMajor.setText(currMajor.getMajor());
-                        mCollege.setText(currMajor.getCollege());
-                    }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), "Error loading profile info",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     private String getEmail() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) {
@@ -313,40 +264,18 @@ public class ProfileMain extends Fragment {
 
     }
 
-    private Major getMajor() {
-        String collegeStr = mCollege.getText().toString();
-        final String majorStr = mMajor.getText().toString();
-
-        Major major = new Major(majorStr, collegeStr);
-
-        return major;
-    }
-
-    private void saveNewProfileToFireBase(Profile newProfile, final Major newMajor) {
+    private void saveNewProfileToFireBase(Profile newProfile) {
         final CollectionReference userRef = db.collection("users");
 
         userRef.document().set(newProfile).addOnCompleteListener(new OnCompleteListener<Void>() {
 
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                boolean done = true;
-                userRef.document().collection("majors").document(newMajor.getMajor()).set(newMajor).addOnCompleteListener(new OnCompleteListener<Void>() {
-
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(getContext(), "User information saved to database.",
-                                Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getContext(), Dashboard.class);
-                        intent.putExtra("user-ids", user.getUid());
-                        startActivity(intent);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Error saving profile info to database",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+                Toast.makeText(getContext(), "User information saved to database.",
+                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), Dashboard.class);
+                intent.putExtra("user-ids", user.getUid());
+                startActivity(intent);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -364,6 +293,8 @@ public class ProfileMain extends Fragment {
         String birthday = mDob.getText().toString();
         String gender = mGender.getText().toString();
         String universityStr = mUniversity.getText().toString();
+        String majorStr = mMajor.getText().toString();
+        String collegeStr = mCollege.getText().toString();
 
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
         Date dob;
@@ -378,6 +309,6 @@ public class ProfileMain extends Fragment {
 
         dob = df.parse(birthday);
 
-        return new Profile(fName, lName, dob, gender, universityStr, email);
+        return new Profile(fName, lName, dob, gender, universityStr, email, majorStr, collegeStr);
     }
 }

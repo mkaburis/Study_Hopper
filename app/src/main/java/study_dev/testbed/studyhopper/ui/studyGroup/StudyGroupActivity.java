@@ -124,7 +124,6 @@ public class StudyGroupActivity extends AppCompatActivity {
                     }
                 });
 
-
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -221,8 +220,6 @@ public class StudyGroupActivity extends AppCompatActivity {
                             }
                         }
                     });
-
-
                 }
 
                 else {
