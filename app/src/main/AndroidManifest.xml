@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".ui.dashboard.CreateGroup"></activity>
+        <activity android:name=".ui.dashboard.CreateGroup"/>
         <activity
             android:name=".ui.sessions.CreateSession"
             android:label="Study Session" />
@@ -29,7 +29,6 @@
         </activity>
         <activity
             android:name=".ui.studyGroup.StudyGroupActivity"
-            android:launchMode="singleTop"
             android:label="Study Group"
             android:value="study_dev.testbed.studyhopper.Dashboard" />
         <activity

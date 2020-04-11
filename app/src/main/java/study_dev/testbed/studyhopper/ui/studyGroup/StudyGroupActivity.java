@@ -86,10 +86,13 @@ public class StudyGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_study_group);
         Intent intent = getIntent();
 
-        // Value for user groupDocId
+        // Value for user groupDocId in user
         userGroupDocId = intent.getStringExtra("documentID");
 
+        // Value for group document ID
         groupDocId = intent.getStringExtra("groupDocId");
+
+        setUpSessionRecyclerView();
 
         groupNameTextView = findViewById(R.id.groupName);
         courseCodeTextView = findViewById(R.id.groupCourseCode);
@@ -100,10 +103,7 @@ public class StudyGroupActivity extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null){
             userEmail = user.getEmail();
-            Toast.makeText(this, userEmail, Toast.LENGTH_SHORT).show();
         }
-
-        setUpSessionRecyclerView();
 
         Query userQuery = userRef.whereEqualTo("email", userEmail);
         userQuery.get()
@@ -118,14 +118,11 @@ public class StudyGroupActivity extends AppCompatActivity {
                                         .collection("groups").document(userGroupDocId);
 
                                 getGroupInformation();
-
+                                break;
                             }
                         }
                     }
                 });
-
-
-
 
 
         // Enable back button
@@ -224,6 +221,8 @@ public class StudyGroupActivity extends AppCompatActivity {
                             }
                         }
                     });
+
+
                 }
 
                 else {
@@ -237,24 +236,22 @@ public class StudyGroupActivity extends AppCompatActivity {
 
     private void setUpSessionRecyclerView() {
 
-        Toast.makeText(this, "Made it!", Toast.LENGTH_SHORT).show();
-
         sessionRef = db.collection("groups").document(groupDocId).collection("sessions");
-        Query query = sessionRef.orderBy("sessionType", Query.Direction.DESCENDING);
+        Query query = sessionRef.orderBy("sessionDate", Query.Direction.DESCENDING);
 
-        query.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful())
-                        {
-                            for(QueryDocumentSnapshot document : task.getResult()) {
-                                String name = document.getString("sessionName");
-                                Toast.makeText(StudyGroupActivity.this, name, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                });
+//        query.get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if(task.isSuccessful())
+//                        {
+//                            for(QueryDocumentSnapshot document : task.getResult()) {
+//                                String name = document.getString("sessionName");
+//                                Toast.makeText(StudyGroupActivity.this, name, Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    }
+//                });
 
         FirestoreRecyclerOptions<Session> options = new FirestoreRecyclerOptions.Builder<Session>()
                 .setQuery(query, Session.class)
@@ -265,11 +262,9 @@ public class StudyGroupActivity extends AppCompatActivity {
         sessionAdapter = new SessionAdapter(options);
 
         RecyclerView recyclerView = findViewById(R.id.sessionRecyclerView);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         sessionAdapter.startListening();
         recyclerView.setAdapter(sessionAdapter);
-
     }
 
     @Override
@@ -309,7 +304,7 @@ public class StudyGroupActivity extends AppCompatActivity {
             case R.id.add_session_option:
                 Intent in = new Intent(StudyGroupActivity.this, CreateSession.class);
                 in.putExtra("userGroupId",userGroupDocId);
-                in.putExtra("groupId", groupID);
+                in.putExtra("groupId", groupDocId);
                 startActivity(in);
                 overridePendingTransition(0, 0);
                 return true;

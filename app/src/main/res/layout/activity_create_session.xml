@@ -31,6 +31,7 @@
         android:hint="@string/session_location"
         android:inputType="textPostalAddress" />
 
+
     <EditText
         android:id="@+id/edit_text_session_date"
         android:layout_width="match_parent"
@@ -42,28 +43,54 @@
         android:hint="@string/session_date"
         android:inputType="date"/>
 
-
-    <EditText
-        android:id="@+id/edit_text_session_start_time"
+    <LinearLayout
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/session_start_time"
-        android:layout_margin="10dp"
-        android:onClick="selectSessionTime"
-        android:cursorVisible="false"
-        android:focusable="false"
-        android:inputType="none" />
+        android:orientation="horizontal"
+        android:weightSum="3">
 
-    <EditText
-        android:id="@+id/edit_text_session_end_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="@string/session_end_time"
-        android:onClick="selectSessionTime"
-        android:cursorVisible="false"
-        android:focusable="false"
-        android:inputType="none" />
+        <EditText
+            android:id="@+id/edit_text_session_start_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.4"
+            android:hint="@string/session_start_time"
+            android:onClick="selectSessionTime"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:inputType="none" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="@string/em_dash"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:textAlignment="center"
+            android:layout_gravity="center"/>
+
+        <EditText
+            android:id="@+id/edit_text_session_end_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.4"
+
+            android:hint="@string/session_end_time"
+            android:onClick="selectSessionTime"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:inputType="none" />
+
+
+
+    </LinearLayout>
+
+
+
+
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -71,7 +98,7 @@
         android:text="@string/session_type_prompt"
         android:layout_margin="10dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="15sp"
+        android:textSize="18sp"
         />
 
 
@@ -87,22 +114,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/session_type_collaborative"
+            android:textSize="18sp"
             android:onClick="onRadioButtonClicked" />
 
         <RadioButton
             android:id="@+id/radio_button_quiet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:text="@string/session_type_quiet"
+            android:textSize="18sp"
             android:onClick="onRadioButtonClicked" />
 
         <RadioButton
             android:id="@+id/radio_button_review"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:text="@string/session_type_review"
+            android:textSize="18sp"
             android:onClick="onRadioButtonClicked" />
 
     </RadioGroup>
@@ -118,6 +148,6 @@
         android:background="@color/safariGreen"
         android:textColor="@color/colorWhite"
         android:textSize="20sp"
-        android:onClick="addSession"/>
+        android:onClick="addSession" />
 
 </LinearLayout>

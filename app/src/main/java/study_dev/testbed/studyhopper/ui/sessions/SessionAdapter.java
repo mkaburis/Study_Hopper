@@ -28,30 +28,44 @@ public class SessionAdapter extends FirestoreRecyclerAdapter<Session, SessionAda
 
     @Override
     protected void onBindViewHolder(@NonNull SessionHolder holder, int position, @NonNull Session model) {
-//        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm aa");
-//        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
-//        SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
-//        Timestamp startTime, endTime, sessionTimestamp;
-//        Date startTimeDate, endTimeDate, sessionDate;
-//        startTime = model.getSessionStartTime();
-//        startTimeDate = startTime.toDate();
-//
-//        endTime = model.getSessionEndTime();
-//        endTimeDate = endTime.toDate();
-//
-//        sessionTimestamp = model.getSessionDate();
-//        sessionDate = sessionTimestamp.toDate();
-//        String sessionMonth = monthFormat.format(sessionDate);
-//        String sessionDay = dayFormat.format(sessionDate);
-//
-//        String timeStart = timeFormat.format(startTimeDate);
-//        String timeEnd = timeFormat.format(endTimeDate);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm aa");
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+        Timestamp startTime, endTime, sessionTimestamp;
+        Date startTimeDate, endTimeDate, sessionDate;
+        startTime = model.getSessionStartTime();
+        startTimeDate = startTime.toDate();
+
+        endTime = model.getSessionEndTime();
+        endTimeDate = endTime.toDate();
+
+        sessionTimestamp = model.getSessionDate();
+        sessionDate = sessionTimestamp.toDate();
+        String sessionMonth = monthFormat.format(sessionDate);
+        String sessionDay = dayFormat.format(sessionDate);
+
+        String timeStart = timeFormat.format(startTimeDate);
+        String timeEnd = timeFormat.format(endTimeDate);
 
 
         holder.textViewSessionName.setText(model.getSessionName());
-//        holder.textViewSessionTime.setText(timeStart + " - " + timeEnd);
-//        holder.textViewSessionMonth.setText(sessionMonth);
-//        holder.textViewSessionDay.setText(sessionDay);
+        holder.textViewSessionTime.setText(timeStart + " - " + timeEnd);
+        holder.textViewSessionMonth.setText(sessionMonth);
+        holder.textViewSessionDay.setText(sessionDay);
+
+        int sessionPreference = model.getSessionType();
+
+        switch (sessionPreference){
+            case 0:
+                holder.imageViewSessionType.setImageResource(R.drawable.ic_collaborative_session);
+                break;
+            case 1:
+                holder.imageViewSessionType.setImageResource(R.drawable.ic_quiet_session);
+                break;
+            case 2:
+                holder.imageViewSessionType.setImageResource(R.drawable.ic_review_session);
+                break;
+        }
 
     }
 

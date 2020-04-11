@@ -19,7 +19,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -41,6 +40,7 @@ public class CreateSession extends AppCompatActivity {
     private TimePickerDialog.OnTimeSetListener timeListener;
     private DocumentReference groupDocRef;
     private String userGroupId;
+    private String groupDocId;
     private int sessionSelected = -1;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -49,14 +49,17 @@ public class CreateSession extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_session_page);
+        setContentView(R.layout.activity_create_session);
 
         Intent intent = getIntent();
         userGroupId = intent.getStringExtra("userGroupId");
-        String groupId = intent.getStringExtra("groupId");
+        groupDocId = intent.getStringExtra("groupId");
 
-        sessionRef = db.collection("groups").document(groupId).collection("sessions");
+        sessionRef = db.collection("groups").document(groupDocId).collection("sessions");
 
+
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        setTitle("Create a Study Session");
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -140,6 +143,7 @@ public class CreateSession extends AppCompatActivity {
     public void onBackPressed() {
         Intent in = new Intent(getBaseContext(), StudyGroupActivity.class);
         in.putExtra("documentID", userGroupId);
+        in.putExtra("groupDocId", groupDocId);
         startActivity(in);
         overridePendingTransition(0, 0);
     }
@@ -222,11 +226,7 @@ public class CreateSession extends AppCompatActivity {
             invalidInput = true;
         }
 
-        if(invalidInput) {
-            // Do nothing
-        }
-
-        else{
+        if(!invalidInput) {
             Date dateOfSession = new SimpleDateFormat("MM/dd/yyyy").parse(sessionDate);
             Date startTimeOfSession = new SimpleDateFormat("hh:mm aa").parse(sessionStartTime);
             Date endTimeOfSession = new SimpleDateFormat("hh:mm aa").parse(sessionEndTime);
@@ -241,8 +241,6 @@ public class CreateSession extends AppCompatActivity {
             sessionRef.add(newSession);
             finish();
         }
-
-
 
     }
 
