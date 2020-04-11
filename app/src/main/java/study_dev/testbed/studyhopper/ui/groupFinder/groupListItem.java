@@ -15,6 +15,7 @@ public class groupListItem implements Parcelable {
             return new groupListItem[size];
         }
     };
+
     private String groupName;
     private String courseCode;
     private String color;

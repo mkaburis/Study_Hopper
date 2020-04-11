@@ -89,6 +89,11 @@
         <item>6-10</item>
         <item>11+</item>
     </string-array>
+    <string-array name="gender_preferences">
+        <item />
+        <item>Female</item>
+        <item>Male</item>
+    </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -110,7 +115,7 @@
     <string name="add_group_member">Add Group Member</string>
     <string name="group_member_edit_text_hint">Type in an email address</string>
     <string name="remove_members">Remove Members</string>
-    <string name ="delete">Delete</string>
+    <string name="delete">Delete</string>
     <string name="search_by_name">Search by Name</string>
     <string name="male_only">Male Only</string>
     <string name="female_only">Female Only</string>
@@ -126,4 +131,9 @@
     <string name="search_by_course">Search By Course</string>
     <string name="search_groups">Search Groups</string>
     <string name="group_size">Group Size</string>
+    <string name="search_by_major">Search by Major</string>
+    <string name="hint_major">i.e. Physics</string>
+    <string name="search_by_college">Search by College</string>
+    <string name="i_e_arts_science"><![CDATA[i.e. Arts & Science]]></string>
+    <string name="search_people">Search People</string>
 </resources>

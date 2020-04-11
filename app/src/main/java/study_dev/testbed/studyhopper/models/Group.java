@@ -8,19 +8,21 @@ public class Group {
     private String groupOwner;
     private int maxGroupMembers;
     private String documentId;
+    private String university;
 
     public Group() {
         // empty constructor needed
     }
 
     public Group(String groupName, String courseCode, String groupColor,
-                 String groupPreference, String groupOwner, int maxGroupMembers) {
+                 String groupPreference, String groupOwner, int maxGroupMembers, String university) {
         this.groupName = groupName;
         this.courseCode = courseCode;
         this.groupColor = groupColor;
         this.groupPreference = groupPreference;
         this.groupOwner = groupOwner;
         this.maxGroupMembers = maxGroupMembers;
+        this.university = university;
     }
 
     public String getGroupName() {
@@ -57,6 +59,14 @@ public class Group {
 
     public void setDocumentId(String documentId) {
         this.documentId = documentId;
+    }
+
+    public String getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(String university) {
+        this.university = university;
     }
 }
 

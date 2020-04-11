@@ -23,7 +23,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,9 +36,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.time.LocalDateTime;
-import java.util.Date;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
@@ -66,6 +62,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference userRef = db.collection("users");
     private String userProfileId;
+    private String userUniversity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +112,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                         if(task.isSuccessful()) {
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 userDocId = documentSnapshot.getId();
+                                userUniversity = documentSnapshot.getString("university");
                             }
                         }
 
@@ -176,7 +174,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                 .collection("groups");
 
         Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
-                getUserName(), groupSizeMax);
+                getUserName(), groupSizeMax, userUniversity);
 
 
 //        groupRef.add(groupTemplate).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
