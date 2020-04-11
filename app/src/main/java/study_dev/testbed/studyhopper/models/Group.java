@@ -1,5 +1,7 @@
 package study_dev.testbed.studyhopper.models;
 
+import com.google.firebase.firestore.DocumentReference;
+
 public class Group {
     private String groupName;
     private String courseCode;
@@ -7,7 +9,9 @@ public class Group {
     private String groupPreference;
     private String groupOwner;
     private int maxGroupMembers;
-    private String documentId;
+    private DocumentReference documentId;
+    private String locationPreference;
+    private String agePreference;
     private String university;
 
     public Group() {
@@ -15,13 +19,30 @@ public class Group {
     }
 
     public Group(String groupName, String courseCode, String groupColor,
-                 String groupPreference, String groupOwner, int maxGroupMembers, String university) {
+                 String groupPreference, String groupOwner, int maxGroupMembers, String university, String locationPreference, String agePreference) {
         this.groupName = groupName;
         this.courseCode = courseCode;
         this.groupColor = groupColor;
         this.groupPreference = groupPreference;
         this.groupOwner = groupOwner;
         this.maxGroupMembers = maxGroupMembers;
+        this.locationPreference = locationPreference;
+        this.agePreference = agePreference;
+        this.university = university;
+    }
+
+    public Group(String groupName, String courseCode, String groupColor,
+                 String groupPreference, String groupOwner, int maxGroupMembers, String university,
+                 String locationPreference, String agePreference, DocumentReference documentId) {
+        this.groupName = groupName;
+        this.courseCode = courseCode;
+        this.groupColor = groupColor;
+        this.groupPreference = groupPreference;
+        this.groupOwner = groupOwner;
+        this.maxGroupMembers = maxGroupMembers;
+        this.documentId = documentId;
+        this.locationPreference = locationPreference;
+        this.agePreference = agePreference;
         this.university = university;
     }
 
@@ -53,12 +74,28 @@ public class Group {
         return maxGroupMembers;
     }
 
-    public String getDocumentId() {
+    public DocumentReference getDocumentId() {
         return documentId;
     }
 
-    public void setDocumentId(String documentId) {
+    public void setDocumentId(DocumentReference documentId) {
         this.documentId = documentId;
+    }
+
+    public String getLocationPreference() {
+        return locationPreference;
+    }
+
+    public void setLocationPreference(String locationPreference) {
+        this.locationPreference = locationPreference;
+    }
+
+    public String getAgePreference() {
+        return agePreference;
+    }
+
+    public void setAgePreference(String agePreference) {
+        this.agePreference = agePreference;
     }
 
     public String getUniversity() {

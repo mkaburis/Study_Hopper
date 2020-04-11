@@ -71,7 +71,7 @@
     <string name="search_group_tab">Search Group</string>
     <string name="search_people_tab">Search People</string>
     <string-array name="age_range_preference">
-        <item />
+        <item>All Ages</item>
         <item>18 - 21</item>
         <item>22 - 25</item>
         <item>26 - 30</item>
@@ -79,7 +79,6 @@
         <item>40+</item>
     </string-array>
     <string-array name="location_preference">
-        <item />
         <item>On Campus</item>
         <item>Off Campus</item>
     </string-array>
@@ -131,6 +130,9 @@
     <string name="search_by_course">Search By Course</string>
     <string name="search_groups">Search Groups</string>
     <string name="group_size">Group Size</string>
+    <string name="select_study_location_text">Select Study Location for Group</string>
+    <string name="select_age_range_text">Select Age Range for Group</string>
+    <string name="select_gender_pref_text">Select Gender Preferences for Group</string>
     <string name="search_by_major">Search by Major</string>
     <string name="hint_major">i.e. Physics</string>
     <string name="search_by_college">Search by College</string>
