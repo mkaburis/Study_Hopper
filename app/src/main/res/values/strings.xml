@@ -62,7 +62,6 @@
     <string name="select_here">Select Here</string>
     <string name="group_color_image_description">Group Color Selection</string>
     <string-array name="group_preferences">
-        <item />
         <item>Coed Group</item>
         <item>Females Only Group</item>
         <item>Males Only Group</item>
@@ -73,10 +72,10 @@
     <string name="search_people_tab">Search People</string>
     <string-array name="age_range_preference">
         <item>All Ages</item>
-        <item>18 - 21</item>
-        <item>22 - 25</item>
-        <item>26 - 30</item>
-        <item>31 - 40</item>
+        <item>18 – 21</item>
+        <item>22 – 25</item>
+        <item>26 – 30</item>
+        <item>31 – 40</item>
         <item>40+</item>
     </string-array>
     <string-array name="location_preference">

@@ -109,8 +109,6 @@
             android:focusable="false"
             android:inputType="none" />
 
-
-
     </LinearLayout>
 
 
@@ -159,7 +157,6 @@
             android:onClick="onRadioButtonClicked" />
 
     </RadioGroup>
-
 
     <Button
         android:id="@+id/add_session_btn"
