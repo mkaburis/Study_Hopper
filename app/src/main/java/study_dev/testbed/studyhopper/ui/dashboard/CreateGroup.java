@@ -66,6 +66,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference userRef = db.collection("users");
     private String userProfileId;
+    private String userUniversity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +116,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                         if(task.isSuccessful()) {
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 userDocId = documentSnapshot.getId();
+                                userUniversity = documentSnapshot.getString("university");
                             }
                         }
 
@@ -181,7 +183,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
                 .collection("groups");
 
         Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
-                getUserName(), groupSizeMax, locationPreference, agePreference);
+                getUserName(), groupSizeMax, userUniversity, locationPreference, agePreference);
 
 
 //        groupRef.add(groupTemplate).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -35,9 +36,10 @@ public class StudyGroupFinderFragment extends Fragment {
     private FirebaseFirestore db;
     private String TAG;
     private GroupSearchAdapter mAdapter;
-    TextView noResultsText;
+    private TextView noResultsText;
     private ArrayList<groupListItem> groupList;
     private RecyclerView mGroupRecycleView;
+    private String userUniversity;
 
     private Spinner ageRangeSpinner;
     private Spinner locationSpinner;
@@ -66,6 +68,18 @@ public class StudyGroupFinderFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         db = FirebaseFirestore.getInstance();
         groupList = new ArrayList<>();
+
+        Bundle extras = getActivity().getIntent().getExtras();
+        String firestoreId = extras.getString("firestore-id");
+
+        db.collection("users").document(firestoreId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    userUniversity = task.getResult().getString("university");
+                }
+            }
+        });
 
         View v = inflater.inflate(R.layout.fragment_study_group_finder, container, false);
         noResultsText = v.getRootView().findViewById(R.id.NoResultsText);
@@ -163,7 +177,7 @@ public class StudyGroupFinderFragment extends Fragment {
     }
 
     private Query buildQuery(CollectionReference groupsReference) {
-        Query newQuery = groupsReference.whereEqualTo("isActive", true);
+        Query newQuery = groupsReference.whereEqualTo("university", userUniversity);
 
         String courseSubject = subjectSearch.getText().toString();
         String courseNumber = courseNumberSearch.getText().toString();

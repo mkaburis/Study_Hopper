@@ -1,38 +1,27 @@
 package study_dev.testbed.studyhopper.models;
 
-import com.google.firebase.Timestamp;
-
 import java.util.Date;
 
 public class Profile {
     String firstName;
     String lastName;
-
-    String email;
-
-    public Profile(String firstName, String lastName, Date dob, String gender, String university, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dob = dob;
-        this.gender = gender;
-        this.university = university;
-        this.email = email;
-    }
-
-    public Profile(String firstName, String lastName, Date dob, String gender, String university, String email, Timestamp lastLogin) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dob = dob;
-        this.gender = gender;
-        this.university = university;
-        this.email = email;
-        this.lastLogin = lastLogin;
-    }
-
     Date dob;
     String gender;
     String university;
-    Timestamp lastLogin;
+    String email;
+    String major;
+    String college;
+
+    public Profile(String firstName, String lastName, Date dob, String gender, String university, String email, String major, String college) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.gender = gender;
+        this.university = university;
+        this.email = email;
+        this.major = major;
+        this.college = college;
+    }
 
     Profile() {
 
@@ -86,12 +75,20 @@ public class Profile {
         this.university = university;
     }
 
-    public Timestamp getLastLogin() {
-        return lastLogin;
+    public String getMajor() {
+        return major;
     }
 
-    public void setLastLogin(Timestamp lastLogin) {
-        this.lastLogin = lastLogin;
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getCollege() {
+        return college;
+    }
+
+    public void setCollege(String college) {
+        this.college = college;
     }
 
 }

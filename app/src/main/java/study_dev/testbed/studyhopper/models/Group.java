@@ -12,13 +12,14 @@ public class Group {
     private DocumentReference documentId;
     private String locationPreference;
     private String agePreference;
+    private String university;
 
     public Group() {
         // empty constructor needed
     }
 
     public Group(String groupName, String courseCode, String groupColor,
-                 String groupPreference, String groupOwner, int maxGroupMembers, String locationPreference, String agePreference) {
+                 String groupPreference, String groupOwner, int maxGroupMembers, String university, String locationPreference, String agePreference) {
         this.groupName = groupName;
         this.courseCode = courseCode;
         this.groupColor = groupColor;
@@ -27,6 +28,7 @@ public class Group {
         this.maxGroupMembers = maxGroupMembers;
         this.locationPreference = locationPreference;
         this.agePreference = agePreference;
+        this.university = university;
     }
 
     public Group(String groupName, String courseCode, String groupColor,
@@ -37,6 +39,7 @@ public class Group {
         this.groupPreference = groupPreference;
         this.groupOwner = groupOwner;
         this.maxGroupMembers = maxGroupMembers;
+
         this.documentId = documentId;
         this.locationPreference = locationPreference;
         this.agePreference = agePreference;
@@ -92,6 +95,14 @@ public class Group {
 
     public void setAgePreference(String agePreference) {
         this.agePreference = agePreference;
+    }
+
+    public String getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(String university) {
+        this.university = university;
     }
 }
 
