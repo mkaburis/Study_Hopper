@@ -32,17 +32,18 @@ public class Group {
     }
 
     public Group(String groupName, String courseCode, String groupColor,
-                 String groupPreference, String groupOwner, int maxGroupMembers, DocumentReference documentId, String locationPreference, String agePreference) {
+                 String groupPreference, String groupOwner, int maxGroupMembers, String university,
+                 String locationPreference, String agePreference, DocumentReference documentId) {
         this.groupName = groupName;
         this.courseCode = courseCode;
         this.groupColor = groupColor;
         this.groupPreference = groupPreference;
         this.groupOwner = groupOwner;
         this.maxGroupMembers = maxGroupMembers;
-
         this.documentId = documentId;
         this.locationPreference = locationPreference;
         this.agePreference = agePreference;
+        this.university = university;
     }
 
     public String getGroupName() {
