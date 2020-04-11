@@ -415,6 +415,7 @@ public class GroupMemberList extends AppCompatActivity {
 
         Intent in = new Intent(getBaseContext(), StudyGroupActivity.class);
         in.putExtra("documentID", userGroupDocID);
+        in.putExtra("groupDocId", groupDocID);
         startActivity(in);
         overridePendingTransition(0, 0);
     }

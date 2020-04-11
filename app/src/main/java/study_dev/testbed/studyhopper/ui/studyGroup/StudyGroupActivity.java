@@ -149,7 +149,7 @@ public class StudyGroupActivity extends AppCompatActivity {
                 Intent intent = new Intent(StudyGroupActivity.this, GroupMemberList.class);
                 intent.putExtra("userGroupDocId", userGroupDocId);
                 intent.putExtra("userDocId", userDocId);
-                intent.putExtra("groupDocId", groupID);
+                intent.putExtra("groupDocId", groupDocId);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }
@@ -236,25 +236,9 @@ public class StudyGroupActivity extends AppCompatActivity {
         sessionRef = db.collection("groups").document(groupDocId).collection("sessions");
         Query query = sessionRef.orderBy("sessionDate", Query.Direction.DESCENDING);
 
-//        query.get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if(task.isSuccessful())
-//                        {
-//                            for(QueryDocumentSnapshot document : task.getResult()) {
-//                                String name = document.getString("sessionName");
-//                                Toast.makeText(StudyGroupActivity.this, name, Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    }
-//                });
-
         FirestoreRecyclerOptions<Session> options = new FirestoreRecyclerOptions.Builder<Session>()
                 .setQuery(query, Session.class)
                 .build();
-
-
 
         sessionAdapter = new SessionAdapter(options);
 
@@ -262,6 +246,13 @@ public class StudyGroupActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         sessionAdapter.startListening();
         recyclerView.setAdapter(sessionAdapter);
+
+        sessionAdapter.setOnItemClickListener(new SessionAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                String sessionPath = documentSnapshot.getReference().getPath();
+            }
+        });
     }
 
     @Override

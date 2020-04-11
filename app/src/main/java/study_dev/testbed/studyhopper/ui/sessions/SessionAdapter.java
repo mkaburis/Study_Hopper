@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,6 +23,7 @@ import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Session;
 
 public class SessionAdapter extends FirestoreRecyclerAdapter<Session, SessionAdapter.SessionHolder> {
+    private OnItemClickListener listener;
 
     public SessionAdapter(@NonNull FirestoreRecyclerOptions<Session> options) {
         super(options);
@@ -92,6 +95,26 @@ public class SessionAdapter extends FirestoreRecyclerAdapter<Session, SessionAda
             textViewSessionMonth = itemView.findViewById(R.id.text_view_session_month);
             textViewSessionDay = itemView.findViewById(R.id.text_view_session_date);
             imageViewSessionType = itemView.findViewById(R.id.imageview_session_type);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION && listener != null){
+                        listener.onItemClick(getSnapshots().getSnapshot(position), position);
+                    }
+                }
+            });
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(DocumentSnapshot documentSnapshot, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+
+        this.listener = listener;
+
     }
 }

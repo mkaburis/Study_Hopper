@@ -305,6 +305,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onBackPressed() {
         Intent in = new Intent(getBaseContext(), MyGroups.class);
+        in.putExtra("firestore-id", userProfileId);
         startActivity(in);
         overridePendingTransition(0, 0);
     }
