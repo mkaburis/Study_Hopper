@@ -3,33 +3,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.sessions.CreateSession"
     android:padding="16dp"
     android:orientation="vertical">
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edit_text_session_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:hint="@string/session_name"
         android:inputType="text"/>
 
-    <EditText
-        android:id="@+id/edit_text_session_description"
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:hint="@string/session_description"
-        android:inputType="textMultiLine" />
+        app:counterEnabled="true"
+        app:counterMaxLength="150">
 
-    <EditText
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_session_description"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:hint="@string/session_description"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"/>
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edit_text_session_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:hint="@string/session_location"
         android:inputType="textPostalAddress" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <EditText
@@ -56,6 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.4"
             android:hint="@string/session_start_time"
+            android:textAlignment="textEnd"
             android:onClick="selectSessionTime"
             android:cursorVisible="false"
             android:focusable="false"
@@ -86,9 +112,6 @@
 
 
     </LinearLayout>
-
-
-
 
 
 
