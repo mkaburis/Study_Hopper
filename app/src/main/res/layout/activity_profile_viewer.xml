@@ -34,13 +34,12 @@
                 app:layout_constraintVertical_bias="0.555" />
 
             <TextView
-                android:id="@+id/NameTextView"
+                android:id="@+id/nameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="Jose-Pablo Mantilla"
+                android:text="@string/default_name"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,10 +50,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
-                android:text="Age: "
+                android:text="@string/age_label"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/NameTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
             <TextView
                 android:id="@+id/ageTextView"
@@ -62,29 +61,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="22"
+                android:text="@string/default_age"
                 app:layout_constraintStart_toEndOf="@+id/ageTextViewFixed"
-                app:layout_constraintTop_toBottomOf="@+id/NameTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
             <TextView
-                android:id="@+id/sexTextViewFixed"
+                android:id="@+id/genderTextViewFixed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
-                android:text="Gender:"
+                android:text="@string/gender_label"
                 app:layout_constraintStart_toEndOf="@+id/ageTextView"
-                app:layout_constraintTop_toBottomOf="@+id/NameTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
             <TextView
-                android:id="@+id/sexTextView"
+                android:id="@+id/genderTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Male"
-                app:layout_constraintStart_toEndOf="@+id/sexTextViewFixed"
-                app:layout_constraintTop_toBottomOf="@id/NameTextView" />
+                android:text="@string/default_gender"
+                app:layout_constraintStart_toEndOf="@+id/genderTextViewFixed"
+                app:layout_constraintTop_toBottomOf="@id/nameTextView" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
@@ -109,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Education"
+                android:text="@string/education_header"
                 android:textAlignment="textStart"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="bold"
@@ -122,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
-                android:text="College:"
+                android:text="@string/college_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/educationCardHeader" />
 
@@ -132,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
-                android:text="Major:"
+                android:text="@string/major_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/collegeTextViewFixed" />
 
@@ -142,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="Engineering"
+                android:text="@string/college"
                 app:layout_constraintStart_toEndOf="@+id/collegeTextViewFixed"
                 app:layout_constraintTop_toBottomOf="@id/educationCardHeader" />
 
@@ -152,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="8dp"
-                android:text="Computer Science"
+                android:text="@string/default_major"
                 app:layout_constraintStart_toEndOf="@+id/majorTextViewFixed"
                 app:layout_constraintTop_toBottomOf="@+id/collegeTextView" />
 
@@ -162,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Classes"
+                android:text="@string/classes_header"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/majorTextViewFixed" />
 
@@ -179,6 +178,7 @@
                 app:layout_constraintTop_toBottomOf="@id/classesTextView">
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/classRecycleView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </FrameLayout>
@@ -194,7 +194,7 @@
         android:backgroundTint="@color/colorPrimary"
         android:drawableStart="@drawable/ic_chat_icon"
         android:drawablePadding="8dp"
-        android:text="Message User"
+        android:text="@string/message_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/educationCard" />
 
@@ -208,7 +208,7 @@
         android:drawableStart="@drawable/ic_add_group_member"
         android:drawablePadding="8dp"
         android:drawableTint="#FFFFFF"
-        android:text="Invite to group"
+        android:text="@string/invite_to_group"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/educationCard" />
 
