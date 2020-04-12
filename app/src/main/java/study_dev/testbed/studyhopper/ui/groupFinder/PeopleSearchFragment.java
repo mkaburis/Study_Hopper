@@ -94,7 +94,7 @@ public class PeopleSearchFragment extends Fragment {
 
 
         View v = inflater.inflate(R.layout.fragment_people_search, container, false);
-        noResultsText = v.getRootView().findViewById(R.id.NoResultsText);
+        noResultsText = v.getRootView().findViewById(R.id.noResultsText);
 
         mPeopleRecycleView = v.getRootView().findViewById(R.id.ResultRecycleViewer);
         mPeopleRecycleView.setHasFixedSize(false); //ONLY for FIXED Size recylcerView remove later

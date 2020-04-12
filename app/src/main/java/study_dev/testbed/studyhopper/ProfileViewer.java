@@ -1,11 +1,14 @@
 package study_dev.testbed.studyhopper;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,45 +23,54 @@ import java.util.ArrayList;
 
 import study_dev.testbed.studyhopper.models.Profile;
 import study_dev.testbed.studyhopper.models.StudentClass;
+import study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder;
+import study_dev.testbed.studyhopper.ui.profile.ClassesListAdapter;
 import study_dev.testbed.studyhopper.ui.profile.classListItem;
 
 public class ProfileViewer extends AppCompatActivity {
-    DocumentReference userRef;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private DocumentReference userRef;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String mainUserId;
 
-    TextView nameTextView;
-    TextView ageTextView;
-    TextView genderTextView;
+    private TextView noResultsText;
 
-    TextView collegeTextView;
-    TextView majorTextView;
+    private TextView nameTextView;
+    private TextView ageTextView;
+    private TextView genderTextView;
 
-    Button messageButton;
-    Button inviteGroupButton;
+    private TextView collegeTextView;
+    private TextView majorTextView;
 
-    RecyclerView classRecycleView;
+    private Button messageButton;
+    private Button inviteGroupButton;
+
+    private RecyclerView classRecycleView;
     private ArrayList<classListItem> classList;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ClassesListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_viewer);
 
-        /*Bundle extras = getIntent().getExtras();
-        if (extras == null){
-            Intent intent = new Intent(getApplicationContext(), Dashboard.class);
-            startActivity(intent);
+        Intent intent = getIntent();
+        String docId = intent.getStringExtra("user-docId");
+        mainUserId = "MykxE4OiK0qpBDkzF6cl";
+
+        /*if (docId == null){
+            Intent newIntent = new Intent(getApplicationContext(), Dashboard.class);
+            startActivity(newIntent);
             return;
         }*/
 
-        //String docId = extras.getString("user-docId");
-        userRef = db.collection("users").document("MykxE4OiK0qpBDkzF6cl");
+        userRef = db.collection("users").document(mainUserId);
 
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        setTitle("View Profile");
 
         setupComponents();
         fillProfile();
-
-
     }
 
     public void setupComponents() {
@@ -72,8 +84,16 @@ public class ProfileViewer extends AppCompatActivity {
         messageButton = findViewById(R.id.messageButton);
         inviteGroupButton = findViewById(R.id.inviteGroupButton);
 
-        classRecycleView = findViewById(R.id.classRecycleView);
+        noResultsText = findViewById(R.id.noResultsText);
+
         classList = new ArrayList<>();
+        classRecycleView = findViewById(R.id.classRecycleView);
+        classRecycleView.setHasFixedSize(false);
+        mLayoutManager = new LinearLayoutManager(this);
+        classRecycleView.setLayoutManager(mLayoutManager);
+        reloadRecycler();
+
+
     }
 
     public void fillProfile() {
@@ -106,12 +126,36 @@ public class ProfileViewer extends AppCompatActivity {
                                 studentClass.getClassName(), studentClass.getSubject(),
                                 studentClass.getNumber(), studentClass.getSection());
                         classList.add(listItem);
-
                     }
+                    reloadRecycler();
                 }
             }
         });
 
+    }
+
+    private void reloadRecycler() {
+        if (classList.size() == 0) {
+            noResultsText.setVisibility(View.VISIBLE);
+        } else {
+            noResultsText.setVisibility(View.GONE);
+            mAdapter = new ClassesListAdapter(classList);
+            classRecycleView.setAdapter(mAdapter);
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent in = new Intent(getBaseContext(), StudyGroupFinder.class);
+        in.putExtra("firestore-id", mainUserId);
+        startActivity(in);
+        overridePendingTransition(0, 0);
     }
 
 }
