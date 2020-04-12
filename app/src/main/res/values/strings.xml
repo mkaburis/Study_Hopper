@@ -156,4 +156,15 @@
     <string name="classes_header">Classes</string>
     <string name="message_user">Message User</string>
     <string name="invite_to_group">Invite to group</string>
+    <string name="default_group_name">Default Group Name</string>
+    <string name="cop_1234">COP 1234</string>
+    <string name="group_gender">Group Gender:</string>
+    <string name="main_study_location_label">Main Study Location:</string>
+    <string name="group_max_size_label">Group Max Size:</string>
+    <string name="default_group_size">5</string>
+    <string name="age_range_label">Age Range:</string>
+    <string name="course_label">Course:</string>
+    <string name="default_age_range">Any Age</string>
+    <string name="request_to_join_button_text">Request to Join</string>
+    <string name="group_members">Group Members</string>
 </resources>

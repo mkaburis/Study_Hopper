@@ -196,7 +196,7 @@ public class StudyGroupFinderFragment extends Fragment {
             }
         }
         if (!meetingLocation.isEmpty()) {
-            newQuery = newQuery.whereEqualTo("meetingLocation", meetingLocation);
+            newQuery = newQuery.whereEqualTo("locationPreference", meetingLocation);
         }
         if (!groupSize.isEmpty()) {
             newQuery = newQuery.whereEqualTo("groupSize", groupSize);
