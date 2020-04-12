@@ -112,12 +112,13 @@ public class DashboardFragment extends Fragment {
                                 adapter.setOnItemClickListener(new GroupAdapter.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                                        String id = documentSnapshot.getId();
-                                        Toast.makeText(getContext(),
-                                                "Position: " + position + " ID: " + id, Toast.LENGTH_SHORT).show();
+                                        String userGroupDocId = documentSnapshot.getId();
+                                        Group mockGroup = documentSnapshot.toObject(Group.class);
+                                        String groupDocId = mockGroup.getDocumentId().getId();
                                         Activity activity = (Activity) getContext();
                                         Intent intent = new Intent(getContext(), StudyGroupActivity.class);
-                                        intent.putExtra("documentID", id);
+                                        intent.putExtra("userGroupDocId", userGroupDocId);
+                                        intent.putExtra("groupDocId", groupDocId);
                                         startActivity(intent);
                                         activity.overridePendingTransition(0, 0);
                                     }

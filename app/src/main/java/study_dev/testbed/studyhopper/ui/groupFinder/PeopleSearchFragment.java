@@ -179,7 +179,7 @@ public class PeopleSearchFragment extends Fragment {
         if (!college.isEmpty()) {
             groupQuery = groupQuery.whereEqualTo("college", college);
         }
-        if (!ageRange.isEmpty()) {
+        if (!ageRange.equals("All Ages")) {
             int lowerBoundInt;
             int upperBoundInt;
 
@@ -187,7 +187,7 @@ public class PeopleSearchFragment extends Fragment {
                 lowerBoundInt = 40;
                 upperBoundInt = 200;
             } else {
-                String[] splitString = ageRange.split(" - ");
+                String[] splitString = ageRange.split(" – ");
                 lowerBoundInt = Integer.parseInt(splitString[0]);
                 upperBoundInt = Integer.parseInt(splitString[1]);
             }

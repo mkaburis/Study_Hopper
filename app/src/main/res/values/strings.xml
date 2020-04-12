@@ -32,9 +32,9 @@
     <string name="session_name">Session Name</string>
     <string name="session_description">Session Description</string>
     <string name="session_location">Session Location</string>
-    <string name="session_date">Date of Session</string>
-    <string name="session_start_time">Session Start Time</string>
-    <string name="session_end_time">Session End Time</string>
+    <string name="session_date">Session Date</string>
+    <string name="session_start_time">Start Time</string>
+    <string name="session_end_time">End Time</string>
     <string name="create_study_group">Create Study Group</string>
     <string name="group_name">Group Name</string>
     <string name="group_course_code">Course the Group is Connected With</string>
@@ -73,10 +73,10 @@
     <string name="search_people_tab">Search People</string>
     <string-array name="age_range_preference">
         <item>All Ages</item>
-        <item>18 - 21</item>
-        <item>22 - 25</item>
-        <item>26 - 30</item>
-        <item>31 - 40</item>
+        <item>18 – 21</item>
+        <item>22 – 25</item>
+        <item>26 – 30</item>
+        <item>31 – 40</item>
         <item>40+</item>
     </string-array>
     <string-array name="location_preference">
@@ -85,8 +85,8 @@
     </string-array>
     <string-array name="group_size_preference">
         <item />
-        <item>2-5</item>
-        <item>6-10</item>
+        <item>2–5</item>
+        <item>6–10</item>
         <item>11+</item>
     </string-array>
     <string-array name="gender_preferences">
@@ -131,6 +131,11 @@
     <string name="search_by_course">Search By Course</string>
     <string name="search_groups">Search Groups</string>
     <string name="group_size">Group Size</string>
+    <string name="session_type_prompt">What type of study session is this?</string>
+    <string name="session_type_collaborative">Collaborative Session</string>
+    <string name="session_type_quiet">Quiet Session</string>
+    <string name="session_type_review">Review Session</string>
+    <string name="em_dash">–</string>
     <string name="select_study_location_text">Select Study Location for Group</string>
     <string name="select_age_range_text">Select Age Range for Group</string>
     <string name="select_gender_pref_text">Select Gender Preferences for Group</string>
