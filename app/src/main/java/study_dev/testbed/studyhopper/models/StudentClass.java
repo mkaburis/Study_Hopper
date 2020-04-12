@@ -60,4 +60,8 @@ public class StudentClass {
         Section = section;
     }
 
+    public String getCode() {
+        return Subject + " " + ClassName;
+    }
+
 }

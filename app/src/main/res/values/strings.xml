@@ -10,6 +10,7 @@
     <string name="title_activity_profile_page">ProfilePage</string>
     <string name="title_activity_study_group_finder">StudyGroupFinder</string>
     <string name="title_activity_reservation_page">StudyRoomReservations</string>
+    <string name="title_activity_profile_viewer">ProfileViewer</string>
     <string name="study_groups_card_title">Your Study Groups</string>
     <string name="study_group_finder_card_title">Study Group Finder</string>
     <string name="study_room_reservation_card_title">Study Room Reservations</string>
@@ -143,4 +144,16 @@
     <string name="search_by_college">Search by College</string>
     <string name="i_e_arts_science"><![CDATA[i.e. Arts & Science]]></string>
     <string name="search_people">Search People</string>
+    <string name="default_name">Unknown Unkown</string>
+    <string name="age_label">Age:</string>
+    <string name="default_age">18</string>
+    <string name="gender_label">Gender:</string>
+    <string name="default_gender">Other</string>
+    <string name="education_header">Education</string>
+    <string name="college_label">College:</string>
+    <string name="major_label">Major:</string>
+    <string name="default_major">Undecided</string>
+    <string name="classes_header">Classes</string>
+    <string name="message_user">Message User</string>
+    <string name="invite_to_group">Invite to group</string>
 </resources>

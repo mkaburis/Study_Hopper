@@ -82,7 +82,7 @@ public class StudyGroupFinderFragment extends Fragment {
         });
 
         View v = inflater.inflate(R.layout.fragment_study_group_finder, container, false);
-        noResultsText = v.getRootView().findViewById(R.id.NoResultsText);
+        noResultsText = v.getRootView().findViewById(R.id.noResultsText);
 
         mGroupRecycleView = v.getRootView().findViewById(R.id.ResultRecycleViewer);
         mGroupRecycleView.setHasFixedSize(false); //ONLY for FIXED Size recylcerView remove later

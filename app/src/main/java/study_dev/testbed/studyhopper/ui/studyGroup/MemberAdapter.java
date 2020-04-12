@@ -51,8 +51,9 @@ public class MemberAdapter extends FirestoreRecyclerAdapter<Member, MemberAdapte
         return getSnapshots().getSnapshot(position).getReference().getId();
     }
 
-
-
+    public String getUserId(int position) {
+        return getSnapshots().getSnapshot(position).get("userDocId").toString();
+    }
 
     class MemberHolder extends RecyclerView.ViewHolder {
         ImageView imageViewProfile;
