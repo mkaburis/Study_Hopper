@@ -10,13 +10,14 @@ public class Session {
     private Timestamp sessionStartTime;
     private Timestamp sessionEndTime;
     private int sessionType;
+    private boolean isActive;
 
     public Session() {
         //Empty constructor needed
     }
 
     public Session(String sessionName, String sessionDescription, String sessionLocation, Timestamp sessionDate,
-                   Timestamp sessionStartTime, Timestamp sessionEndTime, int sessionType) {
+                   Timestamp sessionStartTime, Timestamp sessionEndTime, int sessionType, boolean isActive) {
         this.sessionName = sessionName;
         this.sessionDescription = sessionDescription;
         this.sessionLocation = sessionLocation;
@@ -24,6 +25,15 @@ public class Session {
         this.sessionStartTime = sessionStartTime;
         this.sessionEndTime = sessionEndTime;
         this.sessionType = sessionType;
+        this.isActive = isActive;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     public String getSessionLocation() {

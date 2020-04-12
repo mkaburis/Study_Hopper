@@ -44,10 +44,13 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
@@ -87,7 +90,7 @@ public class StudyGroupActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         // Value for user groupDocId in user
-        userGroupDocId = intent.getStringExtra("documentID");
+        userGroupDocId = intent.getStringExtra("userGroupDocId");
 
         // Value for group document ID
         groupDocId = intent.getStringExtra("groupDocId");
@@ -235,6 +238,54 @@ public class StudyGroupActivity extends AppCompatActivity {
 
         sessionRef = db.collection("groups").document(groupDocId).collection("sessions");
         Query query = sessionRef.orderBy("sessionDate", Query.Direction.DESCENDING);
+
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        dateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult()) {
+                        Session tempSession = document.toObject(Session.class);
+                        Date sessionDate = tempSession.getSessionDate().toDate();
+                        Date sessionEndTime = tempSession.getSessionEndTime().toDate();
+
+                        String date = dateFormat.format(sessionDate);
+                        String time = timeFormat.format(sessionEndTime);
+                        String dateTime = date + " " + time;
+
+                        Toast.makeText(StudyGroupActivity.this, dateTime, Toast.LENGTH_SHORT).show();
+
+                        Date modDate = null;
+                        try {
+                            modDate = dateTimeFormat.parse(dateTime);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        long currentTime = System.currentTimeMillis();
+                        Toast.makeText(StudyGroupActivity.this, "Current time: "+ currentTime, Toast.LENGTH_SHORT).show();
+
+                        long sessionTime = modDate.getTime();
+                        Toast.makeText(StudyGroupActivity.this, "Session time: " +sessionTime, Toast.LENGTH_SHORT).show();
+
+                        if(sessionTime < currentTime){
+                            CollectionReference archivedSessions = db.collection("groups").document(groupDocId)
+                                    .collection("archivedSessions");
+
+                            tempSession.setActive(false);
+
+                            archivedSessions.add(tempSession);
+                            sessionRef.document(document.getId()).delete();
+
+                        }
+                    }
+                }
+            }
+        });
 
         FirestoreRecyclerOptions<Session> options = new FirestoreRecyclerOptions.Builder<Session>()
                 .setQuery(query, Session.class)

@@ -59,7 +59,7 @@ public class CreateSession extends AppCompatActivity {
 
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Create a Study Session");
+        setTitle("Create A Study Session");
         // Enable back button
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -113,7 +113,7 @@ public class CreateSession extends AppCompatActivity {
     }
 
     private void updateDate(Calendar cal) {
-        String format = "MM/dd/yy";
+        String format = "MM/dd/yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.US);
 
         sessionDateEditText.setText(simpleDateFormat.format(cal.getTime()));
@@ -142,7 +142,7 @@ public class CreateSession extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent in = new Intent(getBaseContext(), StudyGroupActivity.class);
-        in.putExtra("documentID", userGroupId);
+        in.putExtra("userGroupDocId", userGroupId);
         in.putExtra("groupDocId", groupDocId);
         startActivity(in);
         overridePendingTransition(0, 0);
@@ -228,15 +228,15 @@ public class CreateSession extends AppCompatActivity {
 
         if(!invalidInput) {
             Date dateOfSession = new SimpleDateFormat("MM/dd/yyyy").parse(sessionDate);
-            Date startTimeOfSession = new SimpleDateFormat("hh:mm aa").parse(sessionStartTime);
-            Date endTimeOfSession = new SimpleDateFormat("hh:mm aa").parse(sessionEndTime);
+            Date startTimeOfSession = new SimpleDateFormat("hh:mm a").parse(sessionStartTime);
+            Date endTimeOfSession = new SimpleDateFormat("hh:mm a").parse(sessionEndTime);
 
             Timestamp newDate = new Timestamp(dateOfSession);
             Timestamp newStartTime = new Timestamp(startTimeOfSession);
             Timestamp newEndTime = new Timestamp(endTimeOfSession);
 
             Session newSession = new Session(sessionName, sessionDescription, sessionLocation,
-                    newDate, newStartTime, newEndTime, sessionSelected);
+                    newDate, newStartTime, newEndTime, sessionSelected, true);
 
             sessionRef.add(newSession);
             finish();

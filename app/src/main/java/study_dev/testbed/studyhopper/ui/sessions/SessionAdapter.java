@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +17,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Session;
+import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 
 public class SessionAdapter extends FirestoreRecyclerAdapter<Session, SessionAdapter.SessionHolder> {
     private OnItemClickListener listener;
@@ -46,7 +49,6 @@ public class SessionAdapter extends FirestoreRecyclerAdapter<Session, SessionAda
         sessionDate = sessionTimestamp.toDate();
         String sessionMonth = monthFormat.format(sessionDate);
         String sessionDay = dayFormat.format(sessionDate);
-
         String timeStart = timeFormat.format(startTimeDate);
         String timeEnd = timeFormat.format(endTimeDate);
 
