@@ -8,10 +8,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -26,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -49,6 +46,7 @@ import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
 import study_dev.testbed.studyhopper.models.Member;
 import study_dev.testbed.studyhopper.models.Profile;
+import study_dev.testbed.studyhopper.ui.profile.ProfileViewer;
 
 public class GroupMemberList extends AppCompatActivity {
     private String userGroupDocID;
@@ -59,22 +57,25 @@ public class GroupMemberList extends AppCompatActivity {
     private int maxMembers;
     private int groupSize;
     private String groupName;
-
     private EditText memberCandidateEditText;
+
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("users");
     private CollectionReference groupMemberRef;
     private DocumentReference groupDoc;
+
     private String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
     private Pattern emailPattern = Pattern.compile(emailRegex);
     private boolean closeDialog = false, memberExists = false;
-    private ColorDrawable swipeBackground = new ColorDrawable(Color.parseColor("#FF0000"));
+
+    private ColorDrawable deleteBackground = new ColorDrawable(Color.parseColor("#FF0000"));
+    private ColorDrawable profileBackground = new ColorDrawable(Color.parseColor("#0000ff"));
     private Drawable deleteIcon;
+    private Drawable profileIcon;
 
     private int removedPosition;
     private int removedMember;
-
 
     private AlertDialog addMemberDialog;
     private MemberAdapter adapter;
@@ -85,6 +86,7 @@ public class GroupMemberList extends AppCompatActivity {
         setContentView(R.layout.activity_group_members_list);
 
         deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete);
+        profileIcon = ContextCompat.getDrawable(this, R.drawable.ic_group_member);
 
         Intent intent = getIntent();
         userGroupDocID = intent.getStringExtra("userGroupDocId");
@@ -159,7 +161,7 @@ public class GroupMemberList extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                ItemTouchHelper.LEFT) {
 
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
@@ -168,23 +170,18 @@ public class GroupMemberList extends AppCompatActivity {
                 View itemView = viewHolder.itemView;
 
                 int iconMargin = (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
-                if(dX > 0) {
-                    swipeBackground.setBounds(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
-                    deleteIcon.setBounds(itemView.getLeft() + iconMargin, itemView.getTop() + iconMargin,
-                            itemView.getLeft() + iconMargin + deleteIcon.getIntrinsicWidth(),
-                            itemView.getBottom() - iconMargin);
-
-                } else {
-                    swipeBackground.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                deleteBackground = new ColorDrawable(Color.parseColor("#FF0000"));
+                if (dX < 0) {
+                    deleteBackground.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
                     deleteIcon.setBounds(itemView.getRight() - iconMargin - deleteIcon.getIntrinsicWidth(), itemView.getTop() + iconMargin,
                             itemView.getRight() - iconMargin, itemView.getBottom() - iconMargin);
                 }
 
-                swipeBackground.draw(c);
+                deleteBackground.draw(c);
 
                 c.save();
 
-                if(dX >0)
+                if (dX > 0)
                     c.clipRect(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
                 else
                     c.clipRect(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
@@ -272,6 +269,66 @@ public class GroupMemberList extends AppCompatActivity {
                 .show();
             }
         }).attachToRecyclerView(recyclerView);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.RIGHT) {
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                View itemView = viewHolder.itemView;
+
+                int iconMargin = (itemView.getHeight() - profileIcon.getIntrinsicHeight()) / 2;
+
+                if (dX > 0) {
+                    profileBackground.setBounds(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
+                    profileIcon.setBounds(itemView.getLeft() + iconMargin, itemView.getTop() + iconMargin,
+                            itemView.getLeft() + iconMargin + profileIcon.getIntrinsicWidth(),
+                            itemView.getBottom() - iconMargin);
+
+                }
+
+                profileBackground.draw(c);
+
+                c.save();
+
+                if (dX > 0)
+                    c.clipRect(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
+                else
+                    c.clipRect(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                profileIcon.draw(c);
+
+                c.restore();
+
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
+                final int position = viewHolder.getAdapterPosition();
+
+                Intent intent = new Intent(getApplicationContext(), ProfileViewer.class);
+                intent.putExtra("primary-user-Id", userDocId);
+                intent.putExtra("found-user-docId", adapter.getUserId(position));
+                intent.putExtra("return-to", "GroupMemberList");
+
+                intent.putExtra("userGroupDocId", userGroupDocID);
+                intent.putExtra("groupDocId", groupDocID);
+
+                startActivity(intent);
+
+                adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+            }
+        }).attachToRecyclerView(recyclerView);
+
+
 
     }
 

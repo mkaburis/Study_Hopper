@@ -26,6 +26,7 @@ import study_dev.testbed.studyhopper.models.Profile;
 import study_dev.testbed.studyhopper.models.StudentClass;
 import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 import study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder;
+import study_dev.testbed.studyhopper.ui.studyGroup.GroupMemberList;
 
 public class ProfileViewer extends AppCompatActivity {
     private DocumentReference userRef;
@@ -49,6 +50,10 @@ public class ProfileViewer extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private ClassesListAdapter mAdapter;
 
+    String userGroupDocId;
+    String groupDocId;
+    String returnTo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +62,12 @@ public class ProfileViewer extends AppCompatActivity {
         Intent intent = getIntent();
         foundUserId = intent.getStringExtra("found-user-docId");
         primaryUserId = intent.getStringExtra("primary-user-Id");
+
+        returnTo = intent.getStringExtra("return-to");
+        if (returnTo.equals("GroupMemberList")) {
+            userGroupDocId = intent.getStringExtra("userGroupDocId");
+            groupDocId = intent.getStringExtra("groupDocId");
+        }
 
         if (primaryUserId == null) {
             Intent newIntent = new Intent(getApplicationContext(), Dashboard.class);
@@ -158,10 +169,23 @@ public class ProfileViewer extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent in = new Intent(getBaseContext(), StudyGroupFinder.class);
-        in.putExtra("firestore-id", primaryUserId);
-        startActivity(in);
-        overridePendingTransition(0, 0);
+
+        if (returnTo.equals("GroupMemberList")) {
+
+
+            Intent in = new Intent(getBaseContext(), GroupMemberList.class);
+            in.putExtra("userDocId", primaryUserId);
+            in.putExtra("userGroupDocId", userGroupDocId);
+            in.putExtra("groupDocId", groupDocId);
+
+            startActivity(in);
+            overridePendingTransition(0, 0);
+        } else {
+            Intent in = new Intent(getBaseContext(), StudyGroupFinder.class);
+            in.putExtra("firestore-id", primaryUserId);
+            startActivity(in);
+            overridePendingTransition(0, 0);
+        }
     }
 
 }

@@ -47,6 +47,7 @@ public class PeopleSearchAdapter extends RecyclerView.Adapter<PeopleSearchAdapte
                 Intent intent = new Intent(context, ProfileViewer.class);
                 intent.putExtra("found-user-docId", currentItem.getUserID());
                 intent.putExtra("primary-user-Id", currentItem.getPrimaryId());
+                intent.putExtra("return-to", "people-finder");
                 context.startActivity(intent);
             }
         });
