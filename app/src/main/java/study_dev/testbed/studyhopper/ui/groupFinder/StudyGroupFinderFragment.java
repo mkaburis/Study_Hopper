@@ -186,9 +186,11 @@ public class StudyGroupFinderFragment extends Fragment {
         String groupSize = groupSizeSpinner.getSelectedItem().toString();
         String genderSpecific = genderSpinner.getSelectedItem().toString();
 
-        if (!courseSubject.isEmpty() && !courseNumber.isEmpty()) {
-            String subjectCode = courseSubject + " " + courseNumber;
-            newQuery = newQuery.whereEqualTo("courseCode", subjectCode);
+        if (!courseSubject.isEmpty()) {
+            newQuery = newQuery.whereEqualTo("courseSubject", courseSubject);
+        }
+        if (!courseNumber.isEmpty()) {
+            newQuery = newQuery.whereEqualTo("courseNumber", courseNumber);
         }
         if (!ageRange.isEmpty()) {
             if (!ageRange.equals("All Ages")) {
