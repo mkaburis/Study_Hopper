@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             overridePendingTransition(0, 0);
         } else {
-            Intent intent = new Intent(this, ProfileViewer.class);
+            Intent intent = new Intent(this, Dashboard.class);
             startActivity(intent);
             overridePendingTransition(0, 0);
         }

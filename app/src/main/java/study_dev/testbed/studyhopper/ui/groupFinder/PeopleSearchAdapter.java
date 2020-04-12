@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import study_dev.testbed.studyhopper.ProfileViewer;
 import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.ui.profile.ProfileViewer;
 
 public class PeopleSearchAdapter extends RecyclerView.Adapter<PeopleSearchAdapter.PeopleSearchViewHolder> {
     private ArrayList<peopleListItem> peopleList;
