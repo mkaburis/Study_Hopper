@@ -76,7 +76,8 @@
                                     android:id="@+id/courseSubjectText"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:hint="@string/subject" />
+                                    android:hint="@string/subject"
+                                    android:inputType="textCapCharacters" />
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <com.google.android.material.textfield.TextInputLayout
@@ -88,7 +89,8 @@
                                     android:id="@+id/courseNumberText"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:hint="@string/course_number" />
+                                    android:hint="@string/course_number"
+                                    android:inputType="number" />
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
                     </LinearLayout>
