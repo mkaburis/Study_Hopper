@@ -26,8 +26,7 @@
                 android:value="study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder" />
         </activity>
         <activity android:name=".ui.dashboard.CreateGroup" />
-        <activity android:name=".ui.sessions.Session"></activity>
-        <activity android:name=".ui.dashboard.CreateGroup" />
+        <activity android:name=".ui.sessions.Session" />
         <activity
             android:name=".ui.sessions.CreateSession"
             android:label="Study Session" />
