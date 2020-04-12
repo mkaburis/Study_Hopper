@@ -1,7 +1,10 @@
 package study_dev.testbed.studyhopper.models;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class Profile {
@@ -99,12 +102,13 @@ public class Profile {
 
     public String getAge() {
 
-        int years = Period.between(
-                LocalDate.of(dob.getYear(), dob.getMonth(), dob.getDate()),
-                LocalDate.now()
-        ).getYears();
+        Instant instant = Instant.ofEpochMilli(dob.getTime());
+        LocalDate birthday = LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalDate();
 
-        return "" + years;
+        LocalDate today = LocalDate.now();
+        Period p = Period.between(birthday, today);
+
+        return "" + p.getYears();
     }
 
 }
