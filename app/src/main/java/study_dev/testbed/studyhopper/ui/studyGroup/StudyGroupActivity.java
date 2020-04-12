@@ -304,9 +304,9 @@ public class StudyGroupActivity extends AppCompatActivity {
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
                 String sessionPath = documentSnapshot.getReference().getPath();
                 Intent intent = new Intent(StudyGroupActivity.this, SessionActivity.class);
-                intent.putExtra("Session-Path", sessionPath);
-                intent.putExtra("userGroupId",userGroupDocId);
-                intent.putExtra("groupId", groupDocId);
+                intent.putExtra("sessionPath", sessionPath);
+                intent.putExtra("userGroupDocId",userGroupDocId);
+                intent.putExtra("groupDocId", groupDocId);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }

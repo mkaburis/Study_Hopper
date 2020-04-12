@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillViewport="true">
+
+<RelativeLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view_session"
@@ -73,7 +79,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_margin="5dp"
                     android:layout_marginStart="15dp"
-                    android:layout_toRightOf="@id/text_view_session_date_info"
+                    android:layout_toEndOf="@id/text_view_session_date_info"
                     android:text="test"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
@@ -121,12 +127,11 @@
                         android:id="@+id/text_view_session_time_dash"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
                         android:layout_gravity="center"
                         android:layout_margin="5dp"
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="15dp"
-                        android:layout_toRightOf="@id/text_view_session_start_time"
+                        android:layout_toEndOf="@id/text_view_session_start_time"
                         android:layout_weight="0.5"
                         android:text="@string/em_dash"
                         android:textAlignment="center"
@@ -139,7 +144,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="5dp"
-                        android:layout_toRightOf="@id/text_view_session_time_dash"
+                        android:layout_toEndOf="@id/text_view_session_time_dash"
                         android:layout_weight="1.5"
                         android:text="test"
                         android:textColor="@android:color/black"
@@ -187,7 +192,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:layout_toRightOf="@id/session_type_text_description"
+                android:layout_toEndOf="@id/session_type_text_description"
                 android:text="place holder text"
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
@@ -197,7 +202,7 @@
                 android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp"
-                android:layout_toRightOf="@id/session_type_text"
+                android:layout_toEndOf="@id/session_type_text"
                 android:src="@drawable/ic_quiet_session" />
 
         </RelativeLayout>
@@ -209,7 +214,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/study_session_location_card"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/session_type_card"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
@@ -247,29 +252,20 @@
                 android:contentDescription="@string/study_group_members"
                 android:src="@drawable/ic_session_location" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/location_card"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_below="@id/text_view_session_location_text"
-                android:layout_margin="15dp"
-                android:padding="10dp"
-                app:cardCornerRadius="6dp"
-                app:cardElevation="5dp"
-                app:cardPreventCornerOverlap="false">
-
 
                 <TextView
                     android:id="@+id/text_view_session_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/text_view_session_location_text"
+                    android:elevation="10dp"
+                    android:background="@color/colorWhite"
+                    android:padding="10dp"
+                    android:layout_margin="10dp"
                     android:text="Location Goes Here"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
-                    android:textSize="20dp" />
-
-            </androidx.cardview.widget.CardView>
-
+                    android:textSize="20sp" />
 
 
         </RelativeLayout>
@@ -338,7 +334,6 @@
                     android:focusable="false"
                     android:hint="@string/session_start_time"
                     android:inputType="none"
-                    android:onClick="selectSessionTime"
                     android:textAlignment="textEnd" />
 
                 <TextView
@@ -359,8 +354,7 @@
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:hint="@string/session_end_time"
-                    android:inputType="none"
-                    android:onClick="selectSessionTime" />
+                    android:inputType="none" />
 
             </LinearLayout>
 
@@ -397,8 +391,9 @@
         android:drawableStart="@drawable/ic_delete"
         android:drawablePadding="5dp"
         android:paddingStart="15dp"
+        android:paddingEnd="10dp"
         android:text="@string/delete_session"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@android:color/white"
         android:background="@android:color/holo_red_dark"
         android:layout_weight="1"
@@ -412,8 +407,9 @@
             android:drawableStart="@drawable/ic_mic"
             android:drawablePadding="5dp"
             android:paddingStart="15dp"
+            android:paddingEnd="10dp"
             android:text="@string/check_noise_level"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textColor="@android:color/white"
             android:background="@android:color/holo_blue_dark"
             android:layout_weight="1"
@@ -423,3 +419,5 @@
     </LinearLayout>
 
 </RelativeLayout>
+
+</ScrollView>
