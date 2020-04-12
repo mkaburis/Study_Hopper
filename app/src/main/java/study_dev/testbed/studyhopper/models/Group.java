@@ -19,21 +19,9 @@ public class Group {
     }
 
     public Group(String groupName, String courseCode, String groupColor,
-                 String groupPreference, String groupOwner, int maxGroupMembers, String university, String locationPreference, String agePreference) {
-        this.groupName = groupName;
-        this.courseCode = courseCode;
-        this.groupColor = groupColor;
-        this.groupPreference = groupPreference;
-        this.groupOwner = groupOwner;
-        this.maxGroupMembers = maxGroupMembers;
-        this.locationPreference = locationPreference;
-        this.agePreference = agePreference;
-        this.university = university;
-    }
-
-    public Group(String groupName, String courseCode, String groupColor,
-                 String groupPreference, String groupOwner, int maxGroupMembers, String university,
-                 String locationPreference, String agePreference, DocumentReference documentId) {
+                 String groupPreference, String groupOwner, int maxGroupMembers,
+                 DocumentReference documentId, String university, String locationPreference,
+                 String agePreference) {
         this.groupName = groupName;
         this.courseCode = courseCode;
         this.groupColor = groupColor;

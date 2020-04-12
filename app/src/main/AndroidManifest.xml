@@ -16,9 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".ui.dashboard.CreateGroup"></activity>
+        <activity android:name=".ui.sessions.Session"></activity>
+        <activity android:name=".ui.dashboard.CreateGroup" />
         <activity
-            android:name=".ui.sessions.SessionPage"
+            android:name=".ui.sessions.CreateSession"
             android:label="Study Session" />
         <activity
             android:name=".ui.studyGroup.GroupMemberList"
@@ -43,8 +44,8 @@
         </activity>
         <activity
             android:name=".ui.dashboard.MyGroups"
-            android:launchMode="singleTop"
-            android:label="@string/my_groups" />
+            android:label="@string/my_groups"
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.groupFinder.StudyGroupFinder"
             android:label="StudyGroupFinder">

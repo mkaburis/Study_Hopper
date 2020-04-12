@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -66,6 +67,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference userRef = db.collection("users");
     private String userProfileId;
+    private Group groupTemplate;
     private String userUniversity;
 
     @Override
@@ -99,7 +101,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         gray.setOnClickListener(this);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Create Group");
+        setTitle("Create A Group");
 
         // Retrieve user's email address from FirebaseAuth
         FirebaseUser user = mAuth.getCurrentUser();
@@ -135,36 +137,41 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         fillGroupPreferencesSpinner();
     }
 
-    public void createStudyGroup(View v) {
+    public void createStudyGroup(View view) {
         String groupName = editTextGroupName.getText().toString();
         String courseCode = editTextCourseCode.getText().toString();
         String groupPreference = groupPreferencesSpinner.getSelectedItem().toString();
         String agePreference = ageSpinner.getSelectedItem().toString();
         String locationPreference = locationSpinner.getSelectedItem().toString();
-
         int groupSizeMax;
 
-        if(editTextMaxSize.getText().toString().equals("")) {
-            Toast.makeText(this, "Please select the maximum number of members for the group!", Toast.LENGTH_SHORT).show();
-            return;
-        } else {
-            groupSizeMax = groupMaxSizePicker.getValue();
+        boolean validGroup = true;
+
+        if(groupName.trim().isEmpty()){
+            editTextGroupName.setError("A group name is required!");
+            validGroup = false;
         }
 
-        if(groupName.trim().isEmpty() || courseCode.trim().isEmpty()) {
-            Toast.makeText(this, "Please input a group name and course code!", Toast.LENGTH_SHORT).show();
-            return;
+        if(courseCode.trim().isEmpty()) {
+            editTextCourseCode.setError("A course code is required!");
+            validGroup = false;
+        }
+
+        if(editTextMaxSize.getText().toString().equals("")) {
+            editTextMaxSize.setError("Please select the maximum number of members for the group!");
+            validGroup = false;
         }
 
         if(groupPreference.trim().isEmpty()) {
             Toast.makeText(this, "Please select a group preference from the dropdown!", Toast.LENGTH_SHORT).show();
-            return;
+            validGroup = false;
         }
 
         if (colorSelected == 0)
         {
-            Toast.makeText(this, "Please select a color for the group", Toast.LENGTH_SHORT).show();
-            return;
+            Snackbar.make(view, "Please select a color for the group", Snackbar.LENGTH_LONG);
+            validGroup = false;
+
         }
 
         if(groupPreference.equals("Coed Group"))
@@ -174,66 +181,60 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         else if(groupPreference.equals("Males Only Group"))
             preferenceSelected = "Males Only";
 
-        // Firebase reference for "Groups" Collection
-        CollectionReference groupRef = db.collection("groups");
 
-        // Firebase reference for "Groups" in users sub-collection
-        CollectionReference userGroupRef = db
-                .collection("users").document(userProfileId)
-                .collection("groups");
+        if(validGroup) {
+            groupSizeMax = groupMaxSizePicker.getValue();
 
-        Group groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
-                getUserName(), groupSizeMax, userUniversity, locationPreference, agePreference);
+            // Firebase reference for "Groups" Collection
+            CollectionReference groupRef = db.collection("groups");
 
+            // Firebase reference for "Groups" in users sub-collection
+            CollectionReference userGroupRef = db
+                    .collection("users").document(userProfileId)
+                    .collection("groups");
 
-//        groupRef.add(groupTemplate).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentReference> task) {
-//                if(task.isSuccessful()){
-//                    groupId = task.getResult().getId();
-//                    Toast.makeText(CreateGroup.this, "Group ID: " + groupId, Toast.LENGTH_SHORT).show();
-//                }
-//                else {
-//                    Toast.makeText(CreateGroup.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//        groupRef.add(groupTemplate);
+            groupId = db.collection("groups").document().getId();
+            DocumentReference groupDocRef = db.collection("groups").document(groupId);
 
-        groupId = db.collection("groups").document().getId();
-        db.collection("groups").document(groupId).set(groupTemplate);
+            groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
+                    getUserName(), groupSizeMax, groupDocRef, userUniversity,
+                    locationPreference, agePreference);
 
-        // Firebase reference for "Groups" in users sub-collection
-        userGroupId = db.collection("user").document(userDocId)
-                .collection("groups").document().getId();
-        db.collection("users").document(userDocId)
-                .collection("groups").document(userGroupId).set(groupTemplate);
+            db.collection("groups").document(groupId).set(groupTemplate);
 
-        DocumentReference docRef = db.collection("users").document(userDocId);
+            // Firebase reference for "Groups" in users sub-collection
+            userGroupId = db.collection("user").document(userDocId)
+                    .collection("groups").document().getId();
+            db.collection("users").document(userDocId)
+                    .collection("groups").document(userGroupId).set(groupTemplate);
 
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Toast.makeText(CreateGroup.this, "Error while loading!", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, e.toString());
+            DocumentReference docRef = db.collection("users").document(userDocId);
+
+            docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Toast.makeText(CreateGroup.this, "Error while loading!", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, e.toString());
+                    }
+                    if (documentSnapshot.exists()) {
+                        String firstName = documentSnapshot.getString("firstName");
+                        String lastName = documentSnapshot.getString("lastName");
+
+                        CollectionReference groupMemberRef = db.collection("groups").document(groupId)
+                                .collection("members");
+                        newMember = new Member(firstName, lastName, userDocId, userGroupId, getUserName(), true,
+                                Timestamp.now());
+                        groupMemberRef.add(newMember);
+                    }
                 }
-                if (documentSnapshot.exists()) {
-                    String firstName  = documentSnapshot.getString("firstName");
-                    String lastName  = documentSnapshot.getString("lastName");
+            });
 
-                    CollectionReference groupMemberRef = db.collection("groups").document(groupId)
-                            .collection("members");
-                    newMember = new Member(firstName, lastName, userDocId, userGroupId, getUserName(), true,
-                            Timestamp.now());
-                    groupMemberRef.add(newMember);
-                }
-            }
-        });
+            Toast.makeText(this, "Group successfully created!", Toast.LENGTH_SHORT).show();
+            MyGroups.adapter.notifyDataSetChanged();
+            finish();
 
-        Toast.makeText(this, "Group added", Toast.LENGTH_SHORT).show();
-        MyGroups.adapter.notifyDataSetChanged();
-        finish();
+        }
     }
 
     public void selectMaxGroupSize(View v) {
@@ -286,6 +287,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
 
     }
 
+
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // Auto-generated method stub DO NOT DELETE
@@ -300,6 +302,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onBackPressed() {
         Intent in = new Intent(getBaseContext(), MyGroups.class);
+        in.putExtra("firestore-id", userProfileId);
         startActivity(in);
         overridePendingTransition(0, 0);
     }

@@ -39,8 +39,7 @@
             android:layout_height="50dp"
             android:layout_marginEnd="20dp"
             android:layout_alignParentEnd="true"
-            android:contentDescription="@string/study_group_circle_color_description"
-            android:src="@drawable/ic_group_color_purple" />
+            android:contentDescription="@string/study_group_circle_color_description" />
 
         <TextView
             android:id="@+id/groupCourseCode"
@@ -61,7 +60,7 @@
         android:padding="8dp"
         android:layout_margin="6dp"
         card_view:cardCornerRadius="5dp"
-        card_view:cardBackgroundColor="@color/safariBrown">
+        card_view:cardBackgroundColor="@color/safariGreen">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -86,6 +85,16 @@
                 android:layout_marginEnd="10dp"
                 android:contentDescription="@string/study_session_content_description"
                 android:src="@drawable/ic_study_sessions" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/sessionRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:layout_below="@id/studySessionImage"
+                android:layout_marginTop="10dp"
+                android:scrollbars="vertical"
+                android:padding="5dp" />
 
 
         </RelativeLayout>

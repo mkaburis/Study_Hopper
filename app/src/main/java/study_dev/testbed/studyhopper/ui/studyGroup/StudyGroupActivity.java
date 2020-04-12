@@ -19,7 +19,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -28,6 +31,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -40,15 +44,21 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
+import study_dev.testbed.studyhopper.models.Session;
 import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 import study_dev.testbed.studyhopper.ui.messages.Messages;
-import study_dev.testbed.studyhopper.ui.sessions.SessionPage;
+import study_dev.testbed.studyhopper.ui.sessions.CreateSession;
+import study_dev.testbed.studyhopper.ui.sessions.SessionAdapter;
 
 public class StudyGroupActivity extends AppCompatActivity {
     private static final String TAG = "StudyGroupActivity";
@@ -57,14 +67,20 @@ public class StudyGroupActivity extends AppCompatActivity {
     private Group templateGroup;
     private String userEmail;
     private String userGroupDocId, userDocId, groupID;
+    private String groupDocId;
     private DocumentReference userGroupDocRef ;
+    private DocumentReference groupDocRef;
     private CollectionReference userRef = db.collection("users");
     private CollectionReference groupRef = db.collection("groups");
+    private CollectionReference sessionRef;
     private TextView groupNameTextView;
     private TextView courseCodeTextView;
     private ImageView groupColorImageView;
     private LineChart mChart;
     CardView groupMembersCard;
+
+    private SessionAdapter sessionAdapter;
+    private ArrayList<Session> sessionList = new ArrayList<>();
 
 
     @Override
@@ -73,18 +89,23 @@ public class StudyGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_study_group);
         Intent intent = getIntent();
 
-        // Value for user groupDocId
-        userGroupDocId = intent.getStringExtra("documentID");
+        // Value for user groupDocId in user
+        userGroupDocId = intent.getStringExtra("userGroupDocId");
+
+        // Value for group document ID
+        groupDocId = intent.getStringExtra("groupDocId");
+
+        setUpSessionRecyclerView();
 
         groupNameTextView = findViewById(R.id.groupName);
         courseCodeTextView = findViewById(R.id.groupCourseCode);
         groupColorImageView = findViewById(R.id.groupCircleImage);
 
+
         // Retrieve user's email address from FirebaseAuth
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null){
             userEmail = user.getEmail();
-            Toast.makeText(this, userEmail, Toast.LENGTH_SHORT).show();
         }
 
         Query userQuery = userRef.whereEqualTo("email", userEmail);
@@ -100,7 +121,7 @@ public class StudyGroupActivity extends AppCompatActivity {
                                         .collection("groups").document(userGroupDocId);
 
                                 getGroupInformation();
-
+                                break;
                             }
                         }
                     }
@@ -131,7 +152,7 @@ public class StudyGroupActivity extends AppCompatActivity {
                 Intent intent = new Intent(StudyGroupActivity.this, GroupMemberList.class);
                 intent.putExtra("userGroupDocId", userGroupDocId);
                 intent.putExtra("userDocId", userDocId);
-                intent.putExtra("groupDocId", groupID);
+                intent.putExtra("groupDocId", groupDocId);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }
@@ -191,16 +212,14 @@ public class StudyGroupActivity extends AppCompatActivity {
                     courseCodeTextView.setText(templateGroup.getCourseCode());
                     groupColorImageView.setImageResource(findGroupColorId(templateGroup.getGroupColor()));
 
-                    Query groupQuery = groupRef.whereEqualTo("groupName", templateGroup.getGroupName());
+                    groupDocRef = templateGroup.getDocumentId();
 
-                    groupQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    groupDocRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if(task.isSuccessful()) {
-                                for(QueryDocumentSnapshot document : task.getResult()) {
-                                    groupID = document.getId();
-                                    Toast.makeText(StudyGroupActivity.this, "Group Doc ID: " + groupID, Toast.LENGTH_SHORT).show();
-                                }
+                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                            if(documentSnapshot.exists()){
+
+                                groupID = documentSnapshot.getId();
                             }
                         }
                     });
@@ -215,6 +234,90 @@ public class StudyGroupActivity extends AppCompatActivity {
         });
     }
 
+    private void setUpSessionRecyclerView() {
+
+        sessionRef = db.collection("groups").document(groupDocId).collection("sessions");
+        Query query = sessionRef.orderBy("sessionDate", Query.Direction.DESCENDING);
+
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        dateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult()) {
+                        Session tempSession = document.toObject(Session.class);
+                        Date sessionDate = tempSession.getSessionDate().toDate();
+                        Date sessionEndTime = tempSession.getSessionEndTime().toDate();
+
+                        String date = dateFormat.format(sessionDate);
+                        String time = timeFormat.format(sessionEndTime);
+                        String dateTime = date + " " + time;
+
+                        Toast.makeText(StudyGroupActivity.this, dateTime, Toast.LENGTH_SHORT).show();
+
+                        Date modDate = null;
+                        try {
+                            modDate = dateTimeFormat.parse(dateTime);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        long currentTime = System.currentTimeMillis();
+                        Toast.makeText(StudyGroupActivity.this, "Current time: "+ currentTime, Toast.LENGTH_SHORT).show();
+
+                        long sessionTime = modDate.getTime();
+                        Toast.makeText(StudyGroupActivity.this, "Session time: " +sessionTime, Toast.LENGTH_SHORT).show();
+
+                        if(sessionTime < currentTime){
+                            CollectionReference archivedSessions = db.collection("groups").document(groupDocId)
+                                    .collection("archivedSessions");
+
+                            tempSession.setActive(false);
+
+                            archivedSessions.add(tempSession);
+                            sessionRef.document(document.getId()).delete();
+
+                        }
+                    }
+                }
+            }
+        });
+
+        FirestoreRecyclerOptions<Session> options = new FirestoreRecyclerOptions.Builder<Session>()
+                .setQuery(query, Session.class)
+                .build();
+
+        sessionAdapter = new SessionAdapter(options);
+
+        RecyclerView recyclerView = findViewById(R.id.sessionRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        sessionAdapter.startListening();
+        recyclerView.setAdapter(sessionAdapter);
+
+        sessionAdapter.setOnItemClickListener(new SessionAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                String sessionPath = documentSnapshot.getReference().getPath();
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(sessionAdapter != null)
+            sessionAdapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        sessionAdapter.stopListening();
+    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
@@ -238,7 +341,9 @@ public class StudyGroupActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.add_session_option:
-                Intent in = new Intent(StudyGroupActivity.this, SessionPage.class);
+                Intent in = new Intent(StudyGroupActivity.this, CreateSession.class);
+                in.putExtra("userGroupId",userGroupDocId);
+                in.putExtra("groupId", groupDocId);
                 startActivity(in);
                 overridePendingTransition(0, 0);
                 return true;
