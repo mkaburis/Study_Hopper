@@ -44,7 +44,8 @@ import study_dev.testbed.studyhopper.models.Member;
 public class CreateGroup extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     private static final String TAG = "CreateGroup";
     private EditText editTextGroupName;
-    private EditText editTextCourseCode;
+    private EditText editTextCourseSubject;
+    private EditText editTextCourseNumber;
     private NumberPicker groupMaxSizePicker;
     private EditText editTextMaxSize;
     private TextView groupPreferencesPrompt;
@@ -79,7 +80,8 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
         userProfileId = intent.getStringExtra("firestore-id");
 
         editTextGroupName = findViewById(R.id.edit_text_group_name);
-        editTextCourseCode = findViewById(R.id.edit_text_group_course_code);
+        editTextCourseSubject = findViewById(R.id.edit_text_group_course_subject);
+        editTextCourseNumber = findViewById(R.id.edit_text_group_course_number);
 
         editTextMaxSize = findViewById(R.id.edit_text_group_max);
         blue = findViewById(R.id.image_view_blue);
@@ -139,7 +141,8 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
 
     public void createStudyGroup(View view) {
         String groupName = editTextGroupName.getText().toString();
-        String courseCode = editTextCourseCode.getText().toString();
+        String courseSubject = editTextCourseSubject.getText().toString();
+        String courseNumber = editTextCourseNumber.getText().toString();
         String groupPreference = groupPreferencesSpinner.getSelectedItem().toString();
         String agePreference = ageSpinner.getSelectedItem().toString();
         String locationPreference = locationSpinner.getSelectedItem().toString();
@@ -152,8 +155,12 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
             validGroup = false;
         }
 
-        if(courseCode.trim().isEmpty()) {
-            editTextCourseCode.setError("A course code is required!");
+        if (courseSubject.trim().isEmpty()) {
+            editTextCourseSubject.setError("A course code is required!");
+            validGroup = false;
+        }
+        if (courseNumber.trim().isEmpty()) {
+            editTextCourseNumber.setError("A course code is required!");
             validGroup = false;
         }
 
@@ -196,7 +203,7 @@ public class CreateGroup extends AppCompatActivity implements View.OnClickListen
             groupId = db.collection("groups").document().getId();
             DocumentReference groupDocRef = db.collection("groups").document(groupId);
 
-            groupTemplate = new Group(groupName, courseCode, groupColor, preferenceSelected,
+            groupTemplate = new Group(groupName, courseSubject, courseNumber, groupColor, preferenceSelected,
                     getUserName(), groupSizeMax, groupDocRef, userUniversity,
                     locationPreference, agePreference);
 

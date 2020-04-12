@@ -196,7 +196,7 @@ public class StudyGroupFinderFragment extends Fragment {
             }
         }
         if (!meetingLocation.isEmpty()) {
-            newQuery = newQuery.whereEqualTo("meetingLocation", meetingLocation);
+            newQuery = newQuery.whereEqualTo("locationPreference", meetingLocation);
         }
         if (!groupSize.isEmpty()) {
             newQuery = newQuery.whereEqualTo("groupSize", groupSize);
@@ -209,7 +209,7 @@ public class StudyGroupFinderFragment extends Fragment {
                 dbGender = "Females Only";
             else if (genderSpecific.equals("Males Only Group"))
                 dbGender = "Males Only";
-            newQuery = newQuery.whereEqualTo("groupPreference", dbGender);
+            newQuery = newQuery.whereEqualTo("genderPreference", dbGender);
         }
 
         return newQuery;
