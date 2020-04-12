@@ -1,5 +1,7 @@
 package study_dev.testbed.studyhopper.models;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 
 public class Profile {
@@ -89,6 +91,20 @@ public class Profile {
 
     public void setCollege(String college) {
         this.college = college;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
+    public String getAge() {
+
+        int years = Period.between(
+                LocalDate.of(dob.getYear(), dob.getMonth(), dob.getDate()),
+                LocalDate.now()
+        ).getYears();
+
+        return "" + years;
     }
 
 }
