@@ -58,6 +58,7 @@ import study_dev.testbed.studyhopper.models.Session;
 import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 import study_dev.testbed.studyhopper.ui.messages.Messages;
 import study_dev.testbed.studyhopper.ui.sessions.CreateSession;
+import study_dev.testbed.studyhopper.ui.sessions.SessionActivity;
 import study_dev.testbed.studyhopper.ui.sessions.SessionAdapter;
 
 public class StudyGroupActivity extends AppCompatActivity {
@@ -302,6 +303,12 @@ public class StudyGroupActivity extends AppCompatActivity {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
                 String sessionPath = documentSnapshot.getReference().getPath();
+                Intent intent = new Intent(StudyGroupActivity.this, SessionActivity.class);
+                intent.putExtra("Session-Path", sessionPath);
+                intent.putExtra("userGroupId",userGroupDocId);
+                intent.putExtra("groupId", groupDocId);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
             }
         });
     }

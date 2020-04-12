@@ -143,4 +143,13 @@
     <string name="search_by_college">Search by College</string>
     <string name="i_e_arts_science"><![CDATA[i.e. Arts & Science]]></string>
     <string name="search_people">Search People</string>
+    <string name="session_name_text">Session Name:</string>
+    <string name="session_date_text">Session Date:</string>
+    <string name="session_time_text">Session Time:</string>
+    <string name="session_type_text">Session Type:</string>
+    <string name="session_location_text">Study Session Location</string>
+    <string name="change_date_and_time">Adjust Study Session Date &amp; Time</string>
+    <string name="update_date_and_time">Update Date &amp; Time</string>
+    <string name="delete_session">Delete Session</string>
+    <string name="check_noise_level">Check Noise Level</string>
 </resources>

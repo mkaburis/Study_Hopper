@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import study_dev.testbed.studyhopper.R;
 
-public class Session extends AppCompatActivity {
+public class SessionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
