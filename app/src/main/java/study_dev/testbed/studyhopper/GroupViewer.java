@@ -50,11 +50,8 @@ public class GroupViewer extends AppCompatActivity {
         setContentView(R.layout.activity_group_viewer);
 
         Intent intent = getIntent();
-        //groupId = intent.getStringExtra("groupId");
-        //primaryUserId = intent.getStringExtra("primary-user-Id");
-
-        groupId = "VzsLSaWT72kYz92PuvQd";
-        primaryUserId = "MykxE4OiK0qpBDkzF6cl";
+        groupId = intent.getStringExtra("groupId");
+        primaryUserId = intent.getStringExtra("primary-user-Id");
 
         groupRef = db.collection("groups").document(groupId);
 
@@ -121,6 +118,9 @@ public class GroupViewer extends AppCompatActivity {
                 .build();
 
         mAdapter = new MemberAdapter(options);
+        memberRecycleView.setHasFixedSize(false);
+        memberRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        memberRecycleView.setAdapter(mAdapter);
         memberRecycleView.setAdapter(mAdapter);
 
         if (mAdapter.getItemCount() == 0) {

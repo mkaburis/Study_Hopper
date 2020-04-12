@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -34,6 +35,7 @@ import study_dev.testbed.studyhopper.models.Group;
 public class StudyGroupFinderFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private FirebaseFirestore db;
+    String firestoreId;
     private String TAG;
     private GroupSearchAdapter mAdapter;
     private TextView noResultsText;
@@ -70,7 +72,7 @@ public class StudyGroupFinderFragment extends Fragment {
         groupList = new ArrayList<>();
 
         Bundle extras = getActivity().getIntent().getExtras();
-        String firestoreId = extras.getString("firestore-id");
+        firestoreId = extras.getString("firestore-id");
 
         db.collection("users").document(firestoreId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -152,9 +154,16 @@ public class StudyGroupFinderFragment extends Fragment {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Group group = document.toObject(Group.class);
 
+                        DocumentReference docID = group.getDocumentId();
+                        if (docID == null) {
+                            continue;
+                        }
+
                         groupListItem listItem = new groupListItem(group.getGroupName(),
                                 group.getCourseCode(),
-                                group.getGroupColor());
+                                group.getGroupColor(),
+                                docID.getId(),
+                                firestoreId);
 
                         groupList.add(listItem);
                     }

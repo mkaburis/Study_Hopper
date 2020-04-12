@@ -1,5 +1,7 @@
 package study_dev.testbed.studyhopper.ui.groupFinder;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import study_dev.testbed.studyhopper.GroupViewer;
 import study_dev.testbed.studyhopper.R;
 
 public class GroupSearchAdapter extends RecyclerView.Adapter<GroupSearchAdapter.GroupSearchViewHolder> {
     //groupListItem
     private ArrayList<groupListItem> mGroupList;
-    private GroupSearchViewHolder.OnItemClickListener mListener;
+
 
     public GroupSearchAdapter(ArrayList<groupListItem> groupList) {
         mGroupList = groupList;
@@ -33,12 +36,24 @@ public class GroupSearchAdapter extends RecyclerView.Adapter<GroupSearchAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GroupSearchViewHolder holder, int position) {
-        groupListItem currentItem = mGroupList.get(position);
+    public void onBindViewHolder(@NonNull final GroupSearchViewHolder holder, int position) {
+        final groupListItem currentItem = mGroupList.get(position);
 
         holder.textViewGroupName.setText(currentItem.getGroupName());
         holder.textViewCourseCode.setText(currentItem.getCourseCode());
         holder.imageViewGroupColor.setImageResource(findGroupColorId(currentItem.getColor()));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = holder.itemView.getContext();
+
+                Intent intent = new Intent(context, GroupViewer.class);
+                intent.putExtra("groupId", currentItem.getGroupID());
+                intent.putExtra("primary-user-Id", currentItem.getPrimaryId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -66,7 +81,7 @@ public class GroupSearchAdapter extends RecyclerView.Adapter<GroupSearchAdapter.
         public TextView textViewCourseCode;
         public ImageView imageViewGroupColor;
 
-        public GroupSearchViewHolder(@NonNull View itemView) {
+        public GroupSearchViewHolder(@NonNull final View itemView) {
             super(itemView);
             textViewGroupName = itemView.findViewById(R.id.text_view_group_name);
             textViewCourseCode = itemView.findViewById(R.id.text_view_course_code);
