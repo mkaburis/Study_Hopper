@@ -37,6 +37,5 @@ public class MainActivity extends AppCompatActivity {
             overridePendingTransition(0, 0);
         }
 
-
     }
 }

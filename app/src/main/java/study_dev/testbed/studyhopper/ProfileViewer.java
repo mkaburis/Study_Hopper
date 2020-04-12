@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import study_dev.testbed.studyhopper.models.Profile;
 import study_dev.testbed.studyhopper.models.StudentClass;
+import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 import study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder;
 import study_dev.testbed.studyhopper.ui.profile.ClassesListAdapter;
 import study_dev.testbed.studyhopper.ui.profile.classListItem;
@@ -55,14 +56,14 @@ public class ProfileViewer extends AppCompatActivity {
         setContentView(R.layout.activity_profile_viewer);
 
         Intent intent = getIntent();
-        String docId = intent.getStringExtra("user-docId");
-        mainUserId = "MykxE4OiK0qpBDkzF6cl";
+        mainUserId = intent.getStringExtra("user-docId");
+        //mainUserId = "MykxE4OiK0qpBDkzF6cl";
 
-        /*if (docId == null){
+        if (mainUserId == null) {
             Intent newIntent = new Intent(getApplicationContext(), Dashboard.class);
             startActivity(newIntent);
             return;
-        }*/
+        }
 
         userRef = db.collection("users").document(mainUserId);
 

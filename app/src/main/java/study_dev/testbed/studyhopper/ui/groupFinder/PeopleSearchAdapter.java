@@ -1,5 +1,7 @@
 package study_dev.testbed.studyhopper.ui.groupFinder;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import study_dev.testbed.studyhopper.ProfileViewer;
 import study_dev.testbed.studyhopper.R;
 
 public class PeopleSearchAdapter extends RecyclerView.Adapter<PeopleSearchAdapter.PeopleSearchViewHolder> {
@@ -29,12 +32,24 @@ public class PeopleSearchAdapter extends RecyclerView.Adapter<PeopleSearchAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PeopleSearchViewHolder holder, int position) {
-        peopleListItem currentItem = peopleList.get(position);
+    public void onBindViewHolder(@NonNull final PeopleSearchViewHolder holder, int position) {
+        final peopleListItem currentItem = peopleList.get(position);
 
         holder.textViewGroupName.setText(currentItem.getPeopleName());
         holder.textViewCourseCode.setText(currentItem.getPrimaryMajor());
         holder.imageViewGroupColor.setImageResource(0);
+
+        final String id = currentItem.getUserID();
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = holder.itemView.getContext();
+                Intent intent = new Intent(context, ProfileViewer.class);
+                intent.putExtra("user-docId", id);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -47,7 +62,7 @@ public class PeopleSearchAdapter extends RecyclerView.Adapter<PeopleSearchAdapte
         public TextView textViewCourseCode;
         public ImageView imageViewGroupColor;
 
-        public PeopleSearchViewHolder(@NonNull View itemView) {
+        public PeopleSearchViewHolder(@NonNull final View itemView) {
             super(itemView);
             textViewGroupName = itemView.findViewById(R.id.text_view_group_name);
             textViewCourseCode = itemView.findViewById(R.id.text_view_course_code);

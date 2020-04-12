@@ -150,12 +150,12 @@ public class PeopleSearchFragment extends Fragment {
                     peopleList.clear();
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Profile group = document.toObject(Profile.class);
+                        Profile profile = document.toObject(Profile.class);
 
-                        String name = group.getFirstName() + " " + group.getLastName();
-                        peopleListItem listItem = new peopleListItem(name,
-                                group.getEmail(),
-                                group.getGender());
+                        peopleListItem listItem = new peopleListItem(profile.getFullName(),
+                                profile.getEmail(),
+                                profile.getGender(),
+                                document.getId());
 
                         peopleList.add(listItem);
                     }
@@ -217,6 +217,7 @@ public class PeopleSearchFragment extends Fragment {
             noResultsText.setVisibility(View.GONE);
             mAdapter = new PeopleSearchAdapter(peopleList);
             mPeopleRecycleView.setAdapter(mAdapter);
+
         }
     }
 }
