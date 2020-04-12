@@ -55,6 +55,7 @@ public class PeopleSearchFragment extends Fragment {
     private Button searchButton;
 
     private String userUniversity;
+    private String firestoreId;
 
 
     public PeopleSearchFragment() {
@@ -81,7 +82,7 @@ public class PeopleSearchFragment extends Fragment {
         peopleList = new ArrayList<>();
 
         Bundle extras = getActivity().getIntent().getExtras();
-        String firestoreId = extras.getString("firestore-id");
+        firestoreId = extras.getString("firestore-id");
 
         db.collection("users").document(firestoreId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -155,7 +156,7 @@ public class PeopleSearchFragment extends Fragment {
                         peopleListItem listItem = new peopleListItem(profile.getFullName(),
                                 profile.getEmail(),
                                 profile.getGender(),
-                                document.getId());
+                                document.getId(), firestoreId);
 
                         peopleList.add(listItem);
                     }

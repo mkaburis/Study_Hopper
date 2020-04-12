@@ -31,10 +31,10 @@ import study_dev.testbed.studyhopper.ui.profile.classListItem;
 public class ProfileViewer extends AppCompatActivity {
     private DocumentReference userRef;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String mainUserId;
+    private String foundUserId;
+    private String primaryUserId;
 
     private TextView noResultsText;
-
     private TextView nameTextView;
     private TextView ageTextView;
     private TextView genderTextView;
@@ -56,16 +56,22 @@ public class ProfileViewer extends AppCompatActivity {
         setContentView(R.layout.activity_profile_viewer);
 
         Intent intent = getIntent();
-        mainUserId = intent.getStringExtra("user-docId");
-        //mainUserId = "MykxE4OiK0qpBDkzF6cl";
+        foundUserId = intent.getStringExtra("found-user-docId");
+        primaryUserId = intent.getStringExtra("primary-user-Id");
 
-        if (mainUserId == null) {
+        if (primaryUserId == null) {
             Intent newIntent = new Intent(getApplicationContext(), Dashboard.class);
             startActivity(newIntent);
             return;
         }
 
-        userRef = db.collection("users").document(mainUserId);
+        if (foundUserId == null) {
+            Intent newIntent = new Intent(getApplicationContext(), StudyGroupFinder.class);
+            startActivity(newIntent);
+            return;
+        }
+
+        userRef = db.collection("users").document(foundUserId);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         setTitle("View Profile");
@@ -154,7 +160,7 @@ public class ProfileViewer extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent in = new Intent(getBaseContext(), StudyGroupFinder.class);
-        in.putExtra("firestore-id", mainUserId);
+        in.putExtra("firestore-id", primaryUserId);
         startActivity(in);
         overridePendingTransition(0, 0);
     }

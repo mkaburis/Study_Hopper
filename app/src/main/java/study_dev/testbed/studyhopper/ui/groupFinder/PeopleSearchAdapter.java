@@ -39,14 +39,14 @@ public class PeopleSearchAdapter extends RecyclerView.Adapter<PeopleSearchAdapte
         holder.textViewCourseCode.setText(currentItem.getPrimaryMajor());
         holder.imageViewGroupColor.setImageResource(0);
 
-        final String id = currentItem.getUserID();
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Context context = holder.itemView.getContext();
+
                 Intent intent = new Intent(context, ProfileViewer.class);
-                intent.putExtra("user-docId", id);
+                intent.putExtra("found-user-docId", currentItem.getUserID());
+                intent.putExtra("primary-user-Id", currentItem.getPrimaryId());
                 context.startActivity(intent);
             }
         });
