@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,8 +52,6 @@ public class ClassesListAdapter extends RecyclerView.Adapter<ClassesListAdapter.
             holder.mDeleteClassButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(), "Current item has id " + currentItem.getClassId(),
-                            Toast.LENGTH_SHORT).show();
                     fragment.deleteClassFromFirebase(currentItem.getClassId());
                 }
             });
