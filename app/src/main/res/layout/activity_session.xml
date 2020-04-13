@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView android:layout_width="match_parent"
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:fillViewport="true">
 
 <RelativeLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -115,12 +115,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginStart="5dp"
                         android:layout_weight="1.5"
                         android:text="test"
                         android:textAlignment="textEnd"
                         android:textColor="@android:color/black"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         tools:ignore="RtlCompat" />
 
                     <TextView
@@ -128,9 +127,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="5dp"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginEnd="15dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_toEndOf="@id/text_view_session_start_time"
                         android:layout_weight="0.5"
                         android:text="@string/em_dash"
@@ -148,7 +146,7 @@
                         android:layout_weight="1.5"
                         android:text="test"
                         android:textColor="@android:color/black"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -179,33 +177,42 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
                 android:text="@string/session_type_text"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/session_type_text"
-                android:layout_width="wrap_content"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_toEndOf="@id/session_type_text_description"
                 android:text="place holder text"
                 android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="14sp"
+                app:autoSizeMaxTextSize="20sp"
+                app:autoSizeStepGranularity="2sp"/>
+
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentEnd="true"
+                android:id="@+id/session_type_image"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginEnd="10dp"
-                android:layout_toEndOf="@id/session_type_text"
-                android:src="@drawable/ic_quiet_session" />
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"/>
 
         </RelativeLayout>
+
+
 
 
     </androidx.cardview.widget.CardView>
@@ -314,7 +321,8 @@
                 android:focusable="false"
                 android:hint="@string/session_date"
                 android:inputType="none"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:onClick="updateSessionDate"/>
 
             <LinearLayout
                 android:id="@+id/adjust_time_layout"
@@ -334,7 +342,8 @@
                     android:focusable="false"
                     android:hint="@string/session_start_time"
                     android:inputType="none"
-                    android:textAlignment="textEnd" />
+                    android:textAlignment="textEnd"
+                    android:onClick="updateSessionTime"/>
 
                 <TextView
                     android:layout_width="0dp"
@@ -354,7 +363,8 @@
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:hint="@string/session_end_time"
-                    android:inputType="none" />
+                    android:inputType="none"
+                    android:onClick="updateSessionTime"/>
 
             </LinearLayout>
 
@@ -369,7 +379,8 @@
                 android:background="@color/safariYellow"
                 android:text="@string/update_date_and_time"
                 android:textColor="@android:color/white"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:onClick="updateSessionDateTime"/>
 
 
         </RelativeLayout>
@@ -397,6 +408,7 @@
         android:textColor="@android:color/white"
         android:background="@android:color/holo_red_dark"
         android:layout_weight="1"
+        android:onClick="deleteSession"
         />
 
         <Button
