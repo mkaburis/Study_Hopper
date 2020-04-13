@@ -18,11 +18,15 @@ public class peopleListItem implements Parcelable {
     private String peopleName;
     private String primaryMajor;
     private String gender;
+    private String userID;
+    private String primaryId;
 
-    public peopleListItem(String peopleName, String primaryMajor, String gender) {
+    public peopleListItem(String peopleName, String primaryMajor, String gender, String id, String pid) {
         this.peopleName = peopleName;
         this.primaryMajor = primaryMajor;
         this.gender = gender;
+        this.userID = id;
+        this.primaryId = pid;
     }
 
     protected peopleListItem(Parcel in) {
@@ -66,4 +70,21 @@ public class peopleListItem implements Parcelable {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getPrimaryId() {
+        return primaryId;
+    }
+
+    public void setPrimaryId(String userID) {
+        this.primaryId = userID;
+    }
+
 }

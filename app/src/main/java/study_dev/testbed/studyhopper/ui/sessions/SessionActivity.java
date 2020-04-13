@@ -1,12 +1,12 @@
 package study_dev.testbed.studyhopper.ui.sessions;
 
+import android.Manifest;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -34,7 +34,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +43,6 @@ import java.util.Locale;
 
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Session;
-import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 import study_dev.testbed.studyhopper.ui.studyGroup.StudyGroupActivity;
 
 public class SessionActivity extends AppCompatActivity {
@@ -216,6 +214,12 @@ public class SessionActivity extends AppCompatActivity {
     }
 
     public void startRecorder(){
+
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 0);
+        }
+
+
         if(mediaRecorder == null){
             mediaRecorder = new MediaRecorder();
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -250,10 +254,13 @@ public class SessionActivity extends AppCompatActivity {
         }
     }
 
-    public void updateTv(){
+    public double updateTv() {
 //        Toast.makeText(this, getAmplitudeEMA() + " db", Toast.LENGTH_SHORT).show();
 
         double dBRating = soundDb(REF_AMP);
+        if (!Double.isFinite(dBRating)) {
+            dBRating = 0;
+        }
         audioLevelTextView.setText(formatDecimal.format(dBRating) + " db");
 
         if(dBRating >= 0.0 && dBRating <= 60.0) {
@@ -266,6 +273,7 @@ public class SessionActivity extends AppCompatActivity {
             audioHappinessImageView.setImageResource(R.drawable.ic_sad_face);
         }
 
+        return dBRating;
     }
 
     public double soundDb(double ampl){
@@ -301,17 +309,19 @@ public class SessionActivity extends AppCompatActivity {
     }
 
     public void recordAudio(final View view) {
-
+        final double[] sumNoiseLevel = {0};
         startRecorder();
         CountDownTimer countDowntimer = new CountDownTimer(10000, 1000) {
             public void onTick(long millisUntilFinished) {
-                updateTv();
+                sumNoiseLevel[0] = sumNoiseLevel[0] + updateTv();
             }
 
             public void onFinish() {
-
+                final double avgNoiseLevel = sumNoiseLevel[0] / 10;
                 Snackbar.make(view, "Completed sampling noise level in room!", Snackbar.LENGTH_LONG);
 
+                stopRecorder();
+                saveNoiseLevel(avgNoiseLevel);
 
             }};countDowntimer.start();
     }
@@ -470,26 +480,25 @@ public class SessionActivity extends AppCompatActivity {
 
     }
 
-//    private void requestAudioPermissions() {
-//        if(ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-//            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-//                Toast.makeText(this, "Please grant permissions to record audio", Toast.LENGTH_LONG).show();
-//
-//                //Give user option to still opt-in the permissions
-//                ActivityCompat.requestPermissions(this,
-//                        new String[]{Manifest.permission.RECORD_AUDIO},
-//                        MY_PERMISSIONS_RECORD_AUDIO);
-//            } else {
-//                ActivityCompat.requestPermissions(this,
-//                        new String[]{Manifest.permission.RECORD_AUDIO},
-//                        MY_PERMISSIONS_RECORD_AUDIO);
-//            }
-//        }
-//        //If permission is granted go ahead recording auidio
-//        else if(ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED){
-//
-//        }
-//    }
+    private void saveNoiseLevel(final double avgNoiseLevel) {
+        sessionDoc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                if (e != null) {
+                    Toast.makeText(SessionActivity.this, "Error while loading!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, e.toString());
+                }
+
+
+                if (documentSnapshot.exists() && Double.isFinite(avgNoiseLevel)) {
+                    session = documentSnapshot.toObject(Session.class);
+
+                    session.setNoiseLevel(avgNoiseLevel);
+
+                    sessionDoc.set(session);
+                }
+            }
+        });
+    }
 }
