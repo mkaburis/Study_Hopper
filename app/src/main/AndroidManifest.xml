@@ -17,6 +17,15 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
         <activity
+            android:name=".ui.studyGroup.GroupViewer"
+            android:label="GroupViewer"
+            android:parentActivityName=".ui.groupFinder.StudyGroupFinder"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder" />
+        </activity>
+        <activity
             android:name=".ui.profile.ProfileViewer"
             android:label="@string/title_activity_profile_viewer"
             android:parentActivityName=".ui.groupFinder.StudyGroupFinder"

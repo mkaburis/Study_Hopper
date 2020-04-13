@@ -27,6 +27,7 @@ import study_dev.testbed.studyhopper.models.StudentClass;
 import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 import study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder;
 import study_dev.testbed.studyhopper.ui.studyGroup.GroupMemberList;
+import study_dev.testbed.studyhopper.ui.studyGroup.GroupViewer;
 
 public class ProfileViewer extends AppCompatActivity {
     private DocumentReference userRef;
@@ -67,6 +68,10 @@ public class ProfileViewer extends AppCompatActivity {
         if (returnTo.equals("GroupMemberList")) {
             userGroupDocId = intent.getStringExtra("userGroupDocId");
             groupDocId = intent.getStringExtra("groupDocId");
+        }
+
+        if (returnTo.equals("GroupViewer")) {
+            groupDocId = intent.getStringExtra("groupId");
         }
 
         if (primaryUserId == null) {
@@ -172,12 +177,17 @@ public class ProfileViewer extends AppCompatActivity {
 
         if (returnTo.equals("GroupMemberList")) {
 
-
             Intent in = new Intent(getBaseContext(), GroupMemberList.class);
             in.putExtra("userDocId", primaryUserId);
             in.putExtra("userGroupDocId", userGroupDocId);
             in.putExtra("groupDocId", groupDocId);
 
+            startActivity(in);
+            overridePendingTransition(0, 0);
+        } else if (returnTo.equals("GroupViewer")) {
+            Intent in = new Intent(getBaseContext(), GroupViewer.class);
+            in.putExtra("primary-user-Id", primaryUserId);
+            in.putExtra("groupId", groupDocId);
             startActivity(in);
             overridePendingTransition(0, 0);
         } else {

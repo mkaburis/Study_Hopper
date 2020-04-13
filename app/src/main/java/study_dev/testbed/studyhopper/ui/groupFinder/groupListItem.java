@@ -19,17 +19,51 @@ public class groupListItem implements Parcelable {
     private String groupName;
     private String courseCode;
     private String color;
+    private String groupID;
+    private String primaryId;
 
-    public groupListItem(String groupName, String courseCode, String color) {
+    public groupListItem(String groupName, String courseCode, String color, String groupID, String primaryId) {
         this.groupName = groupName;
         this.courseCode = courseCode;
         this.color = color;
+        this.groupID = groupID;
+        this.primaryId = primaryId;
     }
 
     protected groupListItem(Parcel in) {
-        groupName = in.readString();
-        courseCode = in.readString();
-        color = in.readString();
+        this.groupName = in.readString();
+        this.courseCode = in.readString();
+        this.color = in.readString();
+        this.groupID = in.readString();
+        this.primaryId = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(groupName);
+        dest.writeString(courseCode);
+        dest.writeString(color);
+    }
+
+    public String getGroupID() {
+        return groupID;
+    }
+
+    public void setGroupID(String groupID) {
+        this.groupID = groupID;
+    }
+
+    public String getPrimaryId() {
+        return primaryId;
+    }
+
+    public void setPrimaryId(String primaryId) {
+        this.primaryId = primaryId;
     }
 
     public String getGroupName() {
@@ -54,17 +88,5 @@ public class groupListItem implements Parcelable {
 
     public void setColor(String color) {
         this.color = color;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(groupName);
-        dest.writeString(courseCode);
-        dest.writeString(color);
     }
 }

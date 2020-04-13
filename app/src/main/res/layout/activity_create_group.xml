@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,8 +11,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,9 +40,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_margin="10dp"
+                card_view:cardBackgroundColor="#f3f3f3"
                 card_view:cardCornerRadius="6dp"
-                card_view:cardElevation="8dp"
-                card_view:cardBackgroundColor="#f3f3f3">
+                card_view:cardElevation="8dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -152,7 +152,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
@@ -207,8 +207,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="15dp"
                         android:layout_marginRight="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="#F3F3F3" />
+                        android:layout_marginBottom="10dp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

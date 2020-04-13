@@ -15,6 +15,7 @@ public class peopleListItem implements Parcelable {
             return new peopleListItem[size];
         }
     };
+
     private String peopleName;
     private String primaryMajor;
     private String gender;

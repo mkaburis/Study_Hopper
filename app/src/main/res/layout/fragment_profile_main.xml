@@ -100,7 +100,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/gender"
-                        android:inputType="text" />
+                        android:inputType="text|textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -112,7 +112,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/university"
-                        android:inputType="text" />
+                        android:inputType="text|textCapWords" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -125,7 +125,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/college"
-                        android:inputType="text" />
+                        android:inputType="text|textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -137,7 +137,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/major"
-                        android:inputType="text" />
+                        android:inputType="text|textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RelativeLayout
