@@ -4,9 +4,10 @@ import com.google.firebase.firestore.DocumentReference;
 
 public class Group {
     private String groupName;
-    private String courseCode;
+    private String courseSubject;
+    private String courseNumber;
     private String groupColor;
-    private String groupPreference;
+    private String genderPreference;
     private String groupOwner;
     private int maxGroupMembers;
     private DocumentReference documentId;
@@ -18,14 +19,15 @@ public class Group {
         // empty constructor needed
     }
 
-    public Group(String groupName, String courseCode, String groupColor,
-                 String groupPreference, String groupOwner, int maxGroupMembers,
+    public Group(String groupName, String courseSubject, String courseNumber, String groupColor,
+                 String genderPreference, String groupOwner, int maxGroupMembers,
                  DocumentReference documentId, String university, String locationPreference,
                  String agePreference) {
         this.groupName = groupName;
-        this.courseCode = courseCode;
+        this.courseSubject = courseSubject;
+        this.courseNumber = courseNumber;
         this.groupColor = groupColor;
-        this.groupPreference = groupPreference;
+        this.genderPreference = genderPreference;
         this.groupOwner = groupOwner;
         this.maxGroupMembers = maxGroupMembers;
         this.documentId = documentId;
@@ -36,10 +38,6 @@ public class Group {
 
     public String getGroupName() {
         return groupName;
-    }
-
-    public String getCourseCode() {
-        return courseCode;
     }
 
     public String getGroupColor() {
@@ -54,8 +52,8 @@ public class Group {
         this.groupOwner = groupOwner;
     }
 
-    public String getGroupPreference() {
-        return groupPreference;
+    public String getGenderPreference() {
+        return genderPreference;
     }
 
     public int getMaxGroupMembers() {
@@ -92,6 +90,42 @@ public class Group {
 
     public void setUniversity(String university) {
         this.university = university;
+    }
+
+    public void setGenderPreference(String genderPreference) {
+        this.genderPreference = genderPreference;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getCourseSubject() {
+        return courseSubject;
+    }
+
+    public void setCourseSubject(String courseSubject) {
+        this.courseSubject = courseSubject;
+    }
+
+    public String getCourseNumber() {
+        return courseNumber;
+    }
+
+    public void setCourseNumber(String courseNumber) {
+        this.courseNumber = courseNumber;
+    }
+
+    public void setGroupColor(String groupColor) {
+        this.groupColor = groupColor;
+    }
+
+    public void setMaxGroupMembers(int maxGroupMembers) {
+        this.maxGroupMembers = maxGroupMembers;
+    }
+
+    public String getCourseCode() {
+        return courseSubject + " " + courseNumber;
     }
 }
 
