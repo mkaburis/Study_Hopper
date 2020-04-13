@@ -21,13 +21,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-import study_dev.testbed.studyhopper.GroupViewer;
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Profile;
 import study_dev.testbed.studyhopper.models.StudentClass;
 import study_dev.testbed.studyhopper.ui.dashboard.Dashboard;
 import study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder;
 import study_dev.testbed.studyhopper.ui.studyGroup.GroupMemberList;
+import study_dev.testbed.studyhopper.ui.studyGroup.GroupViewer;
 
 public class ProfileViewer extends AppCompatActivity {
     private DocumentReference userRef;

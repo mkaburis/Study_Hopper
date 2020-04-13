@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
         <activity
-            android:name=".GroupViewer"
+            android:name=".ui.studyGroup.GroupViewer"
             android:label="GroupViewer"
             android:parentActivityName=".ui.groupFinder.StudyGroupFinder"
             android:windowSoftInputMode="stateHidden|adjustResize">

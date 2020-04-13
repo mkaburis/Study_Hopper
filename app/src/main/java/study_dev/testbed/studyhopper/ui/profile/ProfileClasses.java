@@ -130,36 +130,43 @@ public class ProfileClasses extends Fragment {
         mYear = view.findViewById(R.id.courseYearText);
         mSemester = view.findViewById(R.id.courseSemesterText);
 
+        boolean newProfile = getActivity().getIntent().getExtras().getBoolean("new-profile");
 
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = mCourseName.getText().toString();
-                String subject = mSubject.getText().toString();
-                String number = mNumber.getText().toString();
-                String section = mSection.getText().toString();
+        if (newProfile) {
+            mAddButton.setEnabled(false);
+        } else {
+            mAddButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String name = mCourseName.getText().toString();
+                    String subject = mSubject.getText().toString();
+                    String number = mNumber.getText().toString();
+                    String section = mSection.getText().toString();
 
-                boolean isValidated = true;
+                    boolean isValidated = true;
 
-                if (validateText(name)) {
-                    mCourseName.setError("Course Name cannot be empty");
-                    isValidated = false;
-                }
-                if (validateText(subject)) {
-                    mSubject.setError("Course Name cannot be empty");
-                    isValidated = false;
-                }
-                if (validateText(number)) {
-                    mNumber.setError("Course Name cannot be empty");
-                    isValidated = false;
-                }
+                    if (validateText(name)) {
+                        mCourseName.setError("Course Name cannot be empty");
+                        isValidated = false;
+                    }
+                    if (validateText(subject)) {
+                        mSubject.setError("Course Name cannot be empty");
+                        isValidated = false;
+                    }
+                    if (validateText(number)) {
+                        mNumber.setError("Course Name cannot be empty");
+                        isValidated = false;
+                    }
 
-                if (isValidated) {
-                    StudentClass newClass = new StudentClass(name, subject, number, section);
-                    addClassToFireBase(newClass);
+                    if (isValidated) {
+                        StudentClass newClass = new StudentClass(name, subject, number, section);
+                        addClassToFireBase(newClass);
+                    }
                 }
-            }
-        });
+            });
+        }
+
+
     }
 
     private void fetchClassesFromDB() {

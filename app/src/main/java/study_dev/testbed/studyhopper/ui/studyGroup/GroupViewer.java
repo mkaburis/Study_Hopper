@@ -1,4 +1,4 @@
-package study_dev.testbed.studyhopper;
+package study_dev.testbed.studyhopper.ui.studyGroup;
 
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -28,11 +28,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Group;
 import study_dev.testbed.studyhopper.models.Member;
 import study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder;
 import study_dev.testbed.studyhopper.ui.profile.ProfileViewer;
-import study_dev.testbed.studyhopper.ui.studyGroup.MemberAdapter;
 
 public class GroupViewer extends AppCompatActivity {
 

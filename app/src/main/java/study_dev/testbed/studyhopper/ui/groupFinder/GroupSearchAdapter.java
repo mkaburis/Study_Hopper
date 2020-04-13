@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import study_dev.testbed.studyhopper.GroupViewer;
 import study_dev.testbed.studyhopper.R;
+import study_dev.testbed.studyhopper.ui.studyGroup.GroupViewer;
 
 public class GroupSearchAdapter extends RecyclerView.Adapter<GroupSearchAdapter.GroupSearchViewHolder> {
     //groupListItem
