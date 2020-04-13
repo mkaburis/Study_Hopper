@@ -1,6 +1,10 @@
 package study_dev.testbed.studyhopper;
 
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import study_dev.testbed.studyhopper.models.Group;
 import study_dev.testbed.studyhopper.models.Member;
 import study_dev.testbed.studyhopper.ui.groupFinder.StudyGroupFinder;
+import study_dev.testbed.studyhopper.ui.profile.ProfileViewer;
 import study_dev.testbed.studyhopper.ui.studyGroup.MemberAdapter;
 
 public class GroupViewer extends AppCompatActivity {
@@ -46,6 +53,9 @@ public class GroupViewer extends AppCompatActivity {
     private DocumentReference groupRef;
     private String primaryUserId;
     private String groupId;
+
+    private ColorDrawable profileBackground = new ColorDrawable(Color.parseColor("#0000ff"));
+    private Drawable profileIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +84,7 @@ public class GroupViewer extends AppCompatActivity {
         ageRangeTextView = findViewById(R.id.ageRangeTextView);
         noResultsText = findViewById(R.id.noResultsText);
         memberRecycleView = findViewById(R.id.memberRecycleView);
+        profileIcon = ContextCompat.getDrawable(this, R.drawable.ic_group_member);
 
         requestJoinButton = findViewById(R.id.requestJoinButton);
         // TODO add event listener
@@ -136,6 +147,62 @@ public class GroupViewer extends AppCompatActivity {
         mAdapter = new MemberAdapter(options);
         memberRecycleView.setLayoutManager(new LinearLayoutManager(this));
         memberRecycleView.setAdapter(mAdapter);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.RIGHT) {
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+                                    float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                View itemView = viewHolder.itemView;
+
+                int iconMargin = (itemView.getHeight() - profileIcon.getIntrinsicHeight()) / 2;
+
+                if (dX > 0) {
+                    profileBackground.setBounds(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
+                    profileIcon.setBounds(itemView.getLeft() + iconMargin, itemView.getTop() + iconMargin,
+                            itemView.getLeft() + iconMargin + profileIcon.getIntrinsicWidth(),
+                            itemView.getBottom() - iconMargin);
+
+                }
+
+                profileBackground.draw(c);
+
+                c.save();
+
+                if (dX > 0)
+                    c.clipRect(itemView.getLeft(), itemView.getTop(), (int) dX, itemView.getBottom());
+                else
+                    c.clipRect(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                profileIcon.draw(c);
+
+                c.restore();
+
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
+                final int position = viewHolder.getAdapterPosition();
+
+                Intent intent = new Intent(getApplicationContext(), ProfileViewer.class);
+                intent.putExtra("primary-user-Id", primaryUserId);
+                intent.putExtra("groupId", mAdapter.getGroupId(position));
+                intent.putExtra("return-to", "GroupViewer");
+                intent.putExtra("found-user-docId", mAdapter.getUserId(position));
+
+                startActivity(intent);
+
+                mAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
+            }
+        }).attachToRecyclerView(memberRecycleView);
 
     }
 

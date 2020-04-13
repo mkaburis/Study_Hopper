@@ -21,6 +21,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import study_dev.testbed.studyhopper.GroupViewer;
 import study_dev.testbed.studyhopper.R;
 import study_dev.testbed.studyhopper.models.Profile;
 import study_dev.testbed.studyhopper.models.StudentClass;
@@ -67,6 +68,10 @@ public class ProfileViewer extends AppCompatActivity {
         if (returnTo.equals("GroupMemberList")) {
             userGroupDocId = intent.getStringExtra("userGroupDocId");
             groupDocId = intent.getStringExtra("groupDocId");
+        }
+
+        if (returnTo.equals("GroupViewer")) {
+            groupDocId = intent.getStringExtra("groupId");
         }
 
         if (primaryUserId == null) {
@@ -172,12 +177,17 @@ public class ProfileViewer extends AppCompatActivity {
 
         if (returnTo.equals("GroupMemberList")) {
 
-
             Intent in = new Intent(getBaseContext(), GroupMemberList.class);
             in.putExtra("userDocId", primaryUserId);
             in.putExtra("userGroupDocId", userGroupDocId);
             in.putExtra("groupDocId", groupDocId);
 
+            startActivity(in);
+            overridePendingTransition(0, 0);
+        } else if (returnTo.equals("GroupViewer")) {
+            Intent in = new Intent(getBaseContext(), GroupViewer.class);
+            in.putExtra("primary-user-Id", primaryUserId);
+            in.putExtra("groupId", groupDocId);
             startActivity(in);
             overridePendingTransition(0, 0);
         } else {

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import study_dev.testbed.studyhopper.R;
@@ -53,6 +54,11 @@ public class MemberAdapter extends FirestoreRecyclerAdapter<Member, MemberAdapte
 
     public String getUserId(int position) {
         return getSnapshots().getSnapshot(position).get("userDocId").toString();
+    }
+
+    public String getGroupId(int position) {
+        DocumentReference ref = getSnapshots().getSnapshot(position).getReference().getParent().getParent();
+        return ref.getId();
     }
 
     class MemberHolder extends RecyclerView.ViewHolder {
