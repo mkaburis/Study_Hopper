@@ -11,6 +11,7 @@ public class Session {
     private Timestamp sessionEndTime;
     private int sessionType;
     private boolean isActive;
+    private double noiseLevel;
 
     public Session() {
         //Empty constructor needed
@@ -26,6 +27,7 @@ public class Session {
         this.sessionEndTime = sessionEndTime;
         this.sessionType = sessionType;
         this.isActive = isActive;
+        this.noiseLevel = -1;
     }
 
     public boolean isActive() {
@@ -90,5 +92,13 @@ public class Session {
 
     public void setSessionType(int sessionType) {
         this.sessionType = sessionType;
+    }
+
+    public double getNoiseLevel() {
+        return noiseLevel;
+    }
+
+    public void setNoiseLevel(double noiseLevel) {
+        this.noiseLevel = noiseLevel;
     }
 }
