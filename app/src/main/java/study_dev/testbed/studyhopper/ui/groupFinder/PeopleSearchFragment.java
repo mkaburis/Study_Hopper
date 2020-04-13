@@ -55,6 +55,7 @@ public class PeopleSearchFragment extends Fragment {
     private Button searchButton;
 
     private String userUniversity;
+    private String firestoreId;
 
 
     public PeopleSearchFragment() {
@@ -81,7 +82,7 @@ public class PeopleSearchFragment extends Fragment {
         peopleList = new ArrayList<>();
 
         Bundle extras = getActivity().getIntent().getExtras();
-        String firestoreId = extras.getString("firestore-id");
+        firestoreId = extras.getString("firestore-id");
 
         db.collection("users").document(firestoreId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -94,7 +95,7 @@ public class PeopleSearchFragment extends Fragment {
 
 
         View v = inflater.inflate(R.layout.fragment_people_search, container, false);
-        noResultsText = v.getRootView().findViewById(R.id.NoResultsText);
+        noResultsText = v.getRootView().findViewById(R.id.noResultsText);
 
         mPeopleRecycleView = v.getRootView().findViewById(R.id.ResultRecycleViewer);
         mPeopleRecycleView.setHasFixedSize(false); //ONLY for FIXED Size recylcerView remove later
@@ -150,12 +151,12 @@ public class PeopleSearchFragment extends Fragment {
                     peopleList.clear();
 
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Profile group = document.toObject(Profile.class);
+                        Profile profile = document.toObject(Profile.class);
 
-                        String name = group.getFirstName() + " " + group.getLastName();
-                        peopleListItem listItem = new peopleListItem(name,
-                                group.getEmail(),
-                                group.getGender());
+                        peopleListItem listItem = new peopleListItem(profile.getFullName(),
+                                profile.getEmail(),
+                                profile.getGender(),
+                                document.getId(), firestoreId);
 
                         peopleList.add(listItem);
                     }
@@ -217,6 +218,7 @@ public class PeopleSearchFragment extends Fragment {
             noResultsText.setVisibility(View.GONE);
             mAdapter = new PeopleSearchAdapter(peopleList);
             mPeopleRecycleView.setAdapter(mAdapter);
+
         }
     }
 }

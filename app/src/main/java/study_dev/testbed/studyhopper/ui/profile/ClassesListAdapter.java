@@ -33,6 +33,11 @@ public class ClassesListAdapter extends RecyclerView.Adapter<ClassesListAdapter.
         this.fragment = fragment;
     }
 
+    public ClassesListAdapter(ArrayList<classListItem> classList) {
+        mClassList = classList;
+        this.fragment = null;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ClassesListViewHolder holder, int position) {
         final classListItem currentItem = mClassList.get(position);
@@ -42,20 +47,31 @@ public class ClassesListAdapter extends RecyclerView.Adapter<ClassesListAdapter.
         holder.mClassNumber.setText(currentItem.getClassNumber());
         holder.mClassSection.setText(currentItem.getClassSection());
 
-        holder.mDeleteClassButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Current item has id " + currentItem.getClassId(),
-                        Toast.LENGTH_SHORT).show();
-                fragment.deleteClassFromFirebase(currentItem.getClassId());
-            }
-        });
+        if (fragment == null) {
+            holder.mDeleteClassButton.findViewById(R.id.deleteClassButton).setVisibility(View.GONE);
+        } else {
+            holder.mDeleteClassButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(v.getContext(), "Current item has id " + currentItem.getClassId(),
+                            Toast.LENGTH_SHORT).show();
+                    fragment.deleteClassFromFirebase(currentItem.getClassId());
+                }
+            });
+        }
+
+
     }
 
     @NonNull
     @Override
     public ClassesListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.class_item, parent, false);
+        if (fragment == null) {
+            ImageButton deleteButton = v.findViewById(R.id.deleteClassButton);
+            deleteButton.setVisibility(View.GONE);
+        }
+
         ClassesListViewHolder classListViewHolder = new ClassesListViewHolder(v, mListener);
         return classListViewHolder;
     }
