@@ -91,7 +91,7 @@ public class GroupMemberList extends AppCompatActivity {
         Intent intent = getIntent();
         userGroupDocID = intent.getStringExtra("userGroupDocId");
         userDocId = intent.getStringExtra("userDocId");
-        Toast.makeText(this, "Keep value " + userGroupDocID, Toast.LENGTH_SHORT).show();
+
         groupDocID = intent.getStringExtra("groupDocId");
 
         groupDoc = db.collection("groups").document(groupDocID);

@@ -31,7 +31,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -258,7 +257,6 @@ public class StudyGroupActivity extends AppCompatActivity {
                         String time = timeFormat.format(sessionEndTime);
                         String dateTime = date + " " + time;
 
-                        Toast.makeText(StudyGroupActivity.this, dateTime, Toast.LENGTH_SHORT).show();
 
                         Date modDate = null;
                         try {
@@ -268,10 +266,8 @@ public class StudyGroupActivity extends AppCompatActivity {
                         }
 
                         long currentTime = System.currentTimeMillis();
-                        Toast.makeText(StudyGroupActivity.this, "Current time: "+ currentTime, Toast.LENGTH_SHORT).show();
 
                         long sessionTime = modDate.getTime();
-                        Toast.makeText(StudyGroupActivity.this, "Session time: " +sessionTime, Toast.LENGTH_SHORT).show();
 
                         if(sessionTime < currentTime){
                             CollectionReference archivedSessions = db.collection("groups").document(groupDocId)

@@ -103,7 +103,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "profile image", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Dashboard.this, ProfilePage.class);
                 intent.putExtra("new-profile", false);
                 startActivity(intent);

@@ -92,7 +92,6 @@ public class DashboardFragment extends Fragment {
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null){
             userEmail = user.getEmail();
-            Toast.makeText(getContext(), userEmail, Toast.LENGTH_SHORT).show();
         }
 
         Query userQuery = userRef.whereEqualTo("email", userEmail);

@@ -113,7 +113,7 @@ public class GroupViewer extends AppCompatActivity {
                     groupNameTextView.setText(group.getGroupName());
                     courseCodeTextView.setText(group.getCourseCode());
                     maxSizeTextView.setText(String.valueOf(maxSize));
-                    genderTextView.setText(group.getGroupPreference());
+                    genderTextView.setText(group.getGenderPreference());
                     locationTextView.setText(group.getLocationPreference());
                     ageRangeTextView.setText(group.getAgePreference());
 
