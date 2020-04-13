@@ -386,11 +386,71 @@
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/sound_level_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/adjust_date_and_time_card"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        app:cardBackgroundColor="#D3D3D7"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="6dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/audio_level_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:text="@string/study_room_noise_level"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/audio_level"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/audio_level_text_view"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:text="@string/default_noise"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/sound_happiness_image_view"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_below="@id/audio_level_text_view"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="15dp" />
+
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
     <LinearLayout
+        android:id="@+id/btn_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/adjust_date_and_time_card"
+        android:layout_below="@id/sound_level_card"
         android:weightSum="2">
 
 
@@ -424,11 +484,13 @@
             android:textSize="20sp"
             android:textColor="@android:color/white"
             android:background="@android:color/holo_blue_dark"
+            android:onClick="recordAudio"
             android:layout_weight="1"
             />
 
 
     </LinearLayout>
+
 
 </RelativeLayout>
 

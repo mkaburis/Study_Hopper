@@ -152,4 +152,6 @@
     <string name="update_date_and_time">Update Date &amp; Time</string>
     <string name="delete_session">Delete Session</string>
     <string name="check_noise_level">Check Noise Level</string>
+    <string name="study_room_noise_level">Current Sound Level in Study Room</string>
+    <string name="default_noise">-- dB</string>
 </resources>

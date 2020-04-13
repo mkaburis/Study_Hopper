@@ -9,7 +9,10 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -27,6 +30,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,6 +62,7 @@ public class SessionActivity extends AppCompatActivity {
     private EditText sessionStartTimeEditText;
     private EditText sessionEndTimeEditText;
 
+
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 
@@ -66,6 +72,27 @@ public class SessionActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private DocumentReference sessionDoc;
+
+    private static DecimalFormat formatDecimal = new DecimalFormat("#.##");
+
+    private TextView audioLevelTextView;
+    private ImageView audioHappinessImageView;
+    MediaRecorder mediaRecorder;
+    Thread runner;
+    private static double mEMA = 0.0;
+    private final double REF_AMP = 1.0;
+    static final private double EMA_FILTER = 0.6;
+
+    final Runnable updater = new Runnable() {
+        @Override
+        public void run() {
+            updateTv();
+        }
+    };
+
+    final Handler handler = new Handler();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +115,27 @@ public class SessionActivity extends AppCompatActivity {
         sessionDateEditText = findViewById(R.id.edit_text_change_session_date);
         sessionStartTimeEditText = findViewById(R.id.edit_text_change_session_start_time);
         sessionEndTimeEditText = findViewById(R.id.edit_text_change_session_end_time);
+
+        audioLevelTextView = findViewById(R.id.audio_level);
+        audioHappinessImageView = findViewById(R.id.sound_happiness_image_view);
+
+//        if(runner == null){
+//            runner = new Thread(){
+//                @Override
+//                public void run() {
+//                    while(runner != null)
+//                    {
+//                        try {
+//                            Thread.sleep(1000);
+//                            Log.i("Noise", "Tock");
+//                        }catch (InterruptedException e){ }
+//                        handler.post(updater);
+//                    }
+//                }
+//            };
+//            runner.start();
+//            Log.d("Noise", "start runner()");
+//        }
 
 
         sessionDoc = db.document(sessionPath);
@@ -151,6 +199,88 @@ public class SessionActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        startRecorder();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopRecorder();
+    }
+
+    public void startRecorder(){
+        if(mediaRecorder == null){
+            mediaRecorder = new MediaRecorder();
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mediaRecorder.setOutputFile("/dev/null");
+
+            try {
+                mediaRecorder.prepare();
+            }catch(java.io.IOException ioe){
+                android.util.Log.e("[Monkey]", "IOException: " +
+                        android.util.Log.getStackTraceString(ioe));
+            }catch (java.lang.SecurityException e){
+                android.util.Log.e(TAG, "SecurityException: " +
+                        android.util.Log.getStackTraceString(e));
+            }
+
+            try{
+                mediaRecorder.start();
+            }catch (java.lang.SecurityException e){
+                android.util.Log.e(TAG, "SecurityException: " +
+                android.util.Log.getStackTraceString(e));
+            }
+        }
+    }
+
+    public void stopRecorder() {
+        if (mediaRecorder != null) {
+            mediaRecorder.stop();
+            mediaRecorder.release();
+            mediaRecorder = null;
+        }
+    }
+
+    public void updateTv(){
+//        Toast.makeText(this, getAmplitudeEMA() + " db", Toast.LENGTH_SHORT).show();
+
+        double dBRating = soundDb(REF_AMP);
+        audioLevelTextView.setText(formatDecimal.format(dBRating) + " db");
+
+        if(dBRating >= 0.0 && dBRating <= 60.0) {
+            audioHappinessImageView.setImageResource(R.drawable.ic_happy_face);
+        }
+        else if (dBRating > 60.0 && dBRating <= 80.0) {
+            audioHappinessImageView.setImageResource(R.drawable.ic_neutral_face);
+        }
+        else{
+            audioHappinessImageView.setImageResource(R.drawable.ic_sad_face);
+        }
+
+    }
+
+    public double soundDb(double ampl){
+        return 20 * Math.log10(getAmplitudeEMA() / ampl);
+    }
+
+    public double getAmplitude() {
+        if(mediaRecorder != null)
+            return mediaRecorder.getMaxAmplitude();
+        else
+            return 0;
+    }
+
+    public double getAmplitudeEMA() {
+        double amp = getAmplitude();
+        mEMA = EMA_FILTER * amp + (1.0 - EMA_FILTER) * mEMA;
+        return mEMA;
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
@@ -163,6 +293,22 @@ public class SessionActivity extends AppCompatActivity {
         in.putExtra("groupDocId", groupDocId);
         startActivity(in);
         overridePendingTransition(0, 0);
+    }
+
+    public void recordAudio(final View view) {
+
+        startRecorder();
+        CountDownTimer countDowntimer = new CountDownTimer(10000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                updateTv();
+            }
+
+            public void onFinish() {
+
+                Snackbar.make(view, "Completed sampling noise level in room!", Snackbar.LENGTH_LONG);
+
+
+            }};countDowntimer.start();
     }
 
     public void deleteSession(View view) {
