@@ -252,10 +252,13 @@ public class SessionActivity extends AppCompatActivity {
         }
     }
 
-    public void updateTv(){
+    public double updateTv() {
 //        Toast.makeText(this, getAmplitudeEMA() + " db", Toast.LENGTH_SHORT).show();
 
         double dBRating = soundDb(REF_AMP);
+        if (!Double.isFinite(dBRating)) {
+            dBRating = 0;
+        }
         audioLevelTextView.setText(formatDecimal.format(dBRating) + " db");
 
         if(dBRating >= 0.0 && dBRating <= 60.0) {
@@ -268,6 +271,7 @@ public class SessionActivity extends AppCompatActivity {
             audioHappinessImageView.setImageResource(R.drawable.ic_sad_face);
         }
 
+        return dBRating;
     }
 
     public double soundDb(double ampl){
@@ -303,17 +307,19 @@ public class SessionActivity extends AppCompatActivity {
     }
 
     public void recordAudio(final View view) {
-
+        final double[] sumNoiseLevel = {0};
         startRecorder();
         CountDownTimer countDowntimer = new CountDownTimer(10000, 1000) {
             public void onTick(long millisUntilFinished) {
-                updateTv();
+                sumNoiseLevel[0] = sumNoiseLevel[0] + updateTv();
             }
 
             public void onFinish() {
-
+                final double avgNoiseLevel = sumNoiseLevel[0] / 10;
                 Snackbar.make(view, "Completed sampling noise level in room!", Snackbar.LENGTH_LONG);
 
+                stopRecorder();
+                saveNoiseLevel(avgNoiseLevel);
 
             }};countDowntimer.start();
     }
@@ -470,5 +476,27 @@ public class SessionActivity extends AppCompatActivity {
             sessionEndTimeEditText.setText(simpleDateFormat.format(cal.getTime()));
         }
 
+    }
+
+    private void saveNoiseLevel(final double avgNoiseLevel) {
+        sessionDoc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                if (e != null) {
+                    Toast.makeText(SessionActivity.this, "Error while loading!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, e.toString());
+                }
+
+
+                if (documentSnapshot.exists() && Double.isFinite(avgNoiseLevel)) {
+                    session = documentSnapshot.toObject(Session.class);
+
+                    session.setNoiseLevel(avgNoiseLevel);
+
+                    sessionDoc.set(session);
+                }
+            }
+        });
     }
 }
