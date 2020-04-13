@@ -328,8 +328,6 @@ public class GroupMemberList extends AppCompatActivity {
             }
         }).attachToRecyclerView(recyclerView);
 
-
-
     }
 
     public void addGroupMember(View v) {

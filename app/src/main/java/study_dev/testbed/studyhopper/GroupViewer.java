@@ -13,11 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import study_dev.testbed.studyhopper.models.Group;
 import study_dev.testbed.studyhopper.models.Member;
@@ -72,10 +75,6 @@ public class GroupViewer extends AppCompatActivity {
         noResultsText = findViewById(R.id.noResultsText);
         memberRecycleView = findViewById(R.id.memberRecycleView);
 
-        memberRecycleView.setHasFixedSize(false);
-        mLayoutManager = new LinearLayoutManager(this);
-        memberRecycleView.setLayoutManager(mLayoutManager);
-
         requestJoinButton = findViewById(R.id.requestJoinButton);
         // TODO add event listener
 
@@ -111,21 +110,32 @@ public class GroupViewer extends AppCompatActivity {
             }
         });
 
-        Query query = groupRef.collection("members").orderBy("firstName", Query.Direction.DESCENDING);
+        CollectionReference groupMemberRef = groupRef
+                .collection("members");
+
+        // Get the group size
+        groupMemberRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                int groupSize = queryDocumentSnapshots.size();
+
+                if (groupSize == 0) {
+                    noResultsText.setVisibility(View.VISIBLE);
+                } else {
+                    noResultsText.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        Query query = groupMemberRef.orderBy("firstName", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<Member> options = new FirestoreRecyclerOptions.Builder<Member>()
                 .setQuery(query, Member.class)
                 .build();
 
         mAdapter = new MemberAdapter(options);
-        memberRecycleView.setHasFixedSize(false);
         memberRecycleView.setLayoutManager(new LinearLayoutManager(this));
         memberRecycleView.setAdapter(mAdapter);
-        memberRecycleView.setAdapter(mAdapter);
-
-        if (mAdapter.getItemCount() == 0) {
-            noResultsText.setVisibility(View.VISIBLE);
-        }
 
     }
 
@@ -141,6 +151,18 @@ public class GroupViewer extends AppCompatActivity {
         in.putExtra("firestore-id", primaryUserId);
         startActivity(in);
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAdapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mAdapter.stopListening();
     }
 
 }
