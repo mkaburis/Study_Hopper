@@ -4,11 +4,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -82,6 +86,7 @@ public class SessionActivity extends AppCompatActivity {
     private static double mEMA = 0.0;
     private final double REF_AMP = 1.0;
     static final private double EMA_FILTER = 0.6;
+    private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
 
     final Runnable updater = new Runnable() {
         @Override
@@ -464,4 +469,27 @@ public class SessionActivity extends AppCompatActivity {
         }
 
     }
+
+//    private void requestAudioPermissions() {
+//        if(ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+//            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+//                Toast.makeText(this, "Please grant permissions to record audio", Toast.LENGTH_LONG).show();
+//
+//                //Give user option to still opt-in the permissions
+//                ActivityCompat.requestPermissions(this,
+//                        new String[]{Manifest.permission.RECORD_AUDIO},
+//                        MY_PERMISSIONS_RECORD_AUDIO);
+//            } else {
+//                ActivityCompat.requestPermissions(this,
+//                        new String[]{Manifest.permission.RECORD_AUDIO},
+//                        MY_PERMISSIONS_RECORD_AUDIO);
+//            }
+//        }
+//        //If permission is granted go ahead recording auidio
+//        else if(ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED){
+//
+//        }
+//    }
 }
